@@ -1,0 +1,88 @@
+@echo off
+echo ========================================
+echo FIXING PHI FRAMEWORK PROJECT
+echo ========================================
+echo.
+
+cd /d "C:\Users\User\Desktop\parametric-resonance"
+
+echo Step 1: Checking phi.py file...
+if exist "src\phi_resonance\metrics\phi.py" (
+    echo ✅ phi.py exists
+) else (
+    echo ❌ phi.py missing - creating it...
+    (
+    echo import numpy as np
+    echo from scipy.spatial.distance import cosine
+    echo.
+    echo def calculate_phi(theta_A, theta_B):
+    echo     # Flatten parameter matrices
+    echo     vec_A = theta_A.flatten()
+    echo     vec_B = theta_B.flatten()
+    echo.
+    echo     # Normalize
+    echo     vec_A_norm = vec_A / (np.linalg.norm(vec_A) + 1e-10)
+    echo     vec_B_norm = vec_B / (np.linalg.norm(vec_B) + 1e-10)
+    echo.
+    echo     # Calculate cosine distance
+    echo     cos_dist = cosine(vec_A_norm, vec_B_norm)
+    echo.
+    echo     # Convert to resonance measure Φ
+    echo     phi = cos_dist / 2.0
+    echo.
+    echo     return phi
+    ) > "src\phi_resonance\metrics\phi.py"
+)
+
+echo.
+echo Step 2: Creating basic_usage.py...
+(
+echo import sys
+echo import os
+echo sys.path.insert(0, os.path.abspath('..'))
+echo.
+echo print("=" * 40)
+echo "PHI FRAMEWORK - WORKING TEST"
+echo print("=" * 40)
+echo.
+echo try:
+echo     import numpy as np
+echo     print("1. numpy imported OK")
+echo.
+echo     from src.phi_resonance.metrics.phi import calculate_phi
+echo     print("2. phi module imported OK")
+echo.
+echo     # Test calculation
+echo     a = np.random.randn(3, 3)
+echo     b = a.copy()
+echo     result = calculate_phi(a, b)
+echo     print(f"3. Phi value: {result:.3f}")
+echo.
+echo     if result < 0.1:
+echo         print("4. RESULT: TEST PASSED!")
+echo     else:
+echo         print("4. RESULT: Check needed")
+echo.
+echo except Exception as e:
+echo     print(f"ERROR: {e}")
+echo.
+echo print("=" * 40)
+echo "TEST COMPLETED"
+echo print("=" * 40)
+) > "examples\basic_usage.py"
+
+echo.
+echo Step 3: Testing the file...
+cd examples
+python basic_usage.py
+
+echo.
+echo Step 4: Testing phi_narrative.py...
+cd ..
+python phi_narrative.py
+
+echo.
+echo ========================================
+echo FIX COMPLETED!
+echo ========================================
+pause

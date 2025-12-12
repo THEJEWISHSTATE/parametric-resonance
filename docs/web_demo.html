@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>|≈|Φ - Risonanza Parametrica</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui;
+            background: linear-gradient(135deg, #0a1929 0%, #001e3c 100%);
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: rgba(0, 30, 60, 0.95);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border-bottom: 3px solid #2E7D32;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #1E88E5, #2E7D32);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .section {
+            background: rgba(30, 42, 58, 0.9);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid #2E7D32;
+        }
+        
+        .section-title {
+            color: #1E88E5;
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+        }
+        
+        /* Layout comparativo a due colonne */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .comparison-item {
+            padding: 1.2rem;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        
+        .comparison-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .high-phi {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+        
+        .low-phi {
+            background: rgba(46, 125, 50, 0.1);
+            border: 1px solid rgba(46, 125, 50, 0.3);
+        }
+        
+        .comparison-title {
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .high-phi .comparison-title {
+            color: #F44336;
+        }
+        
+        .low-phi .comparison-title {
+            color: #2E7D32;
+        }
+        
+        /* Visualizzatore Φ */
+        .phi-viz {
+            text-align: center;
+            margin: 2.5rem 0;
+            padding: 2rem;
+            background: rgba(30, 42, 58, 0.7);
+            border-radius: 12px;
+        }
+        
+        .phi-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid #1E88E5;
+            margin: 1.5rem auto;
+            background: conic-gradient(
+                #2E7D32 0%,
+                #2E7D32 70%,
+                #455A64 70%,
+                #455A64 100%
+            );
+            position: relative;
+            transition: all 1s ease;
+        }
+        
+        .phi-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+        }
+        
+        .demo-btn {
+            background: linear-gradient(90deg, #1E88E5, #2E7D32);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 1.5rem auto;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .demo-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(30, 136, 229, 0.3);
+        }
+        
+        .demo-result {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            background: rgba(46, 125, 50, 0.15);
+            border-radius: 8px;
+            border-left: 3px solid #2E7D32;
+            display: none;
+        }
+        
+        .alert {
+            background: rgba(30, 136, 229, 0.1);
+            border: 1px solid #1E88E5;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 30, 60, 0.95);
+            margin-top: 3rem;
+            border-top: 2px solid #2E7D32;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">|≈|Φ - Risonanza Parametrica</h1>
+        <p>Metrica essenziale per sistemi intelligenti allineati</p>
+    </header>
+    
+    <div class="container">
+        <div class="alert">
+            <strong>⚡ Imperativo:</strong> L'allineamento parametrico è fondamentale per sistemi etici
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">📊 Cosa misura Φ?</h2>
+            <p>Φ quantifica la risonanza tra i parametri di un sistema e i dati reali. Valori bassi indicano allineamento, valori alti segnalano disconnessione.</p>
+            
+            <div class="phi-viz">
+                <div class="phi-circle" id="phiCircle">
+                    <div class="phi-value" id="phiValue">0.65</div>
+                </div>
+                
+                <button class="demo-btn" onclick="runDemo()">
+                    ▶ Dimostrazione Training
+                </button>
+                
+                <div class="demo-result" id="demoResult">
+                    <strong style="color: #2E7D32;">✅ Sistema ottimizzato</strong>
+                    <p>Φ finale: <strong>0.09</strong> - Risonanza eccellente raggiunta</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title"⚖️ Confronto Critico</h2>
+            
+            <div class="comparison">
+                <div class="comparison-item high-phi">
+                    <h3 class="comparison-title">🔴 Alto Φ (Bassa Risonanza)</h3>
+                    <ul>
+                        <li>Decisioni disconnesse</li>
+                        <li>Bias non corretti</li>
+                        <li>Feedback negativi</li>
+                        <li>Rigidità adattiva</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-item low-phi">
+                    <h3 class="comparison-title">🟢 Basso Φ (Alta Risonanza)</h3>
+                    <ul>
+                        <li>Percezione accurata</li>
+                        <li>Adattamento dinamico</li>
+                        <li>Allineamento etico</li>
+                        <li>Resilienza sistemica</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">🌍 Impatto Sistemico</h2>
+            
+            <div class="comparison">
+                <div class="comparison-item high-phi">
+                    <h3 class="comparison-title">Rischio Sociale</h3>
+                    <p>Sistemi con alto Φ perpetuano disuguaglianze e prendono decisioni arbitrarie, minando la fiducia nell'IA.</p>
+                </div>
+                
+                <div class="comparison-item low-phi">
+                    <h3 class="comparison-title">Opportunità Etica</h3>
+                    <p>Sistemi con basso Φ supportano processi decisionali trasparenti e promuovono benessere collettivo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p><strong>|≈|Φ Framework</strong> - Per un'IA risonante con la complessità umana</p>
+        <p style="color: #90CAF9; margin-top: 0.5rem;">"L'intelligenza risiede nella risonanza, non nella complessità"</p>
+    </footer>
+    
+    <script>
+        async function runDemo() {
+            const btn = document.querySelector('.demo-btn');
+            const circle = document.getElementById('phiCircle');
+            const value = document.getElementById('phiValue');
+            const result = document.getElementById('demoResult');
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Training in corso...';
+            result.style.display = 'none';
+            
+            // Simula riduzione progressiva di Φ
+            const stages = [
+                {phi: 0.65, label: 'Disconnesso'},
+                {phi: 0.45, label: 'Allineamento iniziale'},
+                {phi: 0.25, label: 'Risonanza migliorata'},
+                {phi: 0.09, label: 'Ottimizzato'}
+            ];
+            
+            for (let i = 0; i < stages.length; i++) {
+                const stage = stages[i];
+                const fill = (1 - stage.phi) * 100;
+                
+                // Aggiorna visualizzazione
+                circle.style.background = `conic-gradient(
+                    #2E7D32 0%,
+                    #2E7D32 ${fill}%,
+                    #455A64 ${fill}%,
+                    #455A64 100%
+                )`;
+                value.textContent = stage.phi.toFixed(2);
+                btn.textContent = `⏳ ${stage.label}`;
+                
+                // Attendi prima del prossimo step
+                await new Promise(resolve => setTimeout(resolve, 1200));
+            }
+            
+            // Mostra risultato finale
+            result.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = '🔄 Ripeti dimostrazione';
+            
+            // Animazione finale
+            circle.style.borderColor = '#2E7D32';
+            circle.style.boxShadow = '0 0 20px rgba(46, 125, 50, 0.5)';
+        }
+        
+        // Animazione iniziale
+        document.addEventListener('DOMContentLoaded', () => {
+            const circle = document.getElementById('phiCircle');
+            setInterval(() => {
+                circle.style.transform = circle.style.transform === 'scale(1.02)' 
+                    ? 'scale(1)' 
+                    : 'scale(1.02)';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
