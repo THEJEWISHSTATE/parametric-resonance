@@ -1,14 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Φ Framework - Academic Portal</title>
-    <!-- Meta tags per academic SEO -->
-    <meta name="citation_title" content="Φ: A Parametric Resonance Framework for Ethical AI Alignment">
-    <meta name="citation_author" content="Your Name">
-    <meta name="citation_publication_date" content="2024">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Φ Framework - Academic Research Portal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f8f9fa;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: #3498db;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        h2 {
+            color: #2c3e50;
+            margin: 1.5rem 0 1rem 0;
+        }
+        .section {
+            background: white;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .abstract {
+            background: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+        .nav-bar {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #ecf0f1;
+            border-radius: 5px;
+        }
+        .nav-bar a {
+            color: #2c3e50;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .nav-bar a:hover {
+            background: #3498db;
+            color: white;
+        }
+        .paper {
+            border: 1px solid #ddd;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+        .paper h3 {
+            color: #2980b9;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-link:hover {
+            background: #2980b9;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: #7f8c8d;
+            border-top: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome, Researchers</h1>
-    <!-- Contenuto specifico per esperti -->
+    <header>
+        <h1>Φ Framework - Academic Research Portal</h1>
+        <p>Quantifying parametric resonance in ethical AI systems</p>
+    </header>
+    
+    <div class="nav-bar">
+        <a href="#overview">Overview</a>
+        <a href="#theory">Theoretical Foundations</a>
+        <a href="#methodology">Methodology</a>
+        <a href="#publications">Publications</a>
+        <a href="#research">Research Directions</a>
+    </div>
+    
+    <div class="section" id="overview">
+        <h2>Research Overview</h2>
+        <div class="abstract">
+            The Φ (Phi) Framework provides mathematical tools to measure parametric resonance—how similarly different AI models or ethical frameworks respond to shared inputs. Instead of auditing outcomes (reactive), Φ measures parametric alignment (proactive).
+        </div>
+        <p>Two systems with high Φ resonance will respond similarly to novel inputs, enabling proactive alignment measurement before deployment.</p>
+    </div>
+    
+    <div class="section" id="theory">
+        <h2>Theoretical Foundations</h2>
+        <h3>Parametric Resonance Theory</h3>
+        <p>Parametric resonance occurs when two systems share similar response functions to input perturbations. The Φ metric quantifies this resonance through:</p>
+        <ul>
+            <li><strong>Response Function Analysis:</strong> Measuring output variations to controlled inputs</li>
+            <li><strong>Parametric Sensitivity:</strong> How parameters affect system behavior</li>
+            <li><strong>Resonance Coefficient:</strong> Φ ∈ [0,1] where 1 indicates perfect parametric alignment</li>
+        </ul>
+        
+        <h3>Mathematical Formulation</h3>
+        <p>Φ(A,B) = 1 - D(R_A, R_B) where:</p>
+        <ul>
+            <li>R_A, R_B: Response functions of systems A and B</li>
+            <li>D: Normalized distance metric between functions</li>
+            <li>Φ = 1: Identical response patterns</li>
+            <li>Φ = 0: Independent response patterns</li>
+        </ul>
+    </div>
+    
+    <div class="section" id="methodology">
+        <h2>Methodology</h2>
+        <h3>Measurement Protocol</h3>
+        <ol>
+            <li><strong>Input Stimulus Set:</strong> Generate controlled input variations</li>
+            <li><strong>Response Recording:</strong> Capture system outputs</li>
+            <li><strong>Function Approximation:</strong> Model response surfaces</li>
+            <li><strong>Distance Computation:</strong> Calculate Φ between systems</li>
+            <li><strong>Statistical Validation:</strong> Confidence intervals and significance testing</li>
+        </ol>
+        
+        <h3>Experimental Design</h3>
+        <p>Standardized test suites for measuring Φ across:</p>
+        <ul>
+            <li>Different training regimes</li>
+            <li>Architectural variations</li>
+            <li>Ethical framework implementations</li>
+            <li>Cross-model comparisons</li>
+        </ul>
+    </div>
+    
+    <div class="section" id="publications">
+        <h2>Publications & Preprints</h2>
+        
+        <div class="paper">
+            <h3>The Φ Metric: Measuring Parametric Resonance in AI Systems</h3>
+            <p><strong>Authors:</strong> Research Team, Φ Framework Project</p>
+            <p><strong>Status:</strong> Preprint available</p>
+            <p><strong>Abstract:</strong> Introduction of the Φ metric for proactive alignment measurement through parametric resonance analysis.</p>
+        </div>
+        
+        <div class="paper">
+            <h3>Ethical Framework Alignment via Parametric Analysis</h3>
+            <p><strong>Authors:</strong> Research Team, Φ Framework Project</p>
+            <p><strong>Status:</strong> In preparation</p>
+            <p><strong>Abstract:</strong> Application of Φ to compare different ethical frameworks across multiple AI systems.</p>
+        </div>
+    </div>
+    
+    <div class="section" id="research">
+        <h2>Research Directions</h2>
+        
+        <h3>Open Questions</h3>
+        <ul>
+            <li>Optimal input stimulus sets for Φ measurement</li>
+            <li>Φ convergence rates during training</li>
+            <li>Cross-architecture Φ generalization</li>
+            <li>Relationship between Φ and downstream task performance</li>
+        </ul>
+        
+        <h3>Collaboration Opportunities</h3>
+        <p>The Φ Framework welcomes research collaborations in:</p>
+        <ul>
+            <li>Experimental validation studies</li>
+            <li>Theoretical extensions</li>
+            <li>Application to specific domains (healthcare, education, etc.)</li>
+            <li>Integration with existing alignment frameworks</li>
+        </ul>
+    </div>
+    
+    <a href="index.html" class="back-link">← Back to Interactive Demo</a>
+    
+    <footer>
+        <p>Φ Framework Academic Portal • Research Edition</p>
+        <p>Contact: research@phiframework.org • GitHub: <a href="https://github.com/THEJEWISHSTATE/parametric-resonance" style="color: #3498db;">Repository</a></p>
+        <p>Last updated: December 2024</p>
+    </footer>
 </body>
 </html>
