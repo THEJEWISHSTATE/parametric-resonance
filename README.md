@@ -8,7 +8,6 @@ cd parametric-resonance
 pip install -r requirements.txt
 python examples/basic_usage.py
 
-text
 
 ## Features
 
