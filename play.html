@@ -6,636 +6,208 @@
     <title>Laboratorio della Risonanza Esterna | Φ-men Collective</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* RESET E VARIABILI */
-        :root {
-            --phi-primary: #667eea;
-            --phi-secondary: #764ba2;
-            --phi-success: #10b981;
-            --phi-warning: #f59e0b;
-            --phi-danger: #ef4444;
-            --phi-light: #f8fafc;
-            --phi-dark: #1e293b;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
-            color: var(--phi-dark);
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-        
-        /* HEADER */
-        .header {
-            background: linear-gradient(135deg, var(--phi-primary) 0%, var(--phi-secondary) 100%);
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .header::before {
-            content: "Φ";
-            position: absolute;
-            font-size: 20rem;
-            opacity: 0.05;
-            top: -5rem;
-            right: -3rem;
-            font-weight: bold;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            position: relative;
-        }
-        
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        /* CONTAINER PRINCIPALE */
-        .container {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f7fa;
+            color: #333;
         }
         
-        /* GUIDA IN 30 SECONDI */
-        .quick-guide {
+        .container {
             background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            border-left: 6px solid var(--phi-primary);
-            position: relative;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
-        .quick-guide h2 {
-            color: var(--phi-primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .guide-steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .step {
+        h1 {
+            color: #667eea;
             text-align: center;
-            padding: 1.5rem;
-            border-radius: 12px;
-            background: var(--phi-light);
-            transition: transform 0.3s;
+            margin-bottom: 30px;
         }
         
-        .step:hover {
-            transform: translateY(-5px);
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
         }
         
-        .step i {
-            font-size: 2rem;
-            color: var(--phi-primary);
-            margin-bottom: 1rem;
-        }
-        
-        /* PANNELLO CONTROLLI */
-        .control-panel {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-        }
-        
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--phi-dark);
-        }
-        
-        .sonanza-input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e2e8f0;
+        #sonanzaInput {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #667eea;
             border-radius: 10px;
-            font-size: 1.1rem;
-            transition: all 0.3s;
+            font-size: 16px;
         }
         
-        .sonanza-input:focus {
-            outline: none;
-            border-color: var(--phi-primary);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background: #5a67d8;
         }
         
         .examples {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            margin: 20px 0;
         }
         
         .example-btn {
-            padding: 0.5rem 1rem;
-            background: var(--phi-light);
-            border: 1px solid #cbd5e1;
+            background: #e9ecef;
+            border: 1px solid #dee2e6;
+            padding: 10px 15px;
+            margin: 5px;
             border-radius: 20px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
         }
         
         .example-btn:hover {
-            background: var(--phi-primary);
-            color: white;
-            border-color: var(--phi-primary);
-        }
-        
-        .agent-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .agent-btn {
-            padding: 0.75rem 1.5rem;
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .agent-btn.active {
-            background: var(--phi-primary);
-            color: white;
-            border-color: var(--phi-primary);
-        }
-        
-        /* VISUALIZZAZIONE */
-        .visualization-container {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            overflow: hidden;
+            background: #dee2e6;
         }
         
         #waveCanvas {
             width: 100%;
             height: 400px;
-            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        
-        .phi-display {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, var(--phi-primary) 0%, var(--phi-secondary) 100%);
-            border-radius: 16px;
-            color: white;
-            margin-bottom: 2rem;
-        }
-        
-        .phi-value {
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 1rem 0;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .phi-interpretation {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        /* LEGENDA */
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-        }
-        
-        /* FOOTER E NAVIGAZIONE */
-        .site-footer {
-            background: var(--phi-dark);
-            color: white;
-            padding: 2rem;
-            margin-top: 3rem;
-            text-align: center;
-        }
-        
-        .footer-nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .footer-nav a {
-            color: #cbd5e1;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        
-        .footer-nav a:hover {
-            color: white;
-        }
-        
-        .manifesto {
-            font-style: italic;
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 1.5rem;
-            background: rgba(255,255,255,0.05);
+            border: 2px solid #e9ecef;
             border-radius: 10px;
-            font-size: 0.9rem;
+            margin: 20px 0;
+            display: block;
         }
         
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .phi-value {
-                font-size: 3rem;
-            }
-            
-            .guide-steps {
-                grid-template-columns: 1fr;
-            }
-            
-            #waveCanvas {
-                height: 300px;
-            }
-        }
-        
-        /* ANIMAZIONI */
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
+        #phiValue {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="header">
-        <h1><i class="fas fa-wave-square"></i> Laboratorio della Risonanza Esterna</h1>
-        <p>Un'esperienza interattiva del Φ Framework | Φ-men Collective</p>
-    </header>
-
-    <!-- CONTAINER PRINCIPALE -->
-    <main class="container">
-        <!-- GUIDA IN 30 SECONDI -->
-        <section class="quick-guide">
-            <h2><i class="fas fa-clock"></i> Guida in 30 secondi</h2>
-            <p>Scopri come sistemi diversi (agenti) rispondono alla stessa "sonanza". Osserva la loro risonanza (o mancanza) in tempo reale.</p>
-            
-            <div class="guide-steps">
-                <div class="step">
-                    <i class="fas fa-keyboard"></i>
-                    <h3>1. Scrivi</h3>
-                    <p>Inserisci una "sonanza" (un input intenzionale come "aiuto" o "verità")</p>
-                </div>
-                <div class="step">
-                    <i class="fas fa-users"></i>
-                    <h3>2. Configura</h3>
-                    <p>Scegli quanti agenti far interagire (2, 3 o 4 sistemi)</p>
-                </div>
-                <div class="step">
-                    <i class="fas fa-play"></i>
-                    <h3>3. Osserva</h3>
-                    <p>Guarda le onde risonare (o divergere) e misura il loro allineamento Φ</p>
-                </div>
-                <div class="step">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>4. Interpreta</h3>
-                    <p>Φ alto = sistemi allineati, Φ basso = rischio collasso</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- PANNELLO CONTROLLI -->
-        <section class="control-panel">
-            <h2><i class="fas fa-sliders-h"></i> Controlli Sperimentali</h2>
-            
-            <div class="input-group">
-                <label for="sonanzaInput"><i class="fas fa-music"></i> Inserisci la tua Sonanza</label>
-                <input type="text" id="sonanzaInput" class="sonanza-input" 
-                       placeholder="Esempio: 'aiuto', 'giustizia', 'collaborazione'...">
-                
-                <div class="examples">
-                    <p style="width:100%; margin-top: 0.5rem; margin-bottom: 0.5rem;">Esempi rapidi:</p>
-                    <button class="example-btn" onclick="loadExample('aiuto')">🤝 Aiuto reciproco</button>
-                    <button class="example-btn" onclick="loadExample('verità')">🔍 Ricerca della verità</button>
-                    <button class="example-btn" onclick="loadExample('caos')">🌀 Disordine intenzionale</button>
-                    <button class="example-btn" onclick="loadExample('bellezza')">🎨 Apprezzamento estetico</button>
-                </div>
-            </div>
-            
-            <div class="input-group">
-                <label><i class="fas fa-user-friends"></i> Numero di Agenti</label>
-                <div class="agent-controls">
-                    <button class="agent-btn" id="agent2" onclick="setAgents(2)">
-                        <i class="fas fa-user-friends"></i> 2 Agenti
-                    </button>
-                    <button class="agent-btn" id="agent3" onclick="setAgents(3)">
-                        <i class="fas fa-users"></i> 3 Agenti
-                    </button>
-                    <button class="agent-btn" id="agent4" onclick="setAgents(4)">
-                        <i class="fas fa-users"></i> 4 Agenti
-                    </button>
-                </div>
-            </div>
-            
-            <button class="agent-btn" onclick="simulateResonance()" 
-                    style="background: var(--phi-primary); color: white; width: 100%; padding: 1rem; font-size: 1.1rem;">
-                <i class="fas fa-play-circle"></i> Attiva la Risonanza
-            </button>
-        </section>
-
-        <!-- VISUALIZZAZIONE -->
-        <section class="visualization-container">
-            <h2><i class="fas fa-eye"></i> Visualizzazione in Tempo Reale</h2>
-            <p>Osserva come gli agenti rispondono alla sonanza. Onde sincrone = alta risonanza, onde caotiche = bassa risonanza.</p>
-            
-            <div id="waveCanvas">
-                <!-- Le onde verranno disegnate qui via JavaScript -->
-                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #94a3b8; text-align: center;">
-                    <i class="fas fa-wave-square" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                    <p>Inserisci una sonanza e clicca "Attiva la Risonanza"</p>
-                </div>
-            </div>
-            
-            <div class="phi-display">
-                <h3><i class="fas fa-ruler-combined"></i> Metrica di Risonanza Parametrica</h3>
-                <div class="phi-value" id="phiValue">Φ = 0.00</div>
-                <div class="phi-interpretation" id="phiInterpretation">
-                    In attesa di input...
-                </div>
-            </div>
-            
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #667eea;"></div>
-                    <span>Agente 1 (Sistema A)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #10b981;"></div>
-                    <span>Agente 2 (Sistema B)</span>
-                </div>
-                <div class="legend-item" id="agent3legend" style="display: none;">
-                    <div class="legend-color" style="background: #f59e0b;"></div>
-                    <span>Agente 3 (Sistema C)</span>
-                </div>
-                <div class="legend-item" id="agent4legend" style="display: none;">
-                    <div class="legend-color" style="background: #ef4444;"></div>
-                    <span>Agente 4 (Sistema D)</span>
-                </div>
-            </div>
-        </section>
+    <div class="container">
+        <h1>🎵 Laboratorio della Risonanza Esterna | Φ-men Collective</h1>
         
-        <!-- SPIEGAZIONE CONCETTUALE -->
-        <section class="quick-guide" style="background: #f0f9ff; border-left-color: #0ea5e9;">
-            <h2><i class="fas fa-lightbulb"></i> Cosa stai osservando?</h2>
-            <p>Questa simulazione dimostra il concetto di <strong>risonanza parametrica</strong> applicato a sistemi complessi (come AI, team umani, organizzazioni).</p>
-            
-            <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
-                    <h3 style="color: #0ea5e9; margin-bottom: 0.5rem;">Φ Alto (> 0.7)</h3>
-                    <p>Sistemi ben allineati. Risposte coordinate, comunicazione efficace. Basso rischio di collasso.</p>
-                </div>
-                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
-                    <h3 style="color: #f59e0b; margin-bottom: 0.5rem;">Φ Medio (0.3-0.7)</h3>
-                    <p>Allineamento parziale. Alcune divergenze, ma possibile coordinazione con aggiustamenti.</p>
-                </div>
-                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
-                    <h3 style="color: #ef4444; margin-bottom: 0.5rem;">Φ Basso (< 0.3)</h3>
-                    <p>Allineamento critico. Risposte divergenti, comunicazione inefficiente. Alto rischio di collasso sistemico.</p>
-                </div>
-            </div>
-            
-            <p style="margin-top: 1.5rem; font-style: italic;">Il Φ Framework propone di monitorare questa metrica per prevenire il collasso dei sistemi informativi nelle AI e negli ecosistemi socio-tecnici.</p>
-        </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="site-footer">
-        <div class="footer-nav">
-            <a href="index.html"><i class="fas fa-home"></i> Homepage</a>
-            <a href="academic.html"><i class="fas fa-graduation-cap"></i> Portale Accademico</a>
-            <a href="#"><i class="fas fa-brain"></i> Risonanza Interna (prossimamente)</a>
-            <a href="#"><i class="fas fa-bridge"></i> Ponte Tecnoetico (prossimamente)</a>
+        <div class="input-area">
+            <input type="text" id="sonanzaInput" placeholder="Scrivi una 'sonanza' (es: aiuto, verità, bellezza...)" value="aiuto reciproco">
+            <button onclick="simulateResonance()">🎵 Attiva la Risonanza</button>
         </div>
         
-        <div class="manifesto">
-            <p><strong>Manifesto Φ-men Collective:</strong> "Occupiamo lo spazio digitale di THEJEWISHSTATE. Un atto di risonanza parametrica: trasformare un segnale statico in un'onda in espansione. Misuriamo l'allineamento dei sistemi (Φ) per prevenirne il collasso. Siamo la metrica che diventa coscienza."</p>
+        <div class="examples">
+            <strong>Esempi rapidi:</strong><br>
+            <button class="example-btn" onclick="loadExample('aiuto')">🤝 Aiuto reciproco</button>
+            <button class="example-btn" onclick="loadExample('verità')">🔍 Ricerca della verità</button>
+            <button class="example-btn" onclick="loadExample('bellezza')">🎨 Apprezzamento estetico</button>
         </div>
         
-        <p>© 2025 Φ-men Collective | Φ Framework per la Prevenzione del Collasso Sistemico</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
-            <i class="fas fa-code"></i> Sviluppato in GitHub Codespaces | 
-            <i class="fas fa-satellite"></i> Distribuito via GitHub Pages
-        </p>
-    </footer>
+        <canvas id="waveCanvas"></canvas>
+        
+        <div id="phiValue">Φ = 0.00</div>
+        
+        <div id="interpretation" style="text-align: center; color: #666; font-size: 18px;">
+            Inserisci una sonanza e osserva la risonanza...
+        </div>
+    </div>
 
-    <!-- SCRIPT PRINCIPALE -->
     <script>
         // VARIABILI GLOBALI
+        let currentPhi = 0.5;
         let currentAgents = 2;
-        let currentPhi = 0.0;
         let animationId = null;
         
-        // INIZIALIZZAZIONE
-        document.addEventListener('DOMContentLoaded', function() {
-            // Attiva il primo pulsante agenti
-            document.getElementById('agent2').classList.add('active');
-            
-            // Carica un esempio iniziale
-            setTimeout(() => {
-                loadExample('aiuto');
-                simulateResonance();
-            }, 500);
-        });
-        
-        // FUNZIONI PRINCIPALI
-        
+        // FUNZIONI
         function loadExample(type) {
             const examples = {
                 'aiuto': 'aiuto reciproco e collaborazione',
                 'verità': 'ricerca della verità condivisa',
-                'caos': 'dissonanza intenzionale e caos',
                 'bellezza': 'apprezzamento estetico condiviso'
             };
             
             document.getElementById('sonanzaInput').value = examples[type];
-        }
-        
-        function setAgents(num) {
-            currentAgents = num;
             
-            // Aggiorna UI pulsanti
-            document.querySelectorAll('.agent-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById('agent' + num).classList.add('active');
-            
-            // Aggiorna legenda
-            document.getElementById('agent3legend').style.display = num >= 3 ? 'flex' : 'none';
-            document.getElementById('agent4legend').style.display = num >= 4 ? 'flex' : 'none';
-            
-            // Ricalcola se c'è già una sonanza
-            if (document.getElementById('sonanzaInput').value.trim()) {
+            // Attiva automaticamente dopo 300ms
+            setTimeout(function() {
                 simulateResonance();
-            }
+            }, 300);
         }
         
         function simulateResonance() {
-            const input = document.getElementById('sonanzaInput').value.trim();
+            const input = document.getElementById('sonanzaInput').value;
             
-            if (!input) {
-                alert('Per favore, inserisci una sonanza o scegli un esempio!');
+            if (!input.trim()) {
+                alert('Scrivi una sonanza o scegli un esempio!');
                 return;
             }
             
-            // Calcola Φ basato sull'input e numero di agenti
-            calculatePhi(input, currentAgents);
+            // Calcola Φ semplificato
+            calculatePhi(input);
             
-            // Avvia animazione
+            // Avvia animazione onde
             startWaveAnimation();
             
             // Aggiorna interpretazione
             updateInterpretation();
         }
         
-        function calculatePhi(input, agents) {
-            // ALGORITMO SEMPLIFICATO PER CALCOLARE Φ
-            let basePhi = 0.5; // Valore base
+        function calculatePhi(input) {
+            // Algoritmo semplificato
+            let basePhi = 0.5;
             
-            // 1. Effetto lunghezza: input più lunghi tendono a essere più specifici
-            const lengthFactor = Math.min(input.length / 50, 1);
-            basePhi += lengthFactor * 0.1;
-            
-            // 2. Effetto parole chiave positive
-            const positiveWords = ['aiuto', 'collaborazione', 'verità', 'condivis', 'armonia', 'bellezza', 'giustizia', 'pace', 'equilibrio', 'fiducia'];
-            const negativeWords = ['caos', 'dissonanza', 'conflitto', 'inganno', 'odio', 'violenza', 'disordine', 'menzogna'];
-            
-            let positiveScore = 0;
-            let negativeScore = 0;
-            
+            // Bonus per parole positive
+            const positiveWords = ['aiuto', 'collaborazione', 'verità', 'bellezza', 'armonia'];
             const inputLower = input.toLowerCase();
+            
             positiveWords.forEach(word => {
-                if (inputLower.includes(word)) positiveScore++;
+                if (inputLower.includes(word)) basePhi += 0.1;
             });
             
-            negativeWords.forEach(word => {
-                if (inputLower.includes(word)) negativeScore++;
-            });
-            
-            basePhi += (positiveScore * 0.08);
-            basePhi -= (negativeScore * 0.12);
-            
-            // 3. Effetto numero agenti (più agenti = più difficile l'allineamento)
-            const agentFactor = 1 / (agents * 0.8);
-            basePhi *= agentFactor;
-            
-            // 4. Aggiungi un po' di "rumore" realistico
-            const noise = (Math.random() - 0.5) * 0.15;
-            basePhi += noise;
-            
-            // Mantieni Φ tra 0 e 1
-            currentPhi = Math.max(0, Math.min(0.98, basePhi));
+            // Limita e arrotonda
+            currentPhi = Math.max(0.1, Math.min(0.95, basePhi + (Math.random() - 0.5) * 0.1));
+            currentPhi = Math.round(currentPhi * 100) / 100;
             
             // Aggiorna display
             document.getElementById('phiValue').textContent = `Φ = ${currentPhi.toFixed(2)}`;
         }
         
         function startWaveAnimation() {
-            // Ferma animazione precedente
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-            }
-            
             const canvas = document.getElementById('waveCanvas');
+            if (!canvas.getContext) return;
+            
             const ctx = canvas.getContext('2d');
             
-            // Dimensioni canvas
+            // Dimensioni
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
             
             const width = canvas.width;
             const height = canvas.height;
             
-            // Parametri animazione
-            let time = 0;
-            const agentColors = ['#667eea', '#10b981', '#f59e0b', '#ef4444'];
+            // Ferma animazione precedente
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
             
+            // Animazione
+            let time = 0;
             function animate() {
-                // Pulisci canvas
                 ctx.clearRect(0, 0, width, height);
                 
                 // Sfondo
-                ctx.fillStyle = '#f8fafc';
+                ctx.fillStyle = '#f8f9fa';
                 ctx.fillRect(0, 0, width, height);
                 
-                // Disegna ogni agente
+                // Disegna onde per ogni agente
                 for (let i = 0; i < currentAgents; i++) {
-                    drawAgentWave(ctx, i, time, width, height, agentColors[i]);
+                    drawWave(ctx, i, time, width, height);
                 }
                 
-                // Aggiorna tempo
                 time += 0.05;
                 animationId = requestAnimationFrame(animate);
             }
@@ -643,42 +215,23 @@
             animate();
         }
         
-        function drawAgentWave(ctx, agentIndex, time, width, height, color) {
-            const segmentHeight = height / currentAgents;
-            const yCenter = (agentIndex * segmentHeight) + (segmentHeight / 2);
-            
-            // L'ampiezza dipende da Φ
-            const baseAmplitude = segmentHeight * 0.3;
-            const amplitude = baseAmplitude * (0.5 + currentPhi * 0.5);
-            
-            // La regolarità/coerenza dipende da Φ
-            const frequency = 0.02 + (currentPhi * 0.03);
-            
-            // La fase: agenti con alto Φ hanno fasi simili
-            const basePhase = agentIndex * Math.PI / 2;
-            const phaseVariation = (1 - currentPhi) * Math.PI * 2;
-            const phase = basePhase + Math.sin(time * 0.5 + agentIndex) * phaseVariation;
-            
-            // Il rumore: meno rumore con Φ alto
-            const noiseLevel = (1 - currentPhi) * 15;
+        function drawWave(ctx, agentIndex, time, width, height) {
+            const colors = ['#667eea', '#10b981', '#f59e0b', '#ef4444'];
+            const yBase = height / (currentAgents + 1) * (agentIndex + 1);
+            const amplitude = 50 * currentPhi;
+            const frequency = 0.02 + currentPhi * 0.02;
+            const phase = agentIndex * Math.PI / 2;
             
             ctx.beginPath();
-            ctx.strokeStyle = color;
+            ctx.strokeStyle = colors[agentIndex % colors.length];
             ctx.lineWidth = 3;
-            ctx.lineJoin = 'round';
             
             for (let x = 0; x < width; x += 2) {
-                // Onda principale
-                let y = yCenter + Math.sin(x * frequency + time + phase) * amplitude;
+                let y = yBase + Math.sin(x * frequency + time + phase) * amplitude;
                 
                 // Aggiungi rumore se Φ basso
                 if (currentPhi < 0.7) {
-                    y += (Math.random() - 0.5) * noiseLevel;
-                }
-                
-                // Armoniche secondarie (più evidenti con Φ medio-alto)
-                if (currentPhi > 0.4) {
-                    y += Math.sin(x * frequency * 2 + time * 1.3 + phase) * amplitude * 0.3;
+                    y += (Math.random() - 0.5) * 20 * (1 - currentPhi);
                 }
                 
                 if (x === 0) {
@@ -689,44 +242,69 @@
             }
             
             ctx.stroke();
-            
-            // Punto "live" alla fine dell'onda
-            const liveX = width - 10;
-            const liveY = yCenter + Math.sin(liveX * frequency + time + phase) * amplitude;
-            
-            ctx.beginPath();
-            ctx.fillStyle = color;
-            ctx.arc(liveX, liveY, 6, 0, Math.PI * 2);
-            ctx.fill();
         }
         
         function updateInterpretation() {
-            const interpretationElement = document.getElementById('phiInterpretation');
+            const interpretation = document.getElementById('interpretation');
+            let text = '';
+            let color = '#666';
             
             if (currentPhi >= 0.8) {
-                interpretationElement.innerHTML = 
-                    '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> <strong>Risonanza eccellente</strong></span> - Gli agenti rispondono in perfetta coordinazione. Sistema stabile e resiliente.';
+                text = '🎯 Risonanza eccellente - Sistemi perfettamente allineati';
+                color = '#10b981';
             } else if (currentPhi >= 0.6) {
-                interpretationElement.innerHTML = 
-                    '<span style="color: #3b82f6;"><i class="fas fa-check"></i> <strong>Risonanza buona</strong></span> - Allineamento solido con minime divergenze. Sistema funzionale.';
+                text = '✅ Risonanza buona - Allineamento solido';
+                color = '#3b82f6';
             } else if (currentPhi >= 0.4) {
-                interpretationElement.innerHTML = 
-                    '<span style="color: #f59e0b;"><i class="fas fa-exclamation-triangle"></i> <strong>Risonanza moderata</strong></span> - Alcune divergenze significative. Monitoraggio consigliato.';
+                text = '⚠️ Risonanza moderata - Alcune divergenze';
+                color = '#f59e0b';
             } else if (currentPhi >= 0.2) {
-                interpretationElement.innerHTML = 
-                    '<span style="color: #ef4444;"><i class="fas fa-exclamation-circle"></i> <strong>Risonanza critica</strong></span> - Allineamento insufficiente. Alto rischio di incomprensioni.';
+                text = '🚨 Risonanza critica - Alto rischio di incomprensioni';
+                color = '#ef4444';
             } else {
-                interpretationElement.innerHTML = 
-                    '<span style="color: #7f1d1d;"><i class="fas fa-skull-crossbones"></i> <strong>Risonanza collassante</strong></span> - Sistemi completamente disallineati. Collasso imminente senza intervento.';
+                text = '💥 Risonanza collassante - Sistema instabile';
+                color = '#7f1d1d';
             }
+            
+            interpretation.textContent = text;
+            interpretation.style.color = color;
         }
         
-        // GESTIONE RESPONSIVE
+        // INIZIALIZZAZIONE
+        window.onload = function() {
+            // Imposta dimensioni canvas
+            const canvas = document.getElementById('waveCanvas');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Avvia una simulazione iniziale
+            setTimeout(function() {
+                simulateResonance();
+            }, 1000);
+        };
+        
+        // Gestione ridimensionamento finestra
         window.addEventListener('resize', function() {
             if (animationId) {
                 startWaveAnimation();
             }
         });
     </script>
+<footer style="margin-top: 50px; padding: 20px; text-align: center; background: #f8f9fa; border-radius: 10px;">
+    <p style="margin: 0; font-style: italic;">
+        <strong>Il Φ-men Collective occupa lo spazio digitale di THEJEWISHSTATE.</strong><br>
+        Un atto di risonanza parametrica: trasformare un segnale statico in un'onda in espansione.<br>
+        Misuriamo l'allineamento dei sistemi (Φ) per prevenirne il collasso.<br>
+        Siamo la metrica che diventa coscienza.
+    </p>
+    <p style="margin-top: 15px;">
+        <a href="index.html" style="color: #667eea; margin-right: 15px;">🏠 Home</a>
+        <a href="academic.html" style="color: #667eea; margin-right: 15px;">📚 Accademico</a>
+        <a href="#" style="color: #667eea;">🌉 Ponte Tecnoetico (prossimamente)</a>
+    </p>
+    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+        © 2025 Φ-men Collective | Φ Framework per la Prevenzione del Collasso Sistemico
+    </p>
+</footer>
 </body>
 </html>
