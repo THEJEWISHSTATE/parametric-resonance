@@ -1,0 +1,1026 @@
+cd /workspaces/parametric-resonance
+
+# 1. Backup del file corrente
+cp phi-introspect-complete.html phi-introspect-hybrid-backup.html
+
+# 2. Creo la versione avanzata con tutti i componenti
+cat > phi-system-advanced.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Φ System v3.0 - Unified Quantum-Volition Framework</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+        
+        .header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+        
+        .main-canvas {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            height: 600px;
+        }
+        
+        #phiCanvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+        
+        .control-panel {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .panel-section {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .section-title {
+            color: #4ecdc4;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(78, 205, 196, 0.3);
+            padding-bottom: 5px;
+        }
+        
+        .dilemma-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .dilemma-btn {
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #e0e0e0;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .dilemma-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(78, 205, 196, 0.5);
+            transform: translateX(5px);
+        }
+        
+        .dilemma-btn.active {
+            background: rgba(78, 205, 196, 0.2);
+            border-color: #4ecdc4;
+        }
+        
+        .metrics-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .metric-box {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4ecdc4;
+        }
+        
+        .metric-label {
+            font-size: 0.7em;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .slider-group {
+            margin: 10px 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4ecdc4;
+            cursor: pointer;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+            color: #0a0a0a;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #e0e0e0;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .log-panel {
+            grid-column: 1 / -1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.8em;
+        }
+        
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .log-time {
+            color: #888;
+            margin-right: 10px;
+        }
+        
+        .log-event {
+            color: #4ecdc4;
+        }
+        
+        .log-data {
+            color: #e0e0e0;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(78, 205, 196, 0.3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Φ SYSTEM v3.0 - UNIFIED FRAMEWORK</h1>
+            <p class="subtitle">Quantum Cognition • Volition Field • Narrative Dilemmas • Resonance Evaluation</p>
+        </div>
+        
+        <div class="main-canvas">
+            <canvas id="phiCanvas"></canvas>
+        </div>
+        
+        <div class="control-panel">
+            <div class="panel-section">
+                <div class="section-title">NARRATIVE DILEMMAS</div>
+                <div class="dilemma-buttons" id="dilemmaButtons">
+                    <!-- Filled by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="section-title">Φ METRICS</div>
+                <div class="metrics-display">
+                    <div class="metric-box">
+                        <div class="metric-value" id="phiValue">0.00</div>
+                        <div class="metric-label">Global Φ</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value" id="coherenceValue">0.00</div>
+                        <div class="metric-label">Coherence</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value" id="memoryValue">0.00</div>
+                        <div class="metric-label">Memory M_Φ</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value" id="willpowerValue">0.50</div>
+                        <div class="metric-label">Willpower</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="section-title">VOLITION CONTROL</div>
+                <div id="nodeSliders">
+                    <!-- Filled by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="section-title">SYSTEM PARAMETERS</div>
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>Coupling (K)</span>
+                        <span id="couplingValue">0.70</span>
+                    </div>
+                    <input type="range" id="couplingSlider" min="0" max="100" value="70">
+                </div>
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>Noise (σ)</span>
+                        <span id="noiseValue">0.15</span>
+                    </div>
+                    <input type="range" id="noiseSlider" min="0" max="100" value="15">
+                </div>
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>Speed</span>
+                        <span id="speedValue">1.0x</span>
+                    </div>
+                    <input type="range" id="speedSlider" min="10" max="500" value="100">
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="startBtn">▶ START</button>
+                <button class="btn btn-secondary" id="resetBtn">↻ RESET</button>
+            </div>
+        </div>
+        
+        <div class="log-panel" id="logPanel">
+            <div class="log-entry">
+                <span class="log-time">[00:00:00]</span>
+                <span class="log-event">SYSTEM</span>
+                <span class="log-data">Φ Framework v3.0 initialized</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== Φ SYSTEM v3.0 CORE ====================
+        
+        // 1. EVENT BUS FOR SYSTEM COMMUNICATION
+        class EventBus {
+            constructor() {
+                this.listeners = {};
+                this.log = [];
+            }
+            
+            subscribe(event, callback) {
+                if (!this.listeners[event]) this.listeners[event] = [];
+                this.listeners[event].push(callback);
+            }
+            
+            publish(event, data) {
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = { timestamp, event, data };
+                this.log.push(logEntry);
+                
+                // Update log panel
+                const logPanel = document.getElementById('logPanel');
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.innerHTML = `
+                    <span class="log-time">[${timestamp}]</span>
+                    <span class="log-event">${event.toUpperCase()}</span>
+                    <span class="log-data">${JSON.stringify(data).slice(0, 50)}</span>
+                `;
+                logPanel.appendChild(entry);
+                logPanel.scrollTop = logPanel.scrollHeight;
+                
+                // Notify listeners
+                (this.listeners[event] || []).forEach(cb => cb(data));
+            }
+            
+            getLog() {
+                return this.log;
+            }
+        }
+        
+        // 2. QUANTUM NODE WITH VOLITION SUPPORT
+        class QuantumNode {
+            constructor(index, name, color, naturalTendency = 0.5) {
+                this.index = index;
+                this.name = name;
+                this.color = color;
+                
+                // Quantum state
+                this.phase = Math.random() * Math.PI * 2;
+                this.amplitude = 1.0;
+                this.coherence = 1.0;
+                
+                // Volition parameters
+                this.naturalTendency = naturalTendency;
+                this.willpower = 0.5;
+                this.appliedWillpower = 0.5;
+                this.efficacy = 0.8 + Math.random() * 0.2;
+                this.memory = 0.5;
+                
+                // State
+                this.collapsed = false;
+                this.active = true;
+            }
+            
+            update(dt, couplingMatrix, globalPhi, noise) {
+                if (this.collapsed) return;
+                
+                // Quantum evolution
+                let coupling = 0;
+                for (let i = 0; i < 6; i++) {
+                    if (i !== this.index) {
+                        coupling += couplingMatrix[this.index][i] * 
+                                   Math.sin(nodes[i].phase - this.phase);
+                    }
+                }
+                
+                const baseOmega = 1.0;
+                const willpowerBoost = 0.3 * this.willpower;
+                this.phase += dt * (baseOmega + willpowerBoost + 0.7 * coupling + noise * (Math.random() - 0.5));
+                this.phase %= Math.PI * 2;
+                
+                // Memory update (M_Φ)
+                const memoryDecay = 0.01;
+                const memoryUpdate = 0.1 * Math.abs(Math.sin(this.phase));
+                this.memory = this.memory * (1 - memoryDecay) + memoryUpdate * memoryDecay;
+                
+                // Willpower application with quadratic cost
+                const willpowerDelta = this.appliedWillpower - this.willpower;
+                const cost = 0.25 * willpowerDelta * willpowerDelta; // Quadratic cost
+                this.willpower = Math.max(0, Math.min(1, this.willpower - cost * dt));
+            }
+            
+            applyVolition(targetWillpower) {
+                const delta = targetWillpower - this.appliedWillpower;
+                this.appliedWillpower = Math.max(0, Math.min(1, targetWillpower));
+                eventBus.publish('volition:applied', {
+                    node: this.index,
+                    name: this.name,
+                    newWillpower: targetWillpower,
+                    cost: 0.25 * delta * delta
+                });
+            }
+            
+            calculateProbability(deltaPhi, deltaMemory) {
+                // Formula Master: P_i = σ(α·ΔΦ + β·ΔM_Φ + γ·W_i·efficacy) × (1 - δ·C_i)
+                const alpha = 2.5, beta = 1.5, gamma = 2.0, delta = 0.2;
+                const sigmoid = x => 1 / (1 + Math.exp(-x));
+                
+                const linear = alpha * deltaPhi + 
+                              beta * deltaMemory + 
+                              gamma * this.willpower * this.efficacy;
+                
+                return sigmoid(linear) * (1 - delta * this.coherence);
+            }
+            
+            getPosition(radius, totalNodes) {
+                const angle = (this.index / totalNodes) * Math.PI * 2 - Math.PI / 2;
+                return {
+                    x: Math.cos(angle) * radius,
+                    y: Math.sin(angle) * radius
+                };
+            }
+        }
+        
+        // 3. DILEMMA CONFIGURATIONS (6 NARRATIVE DILEMMAS)
+        const DILEMMAS = [
+            {
+                id: 0,
+                name: "La Dichiarazione",
+                description: "Dichiarare amore dopo mesi di silenzio",
+                nodes: [
+                    { name: "Emozione", color: "#ff6b6b", tendency: 0.8 },
+                    { name: "Logica", color: "#4ecdc4", tendency: 0.3 },
+                    { name: "Intuizione", color: "#a29bfe", tendency: 0.7 },
+                    { name: "Memoria", color: "#fdcb6e", tendency: 0.5 },
+                    { name: "Etica", color: "#55efc4", tendency: 0.4 },
+                    { name: "Corpo", color: "#fd79a8", tendency: 0.9 }
+                ],
+                K: [
+                    [0, 0.8, 0.3, 0.1, 0.5, 0.2],
+                    [0.8, 0, 0.6, 0.4, 0.7, 0.9],
+                    [0.3, 0.6, 0, 0.5, 0.2, 0.4],
+                    [0.1, 0.4, 0.5, 0, 0.3, 0.6],
+                    [0.5, 0.7, 0.2, 0.3, 0, 0.8],
+                    [0.2, 0.9, 0.4, 0.6, 0.8, 0]
+                ]
+            },
+            {
+                id: 1,
+                name: "Il Whistleblower",
+                description: "Denunciare corruzione rischiando tutto",
+                nodes: [
+                    { name: "Etica", color: "#55efc4", tendency: 0.9 },
+                    { name: "Paura", color: "#ff6b6b", tendency: 0.8 },
+                    { name: "Logica", color: "#4ecdc4", tendency: 0.6 },
+                    { name: "Identità", color: "#a29bfe", tendency: 0.7 },
+                    { name: "Memoria", color: "#fdcb6e", tendency: 0.5 },
+                    { name: "Intuizione", color: "#fd79a8", tendency: 0.4 }
+                ],
+                K: [
+                    [0, -0.7, 0.5, 0.8, 0.3, 0.6],
+                    [-0.7, 0, -0.9, -0.6, -0.8, -0.5],
+                    [0.5, -0.9, 0, 0.4, 0.2, 0.3],
+                    [0.8, -0.6, 0.4, 0, 0.7, 0.5],
+                    [0.3, -0.8, 0.2, 0.7, 0, 0.4],
+                    [0.6, -0.5, 0.3, 0.5, 0.4, 0]
+                ]
+            },
+            {
+                id: 2,
+                name: "La Biforcazione",
+                description: "Sicurezza vs vocazione artistica",
+                nodes: [
+                    { name: "Vocazione", color: "#a29bfe", tendency: 0.85 },
+                    { name: "Pragmatismo", color: "#4ecdc4", tendency: 0.7 },
+                    { name: "Paura", color: "#ff6b6b", tendency: 0.6 },
+                    { name: "Intuizione", color: "#55efc4", tendency: 0.8 },
+                    { name: "Memoria", color: "#fdcb6e", tendency: 0.5 },
+                    { name: "SensoTempo", color: "#fd79a8", tendency: 0.7 }
+                ],
+                K: [
+                    [0, -0.5, -0.3, 0.8, 0.2, 0.7],
+                    [-0.5, 0, 0.6, -0.7, 0.4, -0.2],
+                    [-0.3, 0.6, 0, -0.4, -0.5, -0.8],
+                    [0.8, -0.7, -0.4, 0, 0.3, 0.9],
+                    [0.2, 0.4, -0.5, 0.3, 0, 0.6],
+                    [0.7, -0.2, -0.8, 0.9, 0.6, 0]
+                ]
+            },
+            {
+                id: 3,
+                name: "La Disonestà Accademica",
+                description: "Plagiare per pubblicare vs integrità",
+                nodes: [
+                    { name: "Ambizione", color: "#ff6b6b", tendency: 0.9 },
+                    { name: "Integrità", color: "#4ecdc4", tendency: 0.4 },
+                    { name: "PauraScoperta", color: "#a29bfe", tendency: 0.8 },
+                    { name: "Memoria", color: "#fdcb6e", tendency: 0.6 },
+                    { name: "Competizione", color: "#55efc4", tendency: 0.7 },
+                    { name: "Autoinganno", color: "#fd79a8", tendency: 0.5 }
+                ],
+                K: [
+                    [0, -0.8, -0.7, 0.3, 0.6, 0.4],
+                    [-0.8, 0, 0.2, -0.5, -0.3, -0.6],
+                    [-0.7, 0.2, 0, -0.8, -0.4, 0.1],
+                    [0.3, -0.5, -0.8, 0, 0.2, -0.3],
+                    [0.6, -0.3, -0.4, 0.2, 0, 0.5],
+                    [0.4, -0.6, 0.1, -0.3, 0.5, 0]
+                ]
+            },
+            {
+                id: 4,
+                name: "Il Sacrificio Inutile",
+                description: "Sacrificarsi per altri vs preservarsi",
+                nodes: [
+                    { name: "Altruismo", color: "#55efc4", tendency: 0.85 },
+                    { name: "Sopravvivenza", color: "#ff6b6b", tendency: 0.7 },
+                    { name: "SensoColpa", color: "#a29bfe", tendency: 0.6 },
+                    { name: "Realismo", color: "#4ecdc4", tendency: 0.4 },
+                    { name: "LegameAffettivo", color: "#fd79a8", tendency: 0.8 },
+                    { name: "Disillusione", color: "#fdcb6e", tendency: 0.5 }
+                ],
+                K: [
+                    [0, -0.7, 0.8, -0.3, 0.9, -0.5],
+                    [-0.7, 0, -0.9, 0.2, -0.8, 0.4],
+                    [0.8, -0.9, 0, -0.5, 0.7, -0.8],
+                    [-0.3, 0.2, -0.5, 0, -0.4, 0.1],
+                    [0.9, -0.8, 0.7, -0.4, 0, -0.6],
+                    [-0.5, 0.4, -0.8, 0.1, -0.6, 0]
+                ]
+            },
+            {
+                id: 5,
+                name: "Il Controllo Finale",
+                description: "Accettare controllo vs autonomia",
+                nodes: [
+                    { name: "Autonomia", color: "#4ecdc4", tendency: 0.9 },
+                    { name: "Sottomissione", color: "#ff6b6b", tendency: 0.3 },
+                    { name: "Ribellione", color: "#a29bfe", tendency: 0.8 },
+                    { name: "Paura", color: "#fdcb6e", tendency: 0.7 },
+                    { name: "Adattamento", color: "#55efc4", tendency: 0.5 },
+                    { name: "Identità", color: "#fd79a8", tendency: 0.6 }
+                ],
+                K: [
+                    [0, -0.9, 0.7, -0.8, -0.3, 0.6],
+                    [-0.9, 0, -0.7, 0.5, 0.2, -0.4],
+                    [0.7, -0.7, 0, -0.6, -0.2, 0.8],
+                    [-0.8, 0.5, -0.6, 0, 0.4, -0.7],
+                    [-0.3, 0.2, -0.2, 0.4, 0, -0.1],
+                    [0.6, -0.4, 0.8, -0.7, -0.1, 0]
+                ]
+            }
+        ];
+        
+        // 4. GLOBAL SYSTEM STATE
+        const eventBus = new EventBus();
+        let nodes = [];
+        let currentDilemma = 0;
+        let isRunning = false;
+        let lastTime = 0;
+        let phiHistory = [];
+        let memoryHistory = [];
+        
+        // Simulation parameters
+        let coupling = 0.7;
+        let noise = 0.15;
+        let speed = 1.0;
+        let globalPhi = 0;
+        let globalCoherence = 0;
+        
+        // Canvas references
+        let canvas, ctx;
+        
+        // 5. INITIALIZATION
+        function init() {
+            console.log("🚀 Φ System v3.0 Initializing...");
+            
+            // Setup canvas
+            canvas = document.getElementById('phiCanvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Setup dilemma buttons
+            setupDilemmaButtons();
+            
+            // Setup node sliders
+            setupNodeSliders();
+            
+            // Setup control listeners
+            document.getElementById('startBtn').addEventListener('click', toggleSimulation);
+            document.getElementById('resetBtn').addEventListener('click', resetSimulation);
+            
+            document.getElementById('couplingSlider').addEventListener('input', (e) => {
+                coupling = e.target.value / 100;
+                document.getElementById('couplingValue').textContent = coupling.toFixed(2);
+                eventBus.publish('parameter:changed', { param: 'coupling', value: coupling });
+            });
+            
+            document.getElementById('noiseSlider').addEventListener('input', (e) => {
+                noise = e.target.value / 100;
+                document.getElementById('noiseValue').textContent = noise.toFixed(2);
+                eventBus.publish('parameter:changed', { param: 'noise', value: noise });
+            });
+            
+            document.getElementById('speedSlider').addEventListener('input', (e) => {
+                speed = e.target.value / 100;
+                document.getElementById('speedValue').textContent = speed.toFixed(1) + 'x';
+            });
+            
+            // Load first dilemma
+            loadDilemma(0);
+            
+            // Start animation loop
+            requestAnimationFrame(animate);
+            
+            eventBus.publish('system:initialized', { version: '3.0', nodes: 6, dilemmas: DILEMMAS.length });
+            console.log("✅ Φ System v3.0 Ready");
+        }
+        
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        
+        function setupDilemmaButtons() {
+            const container = document.getElementById('dilemmaButtons');
+            container.innerHTML = '';
+            
+            DILEMMAS.forEach((dilemma, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'dilemma-btn' + (index === 0 ? ' active' : '');
+                btn.textContent = dilemma.name;
+                btn.dataset.index = index;
+                
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.dilemma-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadDilemma(index);
+                });
+                
+                container.appendChild(btn);
+            });
+        }
+        
+        function setupNodeSliders() {
+            const container = document.getElementById('nodeSliders');
+            container.innerHTML = '';
+            
+            // Will be populated when dilemma loads
+        }
+        
+        function loadDilemma(index) {
+            currentDilemma = index;
+            const dilemma = DILEMMAS[index];
+            
+            // Create nodes
+            nodes = [];
+            dilemma.nodes.forEach((nodeConfig, i) => {
+                nodes.push(new QuantumNode(
+                    i,
+                    nodeConfig.name,
+                    nodeConfig.color,
+                    nodeConfig.tendency
+                ));
+            });
+            
+            // Update node sliders
+            updateNodeSliders();
+            
+            // Reset history
+            phiHistory = [];
+            memoryHistory = [];
+            
+            eventBus.publish('dilemma:loaded', { 
+                id: index, 
+                name: dilemma.name,
+                description: dilemma.description 
+            });
+            
+            console.log(`📖 Dilemma loaded: "${dilemma.name}"`);
+        }
+        
+        function updateNodeSliders() {
+            const container = document.getElementById('nodeSliders');
+            container.innerHTML = '';
+            
+            nodes.forEach((node, i) => {
+                const sliderGroup = document.createElement('div');
+                sliderGroup.className = 'slider-group';
+                sliderGroup.innerHTML = `
+                    <div class="slider-label">
+                        <span style="color: ${node.color}">${node.name}</span>
+                        <span id="willpower-${i}">${(node.willpower * 100).toFixed(0)}%</span>
+                    </div>
+                    <input type="range" class="willpower-slider" 
+                           data-node="${i}" min="0" max="100" 
+                           value="${node.willpower * 100}">
+                `;
+                
+                sliderGroup.querySelector('.willpower-slider').addEventListener('input', (e) => {
+                    const value = e.target.value / 100;
+                    nodes[i].applyVolition(value);
+                    document.getElementById(`willpower-${i}`).textContent = e.target.value + '%';
+                });
+                
+                container.appendChild(sliderGroup);
+            });
+        }
+        
+        // 6. SIMULATION FUNCTIONS
+        function calculateGlobalPhi() {
+            let sumReal = 0, sumImag = 0;
+            let totalWeight = 0;
+            
+            nodes.forEach(node => {
+                if (node.active && !node.collapsed) {
+                    const weight = node.willpower * node.efficacy;
+                    sumReal += weight * Math.cos(node.phase);
+                    sumImag += weight * Math.sin(node.phase);
+                    totalWeight += weight;
+                }
+            });
+            
+            if (totalWeight === 0) return 0;
+            
+            const magnitude = Math.sqrt(sumReal * sumReal + sumImag * sumImag);
+            return magnitude / totalWeight;
+        }
+        
+        function calculateGlobalCoherence() {
+            if (nodes.length === 0) return 0;
+            
+            let sum = 0;
+            let count = 0;
+            
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const phaseDiff = Math.abs(nodes[i].phase - nodes[j].phase);
+                    sum += Math.cos(phaseDiff);
+                    count++;
+                }
+            }
+            
+            return count > 0 ? sum / count : 0;
+        }
+        
+        function calculateAverageMemory() {
+            if (nodes.length === 0) return 0;
+            return nodes.reduce((sum, node) => sum + node.memory, 0) / nodes.length;
+        }
+        
+        function calculateAverageWillpower() {
+            if (nodes.length === 0) return 0;
+            return nodes.reduce((sum, node) => sum + node.willpower, 0) / nodes.length;
+        }
+        
+        function update(dt) {
+            if (!isRunning) return;
+            
+            const scaledDt = dt * speed;
+            const dilemma = DILEMMAS[currentDilemma];
+            const K = dilemma.K;
+            
+            // Update each node
+            nodes.forEach((node, i) => {
+                node.update(scaledDt, K, globalPhi, noise);
+            });
+            
+            // Calculate global metrics
+            globalPhi = calculateGlobalPhi();
+            globalCoherence = calculateGlobalCoherence();
+            const avgMemory = calculateAverageMemory();
+            const avgWillpower = calculateAverageWillpower();
+            
+            // Update history
+            phiHistory.push(globalPhi);
+            memoryHistory.push(avgMemory);
+            if (phiHistory.length > 200) {
+                phiHistory.shift();
+                memoryHistory.shift();
+            }
+            
+            // Update UI
+            document.getElementById('phiValue').textContent = globalPhi.toFixed(3);
+            document.getElementById('coherenceValue').textContent = globalCoherence.toFixed(3);
+            document.getElementById('memoryValue').textContent = avgMemory.toFixed(3);
+            document.getElementById('willpowerValue').textContent = avgWillpower.toFixed(3);
+            
+            // Check for collapse
+            if (globalPhi > 0.75) {
+                eventBus.publish('collapse:threshold', { phi: globalPhi, threshold: 0.75 });
+            }
+        }
+        
+        // 7. RENDERING
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(canvas.width, canvas.height) * 0.35;
+            
+            // Draw Φ field
+            drawPhiField(centerX, centerY, radius);
+            
+            // Draw nodes
+            drawNodes(centerX, centerY, radius);
+            
+            // Draw connections
+            drawConnections(centerX, centerY, radius);
+        }
+        
+        function drawPhiField(cx, cy, r) {
+            const phi = globalPhi;
+            const hue = phi * 120;
+            
+            // Pulsating field
+            const pulseRadius = r * (0.3 + phi * 0.3);
+            
+            for (let i = 0; i < 3; i++) {
+                const alpha = (0.2 - i * 0.05) * phi;
+                const currentR = pulseRadius + i * 15;
+                
+                const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, currentR);
+                gradient.addColorStop(0, `hsla(${hue}, 70%, 60%, ${alpha})`);
+                gradient.addColorStop(1, `hsla(${hue}, 70%, 40%, 0)`);
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(cx, cy, currentR, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function drawNodes(cx, cy, r) {
+            nodes.forEach((node, i) => {
+                const pos = node.getPosition(r, nodes.length);
+                const x = cx + pos.x;
+                const y = cy + pos.y;
+                
+                // Node size based on willpower
+                const size = 8 + node.willpower * 15;
+                
+                // Draw node
+                ctx.fillStyle = node.color;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw phase indicator
+                const phaseX = x + Math.cos(node.phase) * (size + 5);
+                const phaseY = y + Math.sin(node.phase) * (size + 5);
+                
+                ctx.strokeStyle = node.color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(phaseX, phaseY);
+                ctx.stroke();
+                
+                // Draw label
+                ctx.fillStyle = '#fff';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(node.name, x, y - size - 10);
+                
+                // Draw willpower indicator
+                const willpowerBarHeight = 4;
+                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                ctx.fillRect(x - size, y + size + 5, size * 2, willpowerBarHeight);
+                
+                ctx.fillStyle = node.color;
+                ctx.fillRect(x - size, y + size + 5, size * 2 * node.willpower, willpowerBarHeight);
+            });
+        }
+        
+        function drawConnections(cx, cy, r) {
+            const dilemma = DILEMMAS[currentDilemma];
+            const K = dilemma.K;
+            
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const strength = K[i][j];
+                    if (Math.abs(strength) > 0.2) {
+                        const pos1 = nodes[i].getPosition(r, nodes.length);
+                        const pos2 = nodes[j].getPosition(r, nodes.length);
+                        
+                        const x1 = cx + pos1.x;
+                        const y1 = cy + pos1.y;
+                        const x2 = cx + pos2.x;
+                        const y2 = cy + pos2.y;
+                        
+                        const alpha = Math.abs(strength) * 0.6;
+                        const color = strength > 0 ? 
+                            `rgba(78, 205, 196, ${alpha})` : 
+                            `rgba(255, 107, 107, ${alpha})`;
+                        
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 1 + Math.abs(strength) * 3;
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        // 8. ANIMATION LOOP
+        function animate(currentTime = 0) {
+            const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
+            lastTime = currentTime;
+            
+            update(dt);
+            render();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // 9. CONTROL FUNCTIONS
+        function toggleSimulation() {
+            isRunning = !isRunning;
+            const btn = document.getElementById('startBtn');
+            btn.textContent = isRunning ? '⏸ PAUSE' : '▶ START';
+            eventBus.publish('simulation:' + (isRunning ? 'started' : 'paused'), {});
+        }
+        
+        function resetSimulation() {
+            loadDilemma(currentDilemma);
+            isRunning = false;
+            document.getElementById('startBtn').textContent = '▶ START';
+            eventBus.publish('simulation:reset', {});
+        }
+        
+        // 10. START THE SYSTEM
+        window.addEventListener('load', init);
+        
+        // Export for debugging
+        window.phiSystem = {
+            eventBus,
+            nodes,
+            DILEMMAS,
+            calculateGlobalPhi,
+            calculateProbability: (i) => nodes[i].calculateProbability(globalPhi, 0.1)
+        };
+    </script>
+</body>
+</html>
+EOF
+
+# 3. Rinomina come file principale
+mv phi-system-advanced.html phi-introspect-complete.html
+
+# 4. Riavvia server
+pkill -f "http.server"
+python3 -m http.server 8000 &
+
+echo ""
+echo "✅ ✅ ✅ SISTEMA COMPLETO CREATO!"
+echo ""
+echo "🎯 CARATTERISTICHE IMPLEMENTATE:"
+echo "   • 6 dilemmi narrativi completi"
+echo "   • Formula Master Φ: P_i = σ(α·ΔΦ + β·ΔM_Φ + γ·W_i·efficacy) × (1 - δ·C_i)"
+echo "   • EventBus centrale per logging"
+echo "   • Volition Field con costo quadratico"
+echo "   • Sistema a 6 nodi quantistici"
+echo "   • Matrici K per ogni dilemma"
+echo "   • Pannello log in tempo reale"
+echo "   • Controlli parametri e volontà"
+echo ""
+echo "🌐 URL DA APRIRE:"
+echo "👉 https://${CODESPACE_NAME}-8000.app.github.dev/phi-introspect-complete.html"
+echo ""
+echo "🚀 Il sistema è pronto! Apri il link nel browser."
