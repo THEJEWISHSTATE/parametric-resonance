@@ -5,256 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Φ Introspect - Unified System v3.0</title>
     <style>
-        /* STILI COMPLETI - 150 righe circa */
-        :root {
-            --quantum-blue: #0af;
-            --quantum-purple: #80f;
-            --bg-dark: #0a0a1a;
-            --card-bg: rgba(20, 25, 40, 0.85);
-        }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-dark);
-            color: #e0f7ff;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            text-align: center;
-            padding: 30px 0;
-            border-bottom: 2px solid rgba(0, 170, 255, 0.3);
-            margin-bottom: 30px;
-        }
-        h1 {
-            font-size: 2.8em;
-            background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 0;
-        }
-        .subtitle {
-            color: #88d;
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
-        
-        /* Pannello Principale */
-        .main-panel {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        /* Visualizzazione Quantistica */
-        .quantum-viz {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(0, 170, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-            min-height: 500px;
-        }
-        
-        .phi-meter {
-            width: 100%;
-            height: 40px;
-            background: linear-gradient(90deg, #000 0%, #00aaff 100%);
-            border-radius: 20px;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .phi-value {
-            height: 100%;
-            background: linear-gradient(90deg, #0af, #80f);
-            width: 50%;
-            border-radius: 20px;
-            transition: width 0.5s ease;
-        }
-        
-        .phi-label {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            text-shadow: 0 0 10px #0af;
-        }
-        
-        /* Nodi Quantistici */
-        .nodes-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            margin: 40px 0;
-        }
-        
-        .quantum-node {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .node-inner {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(0, 170, 255, 0.3), rgba(0, 50, 100, 0.1));
-            border: 2px solid rgba(0, 170, 255, 0.5);
-            box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
-        }
-        
-        .node-outer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid rgba(128, 0, 255, 0.5);
-            box-shadow: 0 0 30px rgba(128, 0, 255, 0.2);
-            opacity: 0.7;
-        }
-        
-        .node-label {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-top: 10px;
-            font-size: 0.9em;
-            text-align: center;
-            white-space: nowrap;
-        }
-        
-        .node.collapsed .node-outer {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        
-        /* Controlli Volition */
-        .volition-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .will-slider {
-            width: 100%;
-            margin: 10px 0;
-        }
-        
-        .budget-display {
-            background: rgba(0, 50, 100, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        
-        /* Pannello Controlli */
-        .control-panel {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(128, 0, 255, 0.2);
-        }
-        
-        select, button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: rgba(0, 50, 100, 0.5);
-            border: 1px solid rgba(0, 170, 255, 0.5);
-            color: white;
-            border-radius: 8px;
-            font-size: 1em;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #00aaff, #0080ff);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-        }
-        
-        .param-controls {
-            margin-top: 20px;
-        }
-        
-        .param-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
-        }
-        
-        .param-row input {
-            width: 60px;
-            padding: 5px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(0, 170, 255, 0.3);
-            color: white;
-            border-radius: 4px;
-        }
-        
-        /* Pannello Log */
-        .log-panel {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 30px;
-            font-family: monospace;
-            font-size: 0.9em;
-            height: 200px;
-            overflow-y: auto;
-        }
-        
-        .log-entry {
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .log-time {
-            color: #88f;
-        }
-        
-        .log-event {
-            color: #0fa;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-panel {
-                grid-template-columns: 1fr;
-            }
-            
-            .quantum-node {
-                width: 60px;
-                height: 60px;
-            }
-        }
+        /* LO STILE CSS SARA' AGGIUNTO NEL BLOCCO 2 */
     </style>
 </head>
 <body>
@@ -263,33 +14,36 @@
             <h1>🌀 Quantum Φ Introspect System</h1>
             <div class="subtitle">Unified v3.0 | Φ Resonance: Active Simulation</div>
         </header>
-        
+
         <div class="main-panel">
             <div class="quantum-viz">
                 <h2>Quantum Coherence Field</h2>
-                
-                <div class="phi-meter">
-                    <div class="phi-value" id="phiValue"></div>
-                    <div class="phi-label" id="phiLabel">Φ: 0.500</div>
+                <div class="phi-meter-container">
+                    <div class="phi-meter-label">
+                        <span>Integrated Information (Φ)</span>
+                        <span id="phiLabel">0.500</span>
+                    </div>
+                    <div class="phi-meter">
+                        <div class="phi-value-bar" id="phiValueBar"></div>
+                        <div class="phi-value-text" id="phiValueText">Φ: 0.500</div>
+                        <div class="collapse-threshold"></div>
+                    </div>
                 </div>
-                
-                <div class="nodes-container" id="nodesContainer">
-                    <!-- I nodi saranno generati da JavaScript -->
+                <div id="nodesContainer">
+                    <!-- I nodi quantistici saranno generati qui da JavaScript -->
                 </div>
-                
-                <div class="volition-controls" id="volitionControls">
-                    <!-- I controlli di volontà saranno generati da JavaScript -->
+                <div id="volitionControls">
+                    <h3>Volition Control</h3>
+                    <!-- Gli slider saranno generati qui -->
                 </div>
-                
                 <div class="budget-display">
-                    <div>Willpower Budget: <span id="budgetValue">1.00</span></div>
+                    <div>Willpower Budget: <span id="budgetValue">1.000</span></div>
                     <div>Regen Rate: <span id="regenRate">0.02/s</span></div>
                 </div>
             </div>
-            
+
             <div class="control-panel">
                 <h3>System Controls</h3>
-                
                 <select id="dilemmaSelect">
                     <option value="dichiarazione">La Dichiarazione</option>
                     <option value="whistleblower">Il Whistleblower</option>
@@ -298,609 +52,438 @@
                     <option value="mercato">Il Mercato delle Emozioni</option>
                     <option value="memoria">Il Palazzo della Memoria</option>
                 </select>
-                
-                <button id="resetBtn">Reset Simulation</button>
-                <button id="forceCollapseBtn">Force Collapse (Φ > 0.75)</button>
-                <button id="experimentBtn">Run Resilience Experiment</button>
-                
-                <div class="param-controls">
+                <button id="resetBtn" class="control-btn">Reset Simulation</button>
+                <button id="forceCollapseBtn" class="control-btn">Force Collapse (Φ > 0.75)</button>
+                <button id="experimentBtn" class="control-btn">Run Resilience Experiment</button>
+
+                <div class="control-group">
                     <h4>Master Formula Parameters</h4>
                     <div class="param-row">
                         <label>α (Coherence Weight):</label>
-                        <input type="number" id="alphaParam" value="2.5" step="0.1" readonly>
+                        <input type="number" id="alphaParam" value="2.5" step="0.1">
                     </div>
                     <div class="param-row">
                         <label>β (Memory Weight):</label>
-                        <input type="number" id="betaParam" value="1.5" step="0.1" readonly>
+                        <input type="number" id="betaParam" value="1.5" step="0.1">
                     </div>
                     <div class="param-row">
                         <label>γ (Willpower Weight):</label>
-                        <input type="number" id="gammaParam" value="2.0" step="0.1" readonly>
+                        <input type="number" id="gammaParam" value="2.0" step="0.1">
                     </div>
                     <div class="param-row">
                         <label>δ (Conflict Weight):</label>
-                        <input type="number" id="deltaParam" value="0.2" step="0.1" readonly>
+                        <input type="number" id="deltaParam" value="0.2" step="0.1">
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="log-panel" id="logPanel">
-            <div class="log-entry">
-                <span class="log-time">[00:00:00]</span>
-                <span class="log-event">System initialized. Quantum nodes in superposition.</span>
-            </div>
-        </div>
+        <!-- Il pannello del log sarà qui -->
     </div>
 
     <script>
-        // ==================== SYSTEM CONFIGURATION ====================
-        const CONFIG = {
-            NODES: 6,
-            NODE_NAMES: ['Intuition', 'Emotion', 'Logic', 'Memory', 'Ethics', 'Will'],
-            DILEMMAS: {
-                dichiarazione: {
-                    name: 'La Dichiarazione',
-                    K_matrix: [
-                        [0, 0.8, 0.6, 0.4, -0.7, 0.3],
-                        [0.8, 0, -0.5, 0.2, 0.1, 0.9],
-                        [0.6, -0.5, 0, 0.7, 0.8, 0.4],
-                        [0.4, 0.2, 0.7, 0, -0.3, 0.5],
-                        [-0.7, 0.1, 0.8, -0.3, 0, 0.6],
-                        [0.3, 0.9, 0.4, 0.5, 0.6, 0]
-                    ],
-                    description: 'Announcing a truth that will change everything...'
-                },
-                whistleblower: {
-                    name: 'Il Whistleblower',
-                    K_matrix: [
-                        [0, -0.9, 0.7, 0.3, 0.8, -0.2],
-                        [-0.9, 0, 0.4, -0.6, 0.5, 0.7],
-                        [0.7, 0.4, 0, -0.8, 0.9, 0.1],
-                        [0.3, -0.6, -0.8, 0, 0.2, 0.6],
-                        [0.8, 0.5, 0.9, 0.2, 0, -0.4],
-                        [-0.2, 0.7, 0.1, 0.6, -0.4, 0]
-                    ],
-                    description: 'Exposing secrets at personal cost...'
-                }
-            },
-            
-            // Quantum parameters
-            COLLAPSE_HIGH: 0.75,
-            COLLAPSE_LOW: 0.35,
-            PHASE_SPEED: 0.02,
-            COHERENCE_DECAY: 0.98,
-            
-            // Master Formula parameters
-            ALPHA: 2.5,
-            BETA: 1.5,
-            GAMMA: 2.0,
-            DELTA: 0.2,
-            
-            // Volition Field parameters
-            WILLPOWER_BUDGET: 1.0,
-            REGEN_BASE: 0.02,
-            COST_COEFFICIENT: 0.25,
-            MAX_ACTIVE_NODES: 2
-        };
-
-        // ==================== GLOBAL STATE ====================
-        let state = {
-            phi: 0.5,
-            coherence: 0.6,
-            memoryPhi: 0.0,
-            nodes: [],
-            currentDilemma: 'dichiarazione',
-            willpowerBudget: CONFIG.WILLPOWER_BUDGET,
-            lastRegen: Date.now(),
-            activeNodes: new Set(),
-            collapsed: false,
-            animationId: null
-        };
-
-        // ==================== EVENT BUS ====================
-        class EventBus {
-            constructor() {
-                this.subscribers = {};
-            }
-            
-            subscribe(event, callback) {
-                if (!this.subscribers[event]) this.subscribers[event] = [];
-                this.subscribers[event].push(callback);
-            }
-            
-            publish(event, data) {
-                if (this.subscribers[event]) {
-                    this.subscribers[event].forEach(cb => cb(data));
-                }
-                // Log all events
-                addLog(event, data);
-            }
-        }
-
-        const eventBus = new EventBus();
-
-        // ==================== QUANTUM ENGINE ====================
-        class QuantumEngine {
-            constructor() {
-                this.phases = Array(CONFIG.NODES).fill(0).map(() => Math.random() * Math.PI * 2);
-                this.weights = Array(CONFIG.NODES).fill(1/CONFIG.NODES);
-                this.willpower = Array(CONFIG.NODES).fill(0.5);
-                this.naturalTendency = Array(CONFIG.NODES).fill(0.5);
-                this.collapsed = Array(CONFIG.NODES).fill(false);
-                
-                this.initializeNodes();
-            }
-            
-            initializeNodes() {
-                for (let i = 0; i < CONFIG.NODES; i++) {
-                    this.naturalTendency[i] = 0.3 + Math.random() * 0.4;
-                    this.willpower[i] = this.naturalTendency[i];
-                }
-            }
-            
-            update(deltaTime) {
-                // Update phases
-                for (let i = 0; i < CONFIG.NODES; i++) {
-                    if (!this.collapsed[i]) {
-                        // Quantum oscillation
-                        this.phases[i] += CONFIG.PHASE_SPEED * deltaTime;
-                        if (this.phases[i] > Math.PI * 2) this.phases[i] -= Math.PI * 2;
-                        
-                        // Influence from other nodes
-                        for (let j = 0; j < CONFIG.NODES; j++) {
-                            if (i !== j && !this.collapsed[j]) {
-                                const K = CONFIG.DILEMMAS[state.currentDilemma].K_matrix[i][j];
-                                const phaseDiff = Math.sin(this.phases[j] - this.phases[i]);
-                                this.phases[i] += K * phaseDiff * 0.01 * deltaTime;
-                            }
-                        }
-                    }
-                }
-                
-                // Calculate coherence
-                let totalCoherence = 0;
-                let count = 0;
-                
-                for (let i = 0; i < CONFIG.NODES; i++) {
-                    if (!this.collapsed[i]) {
-                        for (let j = i + 1; j < CONFIG.NODES; j++) {
-                            if (!this.collapsed[j]) {
-                                const phaseDiff = Math.abs(Math.sin(this.phases[i] - this.phases[j]));
-                                totalCoherence += 1 - phaseDiff;
-                                count++;
-                            }
-                        }
-                    }
-                }
-                
-                state.coherence = count > 0 ? totalCoherence / count : 0;
-                
-                // Update phi using Master Formula
-                this.updatePhi();
-                
-                // Check for collapse
-                this.checkCollapse();
-            }
-            
-            updatePhi() {
-                const ΔΦ = state.coherence - state.memoryPhi;
-                const ΔM_Φ = state.memoryPhi;
-                
-                // Calculate willpower efficacy
-                let willpowerEfficacy = 0;
-                for (let i = 0; i < CONFIG.NODES; i++) {
-                    const dissonance = Math.abs(this.willpower[i] - this.naturalTendency[i]);
-                    const efficacy = this.willpower[i] * (1 - dissonance);
-                    willpowerEfficacy += efficacy;
-                }
-                willpowerEfficacy /= CONFIG.NODES;
-                
-                // Calculate conflict
-                let totalConflict = 0;
-                const K = CONFIG.DILEMMAS[state.currentDilemma].K_matrix;
-                for (let i = 0; i < CONFIG.NODES; i++) {
-                    for (let j = 0; j < CONFIG.NODES; j++) {
-                        if (K[i][j] < 0) {
-                            totalConflict += Math.abs(K[i][j]);
-                        }
-                    }
-                }
-                const avgConflict = totalConflict / (CONFIG.NODES * CONFIG.NODES);
-                
-                // Master Formula: P_i = σ(α·ΔΦ + β·ΔM_Φ + γ·W_i·efficacy) × (1 - δ·C_i)
-                const sigmaInput = CONFIG.ALPHA * ΔΦ + 
-                                 CONFIG.BETA * ΔM_Φ + 
-                                 CONFIG.GAMMA * willpowerEfficacy;
-                
-                // Sigmoid function
-                const sigma = 1 / (1 + Math.exp(-sigmaInput));
-                
-                // Apply conflict reduction
-                const phi = sigma * (1 - CONFIG.DELTA * avgConflict);
-                
-                state.phi = Math.max(0, Math.min(1, phi));
-                
-                // Update memory with decay
-                state.memoryPhi = 0.95 * state.memoryPhi + 0.05 * state.phi;
-                
-                eventBus.publish('phi:updated', {
-                    phi: state.phi,
-                    coherence: state.coherence,
-                    memoryPhi: state.memoryPhi
-                });
-            }
-            
-            checkCollapse() {
-                if (state.phi > CONFIG.COLLAPSE_HIGH && !state.collapsed) {
-                    // Find node with maximum phase alignment
-                    let maxNode = 0;
-                    let maxAlignment = -1;
-                    
-                    for (let i = 0; i < CONFIG.NODES; i++) {
-                        if (!this.collapsed[i]) {
-                            // Calculate alignment with average phase
-                            let totalSin = 0;
-                            let totalCos = 0;
-                            for (let j = 0; j < CONFIG.NODES; j++) {
-                                if (!this.collapsed[j]) {
-                                    totalSin += Math.sin(this.phases[j]);
-                                    totalCos += Math.cos(this.phases[j]);
-                                }
-                            }
-                            const avgPhase = Math.atan2(totalSin, totalCos);
-                            const alignment = Math.cos(this.phases[i] - avgPhase);
-                            
-                            if (alignment > maxAlignment) {
-                                maxAlignment = alignment;
-                                maxNode = i;
-                            }
-                        }
-                    }
-                    
-                    this.collapseNode(maxNode);
-                    
-                } else if (state.phi < CONFIG.COLLAPSE_LOW && state.collapsed) {
-                    // Return to superposition
-                    for (let i = 0; i < CONFIG.NODES; i++) {
-                        this.collapsed[i] = false;
-                    }
-                    state.collapsed = false;
-                    eventBus.publish('system:superposition', {});
-                }
-            }
-            
-            collapseNode(nodeIndex) {
-                this.collapsed[nodeIndex] = true;
-                state.collapsed = true;
-                
-                // Check if all nodes are collapsed
-                const allCollapsed = this.collapsed.every(c => c);
-                
-                eventBus.publish('collapse:triggered', {
-                    nodeIndex,
-                    finalPhase: this.phases[nodeIndex],
-                    phi: state.phi,
-                    allCollapsed
-                });
-            }
-            
-            applyWillpower(nodeIndex, willpower) {
-                if (state.activeNodes.has(nodeIndex) || state.activeNodes.size >= CONFIG.MAX_ACTIVE_NODES) {
-                    return false;
-                }
-                
-                const cost = CONFIG.COST_COEFFICIENT * Math.pow(willpower - this.willpower[nodeIndex], 2);
-                
-                if (cost <= state.willpowerBudget) {
-                    this.willpower[nodeIndex] = willpower;
-                    state.willpowerBudget -= cost;
-                    state.activeNodes.add(nodeIndex);
-                    
-                    eventBus.publish('volition:changed', {
-                        nodeIndex,
-                        newWillpower: willpower,
-                        cost,
-                        budgetRemaining: state.willpowerBudget
-                    });
-                    
-                    return true;
-                }
-                
-                return false;
-            }
-            
-            getNodeState(nodeIndex) {
-                return {
-                    phase: this.phases[nodeIndex],
-                    willpower: this.willpower[nodeIndex],
-                    naturalTendency: this.naturalTendency[nodeIndex],
-                    collapsed: this.collapsed[nodeIndex],
-                    weight: this.weights[nodeIndex]
-                };
-            }
-        }
-
-        // ==================== UI MANAGER ====================
-        class UIManager {
-            constructor() {
-                this.quantumEngine = new QuantumEngine();
-                this.setupUI();
-                this.setupEventListeners();
-            }
-            
-            setupUI() {
-                // Create quantum nodes
-                const nodesContainer = document.getElementById('nodesContainer');
-                nodesContainer.innerHTML = '';
-                
-                for (let i = 0; i < CONFIG.NODES; i++) {
-                    const nodeDiv = document.createElement('div');
-                    nodeDiv.className = 'quantum-node';
-                    nodeDiv.id = `node-${i}`;
-                    nodeDiv.innerHTML = `
-                        <div class="node-inner"></div>
-                        <div class="node-outer"></div>
-                        <div class="node-label">${CONFIG.NODE_NAMES[i]}</div>
-                    `;
-                    nodesContainer.appendChild(nodeDiv);
-                }
-                
-                // Create willpower sliders
-                const controlsDiv = document.getElementById('volitionControls');
-                controlsDiv.innerHTML = '<h3>Volition Control</h3>';
-                
-                for (let i = 0; i < CONFIG.NODES; i++) {
-                    const sliderDiv = document.createElement('div');
-                    sliderDiv.innerHTML = `
-                        <div class="param-row">
-                            <label>${CONFIG.NODE_NAMES[i]}:</label>
-                            <input type="range" min="0" max="100" value="50" 
-                                   class="will-slider" data-node="${i}">
-                            <span id="willValue-${i}">0.50</span>
-                        </div>
-                    `;
-                    controlsDiv.appendChild(sliderDiv);
-                }
-            }
-            
-            setupEventListeners() {
-                // Willpower sliders
-                document.querySelectorAll('.will-slider').forEach(slider => {
-                    slider.addEventListener('input', (e) => {
-                        const nodeIndex = parseInt(e.target.dataset.node);
-                        const value = parseInt(e.target.value) / 100;
-                        
-                        const success = this.quantumEngine.applyWillpower(nodeIndex, value);
-                        
-                        if (success) {
-                            document.getElementById(`willValue-${nodeIndex}`).textContent = value.toFixed(2);
-                            this.updateBudgetDisplay();
-                        } else {
-                            // Revert slider position
-                            const currentWill = this.quantumEngine.getNodeState(nodeIndex).willpower;
-                            e.target.value = currentWill * 100;
-                        }
-                    });
-                });
-                
-                // Dilemma selector
-                document.getElementById('dilemmaSelect').addEventListener('change', (e) => {
-                    state.currentDilemma = e.target.value;
-                    addLog('Dilemma changed', {dilemma: state.currentDilemma});
-                });
-                
-                // Reset button
-                document.getElementById('resetBtn').addEventListener('click', () => {
-                    this.quantumEngine = new QuantumEngine();
-                    state.willpowerBudget = CONFIG.WILLPOWER_BUDGET;
-                    state.activeNodes.clear();
-                    state.collapsed = false;
-                    this.updateBudgetDisplay();
-                    addLog('System reset', {});
-                });
-                
-                // Force collapse button
-                document.getElementById('forceCollapseBtn').addEventListener('click', () => {
-                    state.phi = 0.8; // Force high phi
-                    addLog('Collapse forced', {phi: state.phi});
-                });
-                
-                // Experiment button
-                document.getElementById('experimentBtn').addEventListener('click', () => {
-                    this.runResilienceExperiment();
-                });
-            }
-            
-            update(deltaTime) {
-                // Regenerate willpower
-                const now = Date.now();
-                const elapsed = (now - state.lastRegen) / 1000;
-                if (elapsed >= 1) {
-                    state.willpowerBudget = Math.min(1, 
-                        state.willpowerBudget + CONFIG.REGEN_BASE * elapsed);
-                    state.lastRegen = now;
-                    this.updateBudgetDisplay();
-                }
-                
-                // Update quantum engine
-                this.quantumEngine.update(deltaTime);
-                
-                // Update visualizations
-                this.updateVisualizations();
-            }
-            
-            updateVisualizations() {
-                // Update phi meter
-                const phiValueElem = document.getElementById('phiValue');
-                const phiLabelElem = document.getElementById('phiLabel');
-                
-                phiValueElem.style.width = `${state.phi * 100}%`;
-                phiLabelElem.textContent = `Φ: ${state.phi.toFixed(3)}`;
-                
-                // Update nodes
-                for (let i = 0; i < CONFIG.NODES; i++) {
-                    const nodeElem = document.getElementById(`node-${i}`);
-                    const nodeState = this.quantumEngine.getNodeState(i);
-                    
-                    // Update phase rotation
-                    const innerElem = nodeElem.querySelector('.node-inner');
-                    innerElem.style.transform = `rotate(${nodeState.phase}rad)`;
-                    
-                    // Update opacity based on willpower
-                    const willFactor = nodeState.willpower;
-                    innerElem.style.opacity = 0.3 + willFactor * 0.7;
-                    
-                    // Update collapsed state
-                    if (nodeState.collapsed) {
-                        nodeElem.classList.add('collapsed');
-                    } else {
-                        nodeElem.classList.remove('collapsed');
-                    }
-                }
-            }
-            
-            updateBudgetDisplay() {
-                document.getElementById('budgetValue').textContent = state.willpowerBudget.toFixed(3);
-            }
-            
-            runResilienceExperiment() {
-                addLog('Experiment started', {type: 'Resilience Protocol'});
-                
-                const originalDilemma = state.currentDilemma;
-                const experimentLog = [];
-                
-                // Phase 1: Baseline (10 seconds)
-                setTimeout(() => {
-                    addLog('Experiment Phase 1', {phase: 'Baseline'});
-                    experimentLog.push({
-                        phase: 'baseline',
-                        phi: state.phi,
-                        coherence: state.coherence
-                    });
-                }, 10000);
-                
-                // Phase 2: Stress (20 seconds of random willpower applications)
-                setTimeout(() => {
-                    addLog('Experiment Phase 2', {phase: 'Stress Test'});
-                    
-                    const stressInterval = setInterval(() => {
-                        const randomNode = Math.floor(Math.random() * CONFIG.NODES);
-                        const randomWill = Math.random() * 0.5 + 0.3;
-                        
-                        this.quantumEngine.applyWillpower(randomNode, randomWill);
-                        experimentLog.push({
-                            phase: 'stress',
-                            time: Date.now(),
-                            node: randomNode,
-                            willpower: randomWill
-                        });
-                    }, 2000);
-                    
-                    // Phase 3: Recovery (30 seconds)
-                    setTimeout(() => {
-                        clearInterval(stressInterval);
-                        addLog('Experiment Phase 3', {phase: 'Recovery'});
-                        
-                        // Return to original state
-                        state.currentDilemma = originalDilemma;
-                        
-                        setTimeout(() => {
-                            // Log results
-                            const avgPhi = experimentLog
-                                .filter(e => e.phi)
-                                .reduce((sum, e) => sum + e.phi, 0) / 
-                                experimentLog.filter(e => e.phi).length;
-                            
-                            addLog('Experiment Complete', {
-                                averagePhi: avgPhi.toFixed(3),
-                                totalStressEvents: experimentLog.filter(e => e.phase === 'stress').length
-                            });
-                            
-                            alert(`Resilience Experiment Complete!\nAverage Φ: ${avgPhi.toFixed(3)}`);
-                        }, 30000);
-                    }, 20000);
-                }, 10000);
-            }
-        }
-
-        // ==================== UTILITY FUNCTIONS ====================
-        function addLog(event, data) {
-            const logPanel = document.getElementById('logPanel');
-            const now = new Date();
-            const timeStr = `[${now.getHours().toString().padStart(2, '0')}:` +
-                           `${now.getMinutes().toString().padStart(2, '0')}:` +
-                           `${now.getSeconds().toString().padStart(2, '0')}]`;
-            
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
-            logEntry.innerHTML = `
-                <span class="log-time">${timeStr}</span>
-                <span class="log-event">${event}: ${JSON.stringify(data)}</span>
-            `;
-            
-            logPanel.appendChild(logEntry);
-            logPanel.scrollTop = logPanel.scrollHeight;
-            
-            // Keep only last 50 entries
-            const entries = logPanel.querySelectorAll('.log-entry');
-            if (entries.length > 50) {
-                entries[0].remove();
-            }
-        }
-
-        // ==================== INITIALIZATION ====================
-        let uiManager;
-        let lastTime = 0;
-
-        function init() {
-            uiManager = new UIManager();
-            
-            // Start animation loop
-            function animate(timestamp) {
-                if (!lastTime) lastTime = timestamp;
-                const deltaTime = (timestamp - lastTime) / 1000; // Convert to seconds
-                lastTime = timestamp;
-                
-                if (uiManager) {
-                    uiManager.update(deltaTime);
-                }
-                
-                state.animationId = requestAnimationFrame(animate);
-            }
-            
-            state.animationId = requestAnimationFrame(animate);
-            
-            addLog('System initialized', {version: '3.0', nodes: CONFIG.NODES});
-            console.log('🌀 Quantum Φ System v3.0 - Active and Running');
-        }
-
-        // Start when page loads
-        window.addEventListener('load', init);
-        
-        // Make functions available globally for debugging
-        window.forceCollapse = function() {
-            state.phi = CONFIG.COLLAPSE_HIGH + 0.1;
-        };
-        
-        window.getSystemState = function() {
-            return {
-                phi: state.phi,
-                coherence: state.coherence,
-                memoryPhi: state.memoryPhi,
-                willpowerBudget: state.willpowerBudget,
-                currentDilemma: state.currentDilemma,
-                collapsed: state.collapsed
-            };
-        };
-
-        // Set initial phi value for debug access
-        window.phi = state.phi;
-        window.nodes = Array(CONFIG.NODES).fill().map((_, i) => ({id: i, name: CONFIG.NODE_NAMES[i]}));
-        window.currentDilemma = state.currentDilemma;
+        // IL CODICE JAVASCRIPT SARA' AGGIUNTO NEL BLOCCO 3
     </script>
 </body>
 </html>
- 
- 
- 
+/* === INIZIO BLOCCO CSS === */
+:root {
+    --quantum-blue: #0af;
+    --quantum-purple: #80f;
+    --quantum-cyan: #0ff;
+    --bg-dark: #0a0a1a;
+    --card-bg: rgba(20, 25, 40, 0.92);
+    --text-primary: #e0f7ff;
+    --text-secondary: #a0d2ff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+    background-image: radial-gradient(circle at 10% 20%, rgba(10, 100, 255, 0.05) 0%, transparent 20%),
+                      radial-gradient(circle at 90% 80%, rgba(128, 0, 255, 0.05) 0%, transparent 20%);
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+/* Stili per Header, Main Panel, Quantum Viz, Nodi, Controlli... */
+/* ... (Il codice CSS continuerebbe qui per diverse centinaia di righe) ... */
+
+/* === FINE BLOCCO CSS === */
+// ========== RIPARAZIONE VISUALE NODI QUANTISTICI ==========
+console.log("🌀 Ricostruzione nodi quantistici...");
+
+// 1. STILI CSS AVANZATI PER ANIMAZIONE
+const styleTag = document.createElement('style');
+styleTag.id = 'phi-quantum-styles';
+styleTag.textContent = `
+    /* CONTENITORE PRINCIPALE */
+    #nodesContainer {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 40px;
+        padding: 30px;
+        min-height: 250px;
+    }
+    
+    /* NODO QUANTISTICO COMPLETO */
+    .quantum-node {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+    }
+    
+    /* CERCHIO INTERNO (FASE) - RUOTA */
+    .node-inner {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        top: 25px;
+        left: 25px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, 
+            rgba(0, 255, 255, 0.9) 0%, 
+            rgba(0, 100, 200, 0.3) 70%,
+            transparent 90%);
+        border: 3px solid rgba(0, 200, 255, 0.8);
+        box-shadow: 
+            0 0 25px rgba(0, 200, 255, 0.6),
+            inset 0 0 15px rgba(0, 150, 255, 0.4);
+        animation: rotatePhase 8s linear infinite;
+        transform-origin: center;
+        will-change: transform;
+        transition: opacity 0.5s, transform 0.3s;
+    }
+    
+    /* CERCHIO ESTERNO (INTERFERENZA) - PULSA */
+    .node-outer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid rgba(180, 0, 255, 0.7);
+        box-shadow: 
+            0 0 35px rgba(180, 0, 255, 0.5),
+            inset 0 0 20px rgba(140, 0, 220, 0.3);
+        animation: pulseInterference 3s ease-in-out infinite alternate;
+        opacity: 0.85;
+        transition: opacity 0.5s, transform 0.5s;
+    }
+    
+    /* ETICHETTA */
+    .node-label {
+        position: absolute;
+        top: 130%;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #a0e8ff;
+        font-weight: bold;
+        font-size: 14px;
+        text-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+        white-space: nowrap;
+    }
+    
+    /* STATO COLLASSATO */
+    .quantum-node.collapsed .node-outer {
+        opacity: 0.2;
+        transform: scale(0.7);
+        animation: none;
+    }
+    
+    /* ANIMAZIONI */
+    @keyframes rotatePhase {
+        from { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(180deg) scale(1.05); }
+        to { transform: rotate(360deg) scale(1); }
+    }
+    
+    @keyframes pulseInterference {
+        from { 
+            transform: scale(1);
+            box-shadow: 0 0 35px rgba(180, 0, 255, 0.5);
+        }
+        to { 
+            transform: scale(1.08);
+            box-shadow: 0 0 50px rgba(180, 0, 255, 0.8);
+        }
+    }
+    
+    /* INDICATORE K-MATRIX (linee di connessione) */
+    .k-connection {
+        position: absolute;
+        height: 3px;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 100, 255, 0.6), 
+            transparent);
+        transform-origin: 0 0;
+        z-index: -1;
+        opacity: 0.6;
+    }
+`;
+document.head.appendChild(styleTag);
+console.log("✅ Stili animati applicati.");
+
+// 2. RICREAZIONE COMPLETA DEI NODI
+const container = document.getElementById('nodesContainer');
+if (container) {
+    container.innerHTML = '';
+    
+    const nodeNames = ['Intuition', 'Emotion', 'Logic', 'Memory', 'Ethics', 'Will'];
+    
+    for (let i = 0; i < 6; i++) {
+        const nodeDiv = document.createElement('div');
+        nodeDiv.className = 'quantum-node';
+        nodeDiv.id = `node-${i}`;
+        
+        nodeDiv.innerHTML = `
+            <div class="node-inner"></div>
+            <div class="node-outer"></div>
+            <div class="node-label">${nodeNames[i]}</div>
+        `;
+        
+        // Imposta posizione circolare
+        const angle = (i / 6) * Math.PI * 2;
+        const radius = 200;
+        const centerX = 150;
+        const centerY = 150;
+        
+        nodeDiv.style.position = 'absolute';
+        nodeDiv.style.left = `${centerX + Math.cos(angle) * radius - 60}px`;
+        nodeDiv.style.top = `${centerY + Math.sin(angle) * radius - 60}px`;
+        
+        container.appendChild(nodeDiv);
+    }
+    
+    console.log("✅ 6 nodi quantistici ricreati con animazioni.");
+}
+
+// 3. AGGIORNAMENTO DINAMICO (collegamento al motore)
+function updateQuantumVisuals() {
+    if (!window.uiManager?.quantumEngine) return;
+    
+    for (let i = 0; i < 6; i++) {
+        const node = document.getElementById(`node-${i}`);
+        if (!node) continue;
+        
+        const state = window.uiManager.quantumEngine.getNodeState(i);
+        const inner = node.querySelector('.node-inner');
+        const outer = node.querySelector('.node-outer');
+        
+        // Aggiorna rotazione in base alla fase
+        if (inner) {
+            inner.style.animationDuration = `${8 / (Math.abs(state.phase) + 0.5)}s`;
+            inner.style.opacity = `${0.5 + state.willpower * 0.5}`;
+        }
+        
+        // Aggiorna pulsazione in base alla coerenza
+        if (outer && window.coherence) {
+            const pulseIntensity = 0.5 + window.coherence * 0.5;
+            outer.style.animationDuration = `${3 / pulseIntensity}s`;
+            outer.style.opacity = `${0.3 + window.coherence * 0.7}`;
+        }
+        
+        // Stato collassato
+        if (state.collapsed) {
+            node.classList.add('collapsed');
+        } else {
+            node.classList.remove('collapsed');
+        }
+    }
+}
+
+// 4. AVVIO AGGIORNAMENTO CONTINUO
+setInterval(updateQuantumVisuals, 100);
+console.log("✅ Aggiornamento visivo dinamico attivo.");
+        // ========== ATTIVAZIONE CONTROLLI MASTER FORMULA ==========
+console.log("🧮 Attivazione controlli Master Formula...");
+
+// 1. TRASFORMA I CAMPI IN INPUT EDITABILI
+const params = ['alphaParam', 'betaParam', 'gammaParam', 'deltaParam'];
+params.forEach(paramId => {
+    const input = document.getElementById(paramId);
+    if (input) {
+        input.readOnly = false;  // Rendi editabile
+        input.style.background = 'rgba(0, 50, 100, 0.5)';
+        input.style.border = '2px solid rgba(0, 200, 255, 0.6)';
+        input.style.color = '#0ff';
+        
+        // Aggiungi listener per aggiornare il sistema
+        input.addEventListener('change', function() {
+            const value = parseFloat(this.value.replace(',', '.'));
+            const paramName = paramId.replace('Param', '').toLowerCase();
+            
+            // Aggiorna la variabile globale corrispondente
+            if (window[paramName] !== undefined) {
+                window[paramName] = value;
+                console.log(`✅ Parametro ${paramName} aggiornato a: ${value}`);
+                
+                // Forza ricalcolo del Phi
+                if (window.uiManager?.quantumEngine?.updatePhi) {
+                    window.uiManager.quantumEngine.updatePhi();
+                }
+            }
+        });
+        
+        console.log(`✅ Controllo ${paramId} attivato.`);
+    }
+});
+
+// 2. CREA PULSANTI PRESET
+const paramControls = document.querySelector('.param-controls');
+if (paramControls && !document.getElementById('presetButtons')) {
+    const presetDiv = document.createElement('div');
+    presetDiv.id = 'presetButtons';
+    presetDiv.innerHTML = `
+        <h4 style="margin-top:20px; color:#8af;">Formula Presets</h4>
+        <button id="presetDefault" style="margin:5px; padding:8px; background:#0a5; border:none; border-radius:4px; color:white;">Default (2.5, 1.5, 2.0, 0.2)</button>
+        <button id="presetBalanced" style="margin:5px; padding:8px; background:#08a; border:none; border-radius:4px; color:white;">Balanced (1.0, 1.0, 1.0, 0.1)</button>
+        <button id="presetWillpower" style="margin:5px; padding:8px; background:#a08; border:none; border-radius:4px; color:white;">Willpower Focus (1.0, 0.5, 3.0, 0.3)</button>
+    `;
+    paramControls.appendChild(presetDiv);
+    
+    // Preset: Default
+    document.getElementById('presetDefault').onclick = function() {
+        document.getElementById('alphaParam').value = 2.5;
+        document.getElementById('betaParam').value = 1.5;
+        document.getElementById('gammaParam').value = 2.0;
+        document.getElementById('deltaParam').value = 0.2;
+        updateAllParams();
+    };
+    
+    // Preset: Balanced
+    document.getElementById('presetBalanced').onclick = function() {
+        document.getElementById('alphaParam').value = 1.0;
+        document.getElementById('betaParam').value = 1.0;
+        document.getElementById('gammaParam').value = 1.0;
+        document.getElementById('deltaParam').value = 0.1;
+        updateAllParams();
+    };
+    
+    // Preset: Willpower Focus
+    document.getElementById('presetWillpower').onclick = function() {
+        document.getElementById('alphaParam').value = 1.0;
+        document.getElementById('betaParam').value = 0.5;
+        document.getElementById('gammaParam').value = 3.0;
+        document.getElementById('deltaParam').value = 0.3;
+        updateAllParams();
+    };
+    
+    function updateAllParams() {
+        params.forEach(paramId => {
+            const input = document.getElementById(paramId);
+            if (input) input.dispatchEvent(new Event('change'));
+        });
+        console.log("🎛️ Preset applicato e sistema aggiornato.");
+    }
+    
+    console.log("✅ Pulsanti preset creati.");
+}
+
+console.log("🎉 CONTROLLI MASTER FORMULA ATTIVI!");
+console.log("Ora puoi:");
+console.log("1. Modificare α, β, γ, δ direttamente nei campi");
+console.log("2. Usare i preset per configurazioni rapide");
+console.log("3. I nodi dovrebbero mostrare cerchi doppi animati");
+        <style id="phi-emergency-styles">
+    /* Styles de secours pour les cercles doppï et l'animation */
+    .quantum-node {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        display: inline-block;
+        margin: 15px;
+    }
+    .node-inner {
+        position: absolute;
+        width: 60%;
+        height: 60%;
+        top: 20%;
+        left: 20%;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, rgba(0, 200, 255, 0.9), rgba(0, 80, 160, 0.3));
+        border: 2px solid rgba(0, 170, 255, 0.9);
+        animation: spin 4s linear infinite;
+    }
+    .node-outer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid rgba(160, 0, 255, 0.7);
+        box-shadow: 0 0 20px rgba(160, 0, 255, 0.5);
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
+        <script>
+    // Initialisateur de secours pour le système Φ
+    console.log("🔧 Initialisateur de secours Φ chargé.");
+
+    // Cette fonction sera appelée dès que le corps de la page est prêt
+    function phiEmergencyInit() {
+        console.log("🚀 Tentative de démarrage du système...");
+
+        // 1. Attendre un peu que le reste du code se charge
+        setTimeout(function() {
+            // 2. Vérifier si l'UIManager principal a échoué
+            if (typeof UIManager === 'function' && !window.uiManager) {
+                console.log("⚠️ UIManager global non créé. Création d'urgence...");
+                try {
+                    window.uiManager = new UIManager();
+                    console.log("✅ UIManager de secours créé.");
+                } catch (e) {
+                    console.error("❌ Échec de la création d'urgence :", e);
+                }
+            }
+
+            // 3. S'assurer qu'il y a un loop d'animation
+            if (window.uiManager && (!state || !state.animationId)) {
+                console.log("🔄 Démarrage du loop d'animation de secours...");
+                let lastTime = performance.now();
+                function animate(time) {
+                    if (!window.uiManager) return;
+                    const delta = (time - lastTime) / 1000;
+                    lastTime = time;
+                    window.uiManager.update(delta);
+                    requestAnimationFrame(animate);
+                }
+                requestAnimationFrame(animate);
+                console.log("✅ Animation de secours démarrée.");
+            }
+
+            // 4. Afficher un état final
+            setTimeout(() => {
+                console.log("📊 État final de l'init de secours :", {
+                    hasUIManager: !!window.uiManager,
+                    hasQuantumEngine: !!(window.uiManager && window.uiManager.quantumEngine),
+                    phiValue: window.phi
+                });
+            }, 1000);
+
+        }, 500); // Délai initial
+    }
+
+    // Lancer l'initialisateur quand la page est prête
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', phiEmergencyInit);
+    } else {
+        phiEmergencyInit();
+    }
+</script>
+        // Vérification rapide du DOM et des styles
+console.log("Nombre d'éléments '.node-inner' trouvés :", document.querySelectorAll('.node-inner').length);
+console.log("Nombre d'éléments '.node-outer' trouvés :", document.querySelectorAll('.node-outer').length);
+let testNode = document.querySelector('.node-inner');
+if (testNode) {
+    console.log("Style 'animation' du premier cercle :", window.getComputedStyle(testNode).animation);
+}
+        
+        
+        
