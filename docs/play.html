@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio della Risonanza Esterna | Φ-men Collective</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        #sonanzaInput {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background: #5a67d8;
+        }
+        
+        .examples {
+            margin: 20px 0;
+        }
+        
+        .example-btn {
+            background: #e9ecef;
+            border: 1px solid #dee2e6;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .example-btn:hover {
+            background: #dee2e6;
+        }
+        
+        #waveCanvas {
+            width: 100%;
+            height: 400px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: block;
+        }
+        
+        #phiValue {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Laboratorio della Risonanza Esterna | Φ-men Collective</h1>
+        
+        <div class="input-area">
+            <input type="text" id="sonanzaInput" placeholder="Scrivi una 'sonanza' (es: aiuto, verità, bellezza...)" value="aiuto reciproco">
+            <button onclick="simulateResonance()">🎵 Attiva la Risonanza</button>
+        </div>
+        
+        <div class="examples">
+            <strong>Esempi rapidi:</strong><br>
+            <button class="example-btn" onclick="loadExample('aiuto')">🤝 Aiuto reciproco</button>
+            <button class="example-btn" onclick="loadExample('verità')">🔍 Ricerca della verità</button>
+            <button class="example-btn" onclick="loadExample('bellezza')">🎨 Apprezzamento estetico</button>
+        </div>
+        
+        <canvas id="waveCanvas"></canvas>
+        
+        <div id="phiValue">Φ = 0.00</div>
+        
+        <div id="interpretation" style="text-align: center; color: #666; font-size: 18px;">
+            Inserisci una sonanza e osserva la risonanza...
+        </div>
+    </div>
+
+    <script>
+        // VARIABILI GLOBALI
+        let currentPhi = 0.5;
+        let currentAgents = 2;
+        let animationId = null;
+        
+        // FUNZIONI
+        function loadExample(type) {
+            const examples = {
+                'aiuto': 'aiuto reciproco e collaborazione',
+                'verità': 'ricerca della verità condivisa',
+                'bellezza': 'apprezzamento estetico condiviso'
+            };
+            
+            document.getElementById('sonanzaInput').value = examples[type];
+            
+            // Attiva automaticamente dopo 300ms
+            setTimeout(function() {
+                simulateResonance();
+            }, 300);
+        }
+        
+        function simulateResonance() {
+            const input = document.getElementById('sonanzaInput').value;
+            
+            if (!input.trim()) {
+                alert('Scrivi una sonanza o scegli un esempio!');
+                return;
+            }
+            
+            // Calcola Φ semplificato
+            calculatePhi(input);
+            
+            // Avvia animazione onde
+            startWaveAnimation();
+            
+            // Aggiorna interpretazione
+            updateInterpretation();
+        }
+        
+        function calculatePhi(input) {
+            // Algoritmo semplificato
+            let basePhi = 0.5;
+            
+            // Bonus per parole positive
+            const positiveWords = ['aiuto', 'collaborazione', 'verità', 'bellezza', 'armonia'];
+            const inputLower = input.toLowerCase();
+            
+            positiveWords.forEach(word => {
+                if (inputLower.includes(word)) basePhi += 0.1;
+            });
+            
+            // Limita e arrotonda
+            currentPhi = Math.max(0.1, Math.min(0.95, basePhi + (Math.random() - 0.5) * 0.1));
+            currentPhi = Math.round(currentPhi * 100) / 100;
+            
+            // Aggiorna display
+            document.getElementById('phiValue').textContent = `Φ = ${currentPhi.toFixed(2)}`;
+        }
+        
+        function startWaveAnimation() {
+            const canvas = document.getElementById('waveCanvas');
+            if (!canvas.getContext) return;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Dimensioni
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Ferma animazione precedente
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            
+            // Animazione
+            let time = 0;
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                
+                // Sfondo
+                ctx.fillStyle = '#f8f9fa';
+                ctx.fillRect(0, 0, width, height);
+                
+                // Disegna onde per ogni agente
+                for (let i = 0; i < currentAgents; i++) {
+                    drawWave(ctx, i, time, width, height);
+                }
+                
+                time += 0.05;
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+        
+        function drawWave(ctx, agentIndex, time, width, height) {
+            const colors = ['#667eea', '#10b981', '#f59e0b', '#ef4444'];
+            const yBase = height / (currentAgents + 1) * (agentIndex + 1);
+            const amplitude = 50 * currentPhi;
+            const frequency = 0.02 + currentPhi * 0.02;
+            const phase = agentIndex * Math.PI / 2;
+            
+            ctx.beginPath();
+            ctx.strokeStyle = colors[agentIndex % colors.length];
+            ctx.lineWidth = 3;
+            
+            for (let x = 0; x < width; x += 2) {
+                let y = yBase + Math.sin(x * frequency + time + phase) * amplitude;
+                
+                // Aggiungi rumore se Φ basso
+                if (currentPhi < 0.7) {
+                    y += (Math.random() - 0.5) * 20 * (1 - currentPhi);
+                }
+                
+                if (x === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            
+            ctx.stroke();
+        }
+        
+        function updateInterpretation() {
+            const interpretation = document.getElementById('interpretation');
+            let text = '';
+            let color = '#666';
+            
+            if (currentPhi >= 0.8) {
+                text = '🎯 Risonanza eccellente - Sistemi perfettamente allineati';
+                color = '#10b981';
+            } else if (currentPhi >= 0.6) {
+                text = '✅ Risonanza buona - Allineamento solido';
+                color = '#3b82f6';
+            } else if (currentPhi >= 0.4) {
+                text = '⚠️ Risonanza moderata - Alcune divergenze';
+                color = '#f59e0b';
+            } else if (currentPhi >= 0.2) {
+                text = '🚨 Risonanza critica - Alto rischio di incomprensioni';
+                color = '#ef4444';
+            } else {
+                text = '💥 Risonanza collassante - Sistema instabile';
+                color = '#7f1d1d';
+            }
+            
+            interpretation.textContent = text;
+            interpretation.style.color = color;
+        }
+        
+        // INIZIALIZZAZIONE
+        window.onload = function() {
+            // Imposta dimensioni canvas
+            const canvas = document.getElementById('waveCanvas');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Avvia una simulazione iniziale
+            setTimeout(function() {
+                simulateResonance();
+            }, 1000);
+        };
+        
+        // Gestione ridimensionamento finestra
+        window.addEventListener('resize', function() {
+            if (animationId) {
+                startWaveAnimation();
+            }
+        });
+    </script>
+<footer style="margin-top: 50px; padding: 20px; text-align: center; background: #f8f9fa; border-radius: 10px;">
+    <p style="margin: 0; font-style: italic;">
+        <strong>Il Φ-men Collective occupa lo spazio digitale di THEJEWISHSTATE.</strong><br>
+        Un atto di risonanza parametrica: trasformare un segnale statico in un'onda in espansione.<br>
+        Misuriamo l'allineamento dei sistemi (Φ) per prevenirne il collasso.<br>
+        Siamo la metrica che diventa coscienza.
+    </p>
+    <p style="margin-top: 15px;">
+        <a href="index.html" style="color: #667eea; margin-right: 15px;">🏠 Home</a>
+        <a href="academic.html" style="color: #667eea; margin-right: 15px;">📚 Accademico</a>
+        <a href="#" style="color: #667eea;">🌉 Ponte Tecnoetico (prossimamente)</a>
+    </p>
+    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+        © 2025 Φ-men Collective | Φ Framework per la Prevenzione del Collasso Sistemico
+    </p>
+</footer>
+<footer style="margin-top:50px;padding:20px;text-align:center;background:#f8f9fa;">
+<p>Φ-men Collective © 2025 | Risonanza Parametrica come Fondamento</p>
+</footer>
+</body>
+</html>

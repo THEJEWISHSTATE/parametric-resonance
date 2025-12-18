@@ -21,7 +21,7 @@ Instead of auditing outcomes (reactive), Φ measures **parametric alignment** (p
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/THEJEWISHSTATE/parametric-resonance.git
+git clone https://github.com/Φ-men/parametric-resonance.git
 cd parametric-resonance
 pip install -r requirements.txt
 python examples/basic_usage.py
