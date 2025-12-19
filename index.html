@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +5,199 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Φ Introspect - Unified System v3.0</title>
     <style>
-        /* LO STILE CSS SARA' AGGIUNTO NEL BLOCCO 2 */
+        :root {
+            --quantum-blue: #0af;
+            --quantum-purple: #80f;
+            --quantum-cyan: #0ff;
+            --bg-dark: #0a0a1a;
+            --card-bg: rgba(20, 25, 40, 0.92);
+            --text-primary: #e0f7ff;
+            --text-secondary: #a0d2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 10% 20%, rgba(10, 100, 255, 0.05) 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, rgba(128, 0, 255, 0.05) 0%, transparent 20%);
+        }
+        
+        /* CANVAS FONDAMENTALE - COPRE TUTTO */
+        #phiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            display: block !important;
+        }
+        
+        /* L'INTERFACCIA SOPRA IL CANVAS */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--quantum-cyan), var(--quantum-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .main-panel {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .quantum-viz {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(0, 170, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .phi-meter-container {
+            margin: 20px 0;
+        }
+        .phi-meter {
+            height: 30px;
+            background: rgba(0, 30, 60, 0.5);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .phi-value-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #0066ff, #00ccff);
+            border-radius: 15px;
+            width: 50%;
+            transition: width 0.5s ease;
+        }
+        .phi-value-text {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            line-height: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #00aaff;
+        }
+        
+        #nodesContainer {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .quantum-node {
+            background: rgba(0, 40, 80, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .quantum-node:hover {
+            border-color: var(--quantum-cyan);
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
+        }
+        .node-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #a0e8ff;
+        }
+        .node-value {
+            font-size: 1.5rem;
+            color: #0ff;
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        .control-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(128, 0, 255, 0.2);
+        }
+        .control-btn {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: linear-gradient(135deg, #0066cc, #0044aa);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .control-btn:hover {
+            background: linear-gradient(135deg, #0088ff, #0066cc);
+            transform: translateY(-2px);
+        }
+        
+        .param-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+        }
+        .param-row input {
+            width: 80px;
+            padding: 8px;
+            background: rgba(0, 30, 60, 0.5);
+            border: 1px solid #0af;
+            border-radius: 5px;
+            color: #0ff;
+            text-align: center;
+        }
+        
+        .budget-display {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0, 50, 100, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-panel { grid-template-columns: 1fr; }
+            #nodesContainer { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
+    <!-- CANVAS ANIMATO (SOTTO TUTTO) -->
+    <canvas id="phiCanvas"></canvas>
+    
+    <!-- INTERFACCIA UTENTE (SOPRA IL CANVAS) -->
     <div class="container">
         <header>
             <h1>🌀 Quantum Φ Introspect System</h1>
@@ -30,13 +218,24 @@
                         <div class="collapse-threshold"></div>
                     </div>
                 </div>
+                
                 <div id="nodesContainer">
-                    <!-- I nodi quantistici saranno generati qui da JavaScript -->
+                    <div class="quantum-node"><div class="node-title">Intuition</div><div class="node-value">0.75</div></div>
+                    <div class="quantum-node"><div class="node-title">Emotion</div><div class="node-value">0.62</div></div>
+                    <div class="quantum-node"><div class="node-title">Logic</div><div class="node-value">0.88</div></div>
+                    <div class="quantum-node"><div class="node-title">Memory</div><div class="node-value">0.54</div></div>
+                    <div class="quantum-node"><div class="node-title">Ethics</div><div class="node-value">0.71</div></div>
+                    <div class="quantum-node"><div class="node-title">Will</div><div class="node-value">0.93</div></div>
                 </div>
+                
                 <div id="volitionControls">
                     <h3>Volition Control</h3>
-                    <!-- Gli slider saranno generati qui -->
+                    <div style="margin: 15px 0;">
+                        <div>Coherence: <input type="range" min="0" max="100" value="50" style="width: 80%;"></div>
+                        <div>Resonance: <input type="range" min="0" max="100" value="65" style="width: 80%;"></div>
+                    </div>
                 </div>
+                
                 <div class="budget-display">
                     <div>Willpower Budget: <span id="budgetValue">1.000</span></div>
                     <div>Regen Rate: <span id="regenRate">0.02/s</span></div>
@@ -45,7 +244,7 @@
 
             <div class="control-panel">
                 <h3>System Controls</h3>
-                <select id="dilemmaSelect">
+                <select id="dilemmaSelect" style="width:100%; padding:10px; margin:10px 0; background:#112240; color:#0ff; border:1px solid #0af; border-radius:8px;">
                     <option value="dichiarazione">La Dichiarazione</option>
                     <option value="whistleblower">Il Whistleblower</option>
                     <option value="segreto">Il Segreto Condiviso</option>
@@ -53,12 +252,13 @@
                     <option value="mercato">Il Mercato delle Emozioni</option>
                     <option value="memoria">Il Palazzo della Memoria</option>
                 </select>
+                
                 <button id="resetBtn" class="control-btn">Reset Simulation</button>
                 <button id="forceCollapseBtn" class="control-btn">Force Collapse (Φ > 0.75)</button>
                 <button id="experimentBtn" class="control-btn">Run Resilience Experiment</button>
 
                 <div class="control-group">
-                    <h4>Master Formula Parameters</h4>
+                    <h4 style="margin-top:25px; color:#8af;">Master Formula Parameters</h4>
                     <div class="param-row">
                         <label>α (Coherence Weight):</label>
                         <input type="number" id="alphaParam" value="2.5" step="0.1">
@@ -76,415 +276,260 @@
                         <input type="number" id="deltaParam" value="0.2" step="0.1">
                     </div>
                 </div>
+                
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(0,170,255,0.3);">
+                    <h4 style="color:#8af;">Canvas Animation Status</h4>
+                    <div id="canvasStatus" style="color:#0f0; padding:10px; background:rgba(0,50,0,0.3); border-radius:5px;">
+                        ✅ Canvas animato attivo - Onde e nodi visibili
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Il pannello del log sarà qui -->
     </div>
 
     <script>
-        // IL CODICE JAVASCRIPT SARA' AGGIUNTO NEL BLOCCO 3
+        // ==================== CANVAS ANIMATO Φ ====================
+        console.log("🌀 Inizializzazione Canvas Animato Φ...");
+        
+        class PhiCanvasRenderer {
+            constructor() {
+                this.canvas = document.getElementById('phiCanvas');
+                if (!this.canvas) {
+                    console.error("Canvas non trovato!");
+                    return;
+                }
+                this.ctx = this.canvas.getContext('2d');
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                
+                this.nodes = [];
+                this.waves = [];
+                this.time = 0;
+                this.initNodes();
+                
+                console.log("✅ CanvasRenderer pronto - Dimensioni:", this.canvas.width, "x", this.canvas.height);
+            }
+            
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                console.log("📐 Canvas ridimensionato a:", this.canvas.width, "x", this.canvas.height);
+            }
+            
+            initNodes() {
+                const nodeNames = ['Intuition', 'Emotion', 'Logic', 'Memory', 'Ethics', 'Will'];
+                for (let i = 0; i < 6; i++) {
+                    this.nodes.push({
+                        name: nodeNames[i],
+                        radius: 25 + Math.random() * 15,
+                        color: i % 2 === 0 ? [0, 170, 255] : [180, 0, 255],
+                        phase: Math.random() * Math.PI * 2,
+                        speed: 0.5 + Math.random() * 0.5
+                    });
+                }
+            }
+            
+            update(deltaTime) {
+                this.time += deltaTime;
+                
+                // Aggiorna nodi
+                this.nodes.forEach(node => {
+                    node.phase += deltaTime * node.speed;
+                });
+                
+                // Crea nuove onde casuali
+                if (Math.random() < 0.03) {
+                    this.waves.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        radius: 5,
+                        maxRadius: 150 + Math.random() * 200,
+                        alpha: 0.7,
+                        color: [100, 200, 255]
+                    });
+                }
+                
+                // Aggiorna onde
+                this.waves.forEach(wave => {
+                    wave.radius += 2;
+                    wave.alpha -= 0.01;
+                });
+                this.waves = this.waves.filter(wave => wave.alpha > 0);
+            }
+            
+            render() {
+                if (!this.ctx) return;
+                
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const radius = Math.min(centerX, centerY) * 0.35;
+                
+                // Sfondo trasparente
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // 1. ONDE CONCENTRICHE PULSANTI
+                for (let i = 0; i < 6; i++) {
+                    const waveRadius = 100 + i * 55 + Math.sin(this.time + i) * 25;
+                    this.ctx.beginPath();
+                    this.ctx.arc(centerX, centerY, waveRadius, 0, Math.PI * 2);
+                    this.ctx.strokeStyle = `rgba(0, 200, 255, ${0.1 * (1 - i/6)})`;
+                    this.ctx.lineWidth = 1.5;
+                    this.ctx.stroke();
+                }
+                
+                // 2. LINEA DI CONNESSIONE CIRCOLARE
+                this.ctx.strokeStyle = 'rgba(0, 170, 255, 0.2)';
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+                this.ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                this.ctx.stroke();
+                
+                // 3. DISEGNA I 6 NODI IN CERCHIO
+                this.nodes.forEach((node, i) => {
+                    const angle = (i / 6) * Math.PI * 2 + this.time * 0.3;
+                    const x = centerX + Math.cos(angle) * radius;
+                    const y = centerY + Math.sin(angle) * radius;
+                    
+                    // Cerchio del nodo
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, node.radius, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, 0.7)`;
+                    this.ctx.fill();
+                    
+                    // Bordo luminoso
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, node.radius, 0, Math.PI * 2);
+                    this.ctx.strokeStyle = `rgba(255, 255, 255, 0.9)`;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.stroke();
+                    
+                    // Punto rotante interno
+                    this.ctx.save();
+                    this.ctx.translate(x, y);
+                    this.ctx.rotate(node.phase);
+                    this.ctx.beginPath();
+                    this.ctx.arc(node.radius * 0.6, 0, 8, 0, Math.PI * 2);
+                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                    this.ctx.fill();
+                    this.ctx.restore();
+                    
+                    // Linee di connessione tra nodi
+                    if (i < 5) {
+                        const nextAngle = ((i + 1) / 6) * Math.PI * 2 + this.time * 0.3;
+                        const nextX = centerX + Math.cos(nextAngle) * radius;
+                        const nextY = centerY + Math.sin(nextAngle) * radius;
+                        
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(x, y);
+                        this.ctx.lineTo(nextX, nextY);
+                        this.ctx.strokeStyle = `rgba(0, 170, 255, 0.4)`;
+                        this.ctx.lineWidth = 2;
+                        this.ctx.stroke();
+                    }
+                });
+                
+                // 4. DISEGNA ONDE ESPANSIVE
+                this.waves.forEach(wave => {
+                    this.ctx.beginPath();
+                    this.ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
+                    this.ctx.strokeStyle = `rgba(${wave.color[0]}, ${wave.color[1]}, ${wave.color[2]}, ${wave.alpha})`;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.stroke();
+                });
+                
+                // 5. PARTICOLINE LUMINOSE
+                for (let i = 0; i < 20; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = Math.random() * radius * 1.5;
+                    const px = centerX + Math.cos(angle) * dist;
+                    const py = centerY + Math.sin(angle) * dist;
+                    
+                    this.ctx.beginPath();
+                    this.ctx.arc(px, py, 1 + Math.random() * 2, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.random() * 0.4})`;
+                    this.ctx.fill();
+                }
+            }
+        }
+        
+        // ==================== INIZIALIZZAZIONE E AVVIO ====================
+        let phiRenderer = null;
+        let animationId = null;
+        
+        function initPhiSystem() {
+            console.log("🚀 Avvio Sistema Φ con Canvas Animato...");
+            
+            // Crea il renderer
+            phiRenderer = new PhiCanvasRenderer();
+            
+            // Avvia animazione
+            let lastTime = performance.now();
+            function animate(currentTime) {
+                if (!phiRenderer) return;
+                
+                const deltaTime = (currentTime - lastTime) / 1000;
+                lastTime = currentTime;
+                
+                phiRenderer.update(deltaTime);
+                phiRenderer.render();
+                
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            animationId = requestAnimationFrame(animate);
+            
+            // Aggiorna stato nella UI
+            const statusEl = document.getElementById('canvasStatus');
+            if (statusEl) {
+                statusEl.innerHTML = `✅ Canvas animato attivo - ${phiRenderer.canvas.width}x${phiRenderer.canvas.height}`;
+                statusEl.style.backgroundColor = 'rgba(0, 50, 0, 0.4)';
+            }
+            
+            // Simula aggiornamento valori Φ
+            setInterval(() => {
+                const phiValue = 0.5 + Math.sin(Date.now() / 3000) * 0.2;
+                const phiBar = document.getElementById('phiValueBar');
+                const phiText = document.getElementById('phiValueText');
+                if (phiBar) phiBar.style.width = `${phiValue * 100}%`;
+                if (phiText) phiText.textContent = `Φ: ${phiValue.toFixed(3)}`;
+            }, 100);
+            
+            console.log("🎉 Sistema Φ Canvas Animato ATTIVO!");
+        }
+        
+        // Avvia quando la pagina è pronta
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPhiSystem);
+        } else {
+            initPhiSystem();
+        }
+        
+        // ==================== CONTROLLI INTERATTIVI ====================
+        document.getElementById('resetBtn').onclick = function() {
+            if (phiRenderer) {
+                phiRenderer.waves = [];
+                console.log("🔄 Simulazione resettata - Onde pulite");
+            }
+        };
+        
+        document.getElementById('forceCollapseBtn').onclick = function() {
+            if (phiRenderer) {
+                // Crea un'onda di collasso
+                for (let i = 0; i < 10; i++) {
+                    phiRenderer.waves.push({
+                        x: phiRenderer.canvas.width / 2,
+                        y: phiRenderer.canvas.height / 2,
+                        radius: i * 20,
+                        maxRadius: 400,
+                        alpha: 0.8 - i * 0.08,
+                        color: [255, 50, 100]
+                    });
+                }
+                console.log("💥 Collasso forzato attivato");
+            }
+        };
+        
+        console.log("✅ Script Φ Canvas Animato caricato e pronto.");
     </script>
 </body>
 </html>
-/* === INIZIO BLOCCO CSS === */
-:root {
-    --quantum-blue: #0af;
-    --quantum-purple: #80f;
-    --quantum-cyan: #0ff;
-    --bg-dark: #0a0a1a;
-    --card-bg: rgba(20, 25, 40, 0.92);
-    --text-primary: #e0f7ff;
-    --text-secondary: #a0d2ff;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg-dark);
-    color: var(--text-primary);
-    line-height: 1.6;
-    min-height: 100vh;
-    padding: 20px;
-    background-image: radial-gradient(circle at 10% 20%, rgba(10, 100, 255, 0.05) 0%, transparent 20%),
-                      radial-gradient(circle at 90% 80%, rgba(128, 0, 255, 0.05) 0%, transparent 20%);
-}
-.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-
-/* Stili per Header, Main Panel, Quantum Viz, Nodi, Controlli... */
-/* ... (Il codice CSS continuerebbe qui per diverse centinaia di righe) ... */
-
-/* === FINE BLOCCO CSS === */
-// ========== RIPARAZIONE VISUALE NODI QUANTISTICI ==========
-console.log("🌀 Ricostruzione nodi quantistici...");
-
-// 1. STILI CSS AVANZATI PER ANIMAZIONE
-const styleTag = document.createElement('style');
-styleTag.id = 'phi-quantum-styles';
-styleTag.textContent = `
-    /* CONTENITORE PRINCIPALE */
-    #nodesContainer {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 40px;
-        padding: 30px;
-        min-height: 250px;
-    }
-    
-    /* NODO QUANTISTICO COMPLETO */
-    .quantum-node {
-        position: relative;
-        width: 120px;
-        height: 120px;
-        cursor: pointer;
-    }
-    
-    /* CERCHIO INTERNO (FASE) - RUOTA */
-    .node-inner {
-        position: absolute;
-        width: 70px;
-        height: 70px;
-        top: 25px;
-        left: 25px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 35%, 
-            rgba(0, 255, 255, 0.9) 0%, 
-            rgba(0, 100, 200, 0.3) 70%,
-            transparent 90%);
-        border: 3px solid rgba(0, 200, 255, 0.8);
-        box-shadow: 
-            0 0 25px rgba(0, 200, 255, 0.6),
-            inset 0 0 15px rgba(0, 150, 255, 0.4);
-        animation: rotatePhase 8s linear infinite;
-        transform-origin: center;
-        will-change: transform;
-        transition: opacity 0.5s, transform 0.3s;
-    }
-    
-    /* CERCHIO ESTERNO (INTERFERENZA) - PULSA */
-    .node-outer {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 4px solid rgba(180, 0, 255, 0.7);
-        box-shadow: 
-            0 0 35px rgba(180, 0, 255, 0.5),
-            inset 0 0 20px rgba(140, 0, 220, 0.3);
-        animation: pulseInterference 3s ease-in-out infinite alternate;
-        opacity: 0.85;
-        transition: opacity 0.5s, transform 0.5s;
-    }
-    
-    /* ETICHETTA */
-    .node-label {
-        position: absolute;
-        top: 130%;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #a0e8ff;
-        font-weight: bold;
-        font-size: 14px;
-        text-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
-        white-space: nowrap;
-    }
-    
-    /* STATO COLLASSATO */
-    .quantum-node.collapsed .node-outer {
-        opacity: 0.2;
-        transform: scale(0.7);
-        animation: none;
-    }
-    
-    /* ANIMAZIONI */
-    @keyframes rotatePhase {
-        from { transform: rotate(0deg) scale(1); }
-        50% { transform: rotate(180deg) scale(1.05); }
-        to { transform: rotate(360deg) scale(1); }
-    }
-    
-    @keyframes pulseInterference {
-        from { 
-            transform: scale(1);
-            box-shadow: 0 0 35px rgba(180, 0, 255, 0.5);
-        }
-        to { 
-            transform: scale(1.08);
-            box-shadow: 0 0 50px rgba(180, 0, 255, 0.8);
-        }
-    }
-    
-    /* INDICATORE K-MATRIX (linee di connessione) */
-    .k-connection {
-        position: absolute;
-        height: 3px;
-        background: linear-gradient(90deg, 
-            transparent, 
-            rgba(255, 100, 255, 0.6), 
-            transparent);
-        transform-origin: 0 0;
-        z-index: -1;
-        opacity: 0.6;
-    }
-`;
-document.head.appendChild(styleTag);
-console.log("✅ Stili animati applicati.");
-
-// 2. RICREAZIONE COMPLETA DEI NODI
-const container = document.getElementById('nodesContainer');
-if (container) {
-    container.innerHTML = '';
-    
-    const nodeNames = ['Intuition', 'Emotion', 'Logic', 'Memory', 'Ethics', 'Will'];
-    
-    for (let i = 0; i < 6; i++) {
-        const nodeDiv = document.createElement('div');
-        nodeDiv.className = 'quantum-node';
-        nodeDiv.id = `node-${i}`;
-        
-        nodeDiv.innerHTML = `
-            <div class="node-inner"></div>
-            <div class="node-outer"></div>
-            <div class="node-label">${nodeNames[i]}</div>
-        `;
-        
-        // Imposta posizione circolare
-        const angle = (i / 6) * Math.PI * 2;
-        const radius = 200;
-        const centerX = 150;
-        const centerY = 150;
-        
-        nodeDiv.style.position = 'absolute';
-        nodeDiv.style.left = `${centerX + Math.cos(angle) * radius - 60}px`;
-        nodeDiv.style.top = `${centerY + Math.sin(angle) * radius - 60}px`;
-        
-        container.appendChild(nodeDiv);
-    }
-    
-    console.log("✅ 6 nodi quantistici ricreati con animazioni.");
-}
-
-// 3. AGGIORNAMENTO DINAMICO (collegamento al motore)
-function updateQuantumVisuals() {
-    if (!window.uiManager?.quantumEngine) return;
-    
-    for (let i = 0; i < 6; i++) {
-        const node = document.getElementById(`node-${i}`);
-        if (!node) continue;
-        
-        const state = window.uiManager.quantumEngine.getNodeState(i);
-        const inner = node.querySelector('.node-inner');
-        const outer = node.querySelector('.node-outer');
-        
-        // Aggiorna rotazione in base alla fase
-        if (inner) {
-            inner.style.animationDuration = `${8 / (Math.abs(state.phase) + 0.5)}s`;
-            inner.style.opacity = `${0.5 + state.willpower * 0.5}`;
-        }
-        
-        // Aggiorna pulsazione in base alla coerenza
-        if (outer && window.coherence) {
-            const pulseIntensity = 0.5 + window.coherence * 0.5;
-            outer.style.animationDuration = `${3 / pulseIntensity}s`;
-            outer.style.opacity = `${0.3 + window.coherence * 0.7}`;
-        }
-        
-        // Stato collassato
-        if (state.collapsed) {
-            node.classList.add('collapsed');
-        } else {
-            node.classList.remove('collapsed');
-        }
-    }
-}
-
-// 4. AVVIO AGGIORNAMENTO CONTINUO
-setInterval(updateQuantumVisuals, 100);
-console.log("✅ Aggiornamento visivo dinamico attivo.");
-        // ========== ATTIVAZIONE CONTROLLI MASTER FORMULA ==========
-console.log("🧮 Attivazione controlli Master Formula...");
-
-// 1. TRASFORMA I CAMPI IN INPUT EDITABILI
-const params = ['alphaParam', 'betaParam', 'gammaParam', 'deltaParam'];
-params.forEach(paramId => {
-    const input = document.getElementById(paramId);
-    if (input) {
-        input.readOnly = false;  // Rendi editabile
-        input.style.background = 'rgba(0, 50, 100, 0.5)';
-        input.style.border = '2px solid rgba(0, 200, 255, 0.6)';
-        input.style.color = '#0ff';
-        
-        // Aggiungi listener per aggiornare il sistema
-        input.addEventListener('change', function() {
-            const value = parseFloat(this.value.replace(',', '.'));
-            const paramName = paramId.replace('Param', '').toLowerCase();
-            
-            // Aggiorna la variabile globale corrispondente
-            if (window[paramName] !== undefined) {
-                window[paramName] = value;
-                console.log(`✅ Parametro ${paramName} aggiornato a: ${value}`);
-                
-                // Forza ricalcolo del Phi
-                if (window.uiManager?.quantumEngine?.updatePhi) {
-                    window.uiManager.quantumEngine.updatePhi();
-                }
-            }
-        });
-        
-        console.log(`✅ Controllo ${paramId} attivato.`);
-    }
-});
-
-// 2. CREA PULSANTI PRESET
-const paramControls = document.querySelector('.param-controls');
-if (paramControls && !document.getElementById('presetButtons')) {
-    const presetDiv = document.createElement('div');
-    presetDiv.id = 'presetButtons';
-    presetDiv.innerHTML = `
-        <h4 style="margin-top:20px; color:#8af;">Formula Presets</h4>
-        <button id="presetDefault" style="margin:5px; padding:8px; background:#0a5; border:none; border-radius:4px; color:white;">Default (2.5, 1.5, 2.0, 0.2)</button>
-        <button id="presetBalanced" style="margin:5px; padding:8px; background:#08a; border:none; border-radius:4px; color:white;">Balanced (1.0, 1.0, 1.0, 0.1)</button>
-        <button id="presetWillpower" style="margin:5px; padding:8px; background:#a08; border:none; border-radius:4px; color:white;">Willpower Focus (1.0, 0.5, 3.0, 0.3)</button>
-    `;
-    paramControls.appendChild(presetDiv);
-    
-    // Preset: Default
-    document.getElementById('presetDefault').onclick = function() {
-        document.getElementById('alphaParam').value = 2.5;
-        document.getElementById('betaParam').value = 1.5;
-        document.getElementById('gammaParam').value = 2.0;
-        document.getElementById('deltaParam').value = 0.2;
-        updateAllParams();
-    };
-    
-    // Preset: Balanced
-    document.getElementById('presetBalanced').onclick = function() {
-        document.getElementById('alphaParam').value = 1.0;
-        document.getElementById('betaParam').value = 1.0;
-        document.getElementById('gammaParam').value = 1.0;
-        document.getElementById('deltaParam').value = 0.1;
-        updateAllParams();
-    };
-    
-    // Preset: Willpower Focus
-    document.getElementById('presetWillpower').onclick = function() {
-        document.getElementById('alphaParam').value = 1.0;
-        document.getElementById('betaParam').value = 0.5;
-        document.getElementById('gammaParam').value = 3.0;
-        document.getElementById('deltaParam').value = 0.3;
-        updateAllParams();
-    };
-    
-    function updateAllParams() {
-        params.forEach(paramId => {
-            const input = document.getElementById(paramId);
-            if (input) input.dispatchEvent(new Event('change'));
-        });
-        console.log("🎛️ Preset applicato e sistema aggiornato.");
-    }
-    
-    console.log("✅ Pulsanti preset creati.");
-}
-
-console.log("🎉 CONTROLLI MASTER FORMULA ATTIVI!");
-console.log("Ora puoi:");
-console.log("1. Modificare α, β, γ, δ direttamente nei campi");
-console.log("2. Usare i preset per configurazioni rapide");
-console.log("3. I nodi dovrebbero mostrare cerchi doppi animati");
-        <style id="phi-emergency-styles">
-    /* Styles de secours pour les cercles doppï et l'animation */
-    .quantum-node {
-        position: relative;
-        width: 80px;
-        height: 80px;
-        display: inline-block;
-        margin: 15px;
-    }
-    .node-inner {
-        position: absolute;
-        width: 60%;
-        height: 60%;
-        top: 20%;
-        left: 20%;
-        border-radius: 50%;
-        background: radial-gradient(circle at 30% 30%, rgba(0, 200, 255, 0.9), rgba(0, 80, 160, 0.3));
-        border: 2px solid rgba(0, 170, 255, 0.9);
-        animation: spin 4s linear infinite;
-    }
-    .node-outer {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 2px solid rgba(160, 0, 255, 0.7);
-        box-shadow: 0 0 20px rgba(160, 0, 255, 0.5);
-    }
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-</style>
-        <script>
-    // Initialisateur de secours pour le système Φ
-    console.log("🔧 Initialisateur de secours Φ chargé.");
-
-    // Cette fonction sera appelée dès que le corps de la page est prêt
-    function phiEmergencyInit() {
-        console.log("🚀 Tentative de démarrage du système...");
-
-        // 1. Attendre un peu que le reste du code se charge
-        setTimeout(function() {
-            // 2. Vérifier si l'UIManager principal a échoué
-            if (typeof UIManager === 'function' && !window.uiManager) {
-                console.log("⚠️ UIManager global non créé. Création d'urgence...");
-                try {
-                    window.uiManager = new UIManager();
-                    console.log("✅ UIManager de secours créé.");
-                } catch (e) {
-                    console.error("❌ Échec de la création d'urgence :", e);
-                }
-            }
-
-            // 3. S'assurer qu'il y a un loop d'animation
-            if (window.uiManager && (!state || !state.animationId)) {
-                console.log("🔄 Démarrage du loop d'animation de secours...");
-                let lastTime = performance.now();
-                function animate(time) {
-                    if (!window.uiManager) return;
-                    const delta = (time - lastTime) / 1000;
-                    lastTime = time;
-                    window.uiManager.update(delta);
-                    requestAnimationFrame(animate);
-                }
-                requestAnimationFrame(animate);
-                console.log("✅ Animation de secours démarrée.");
-            }
-
-            // 4. Afficher un état final
-            setTimeout(() => {
-                console.log("📊 État final de l'init de secours :", {
-                    hasUIManager: !!window.uiManager,
-                    hasQuantumEngine: !!(window.uiManager && window.uiManager.quantumEngine),
-                    phiValue: window.phi
-                });
-            }, 1000);
-
-        }, 500); // Délai initial
-    }
-
-    // Lancer l'initialisateur quand la page est prête
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', phiEmergencyInit);
-    } else {
-        phiEmergencyInit();
-    }
-</script>
-        // Vérification rapide du DOM et des styles
-console.log("Nombre d'éléments '.node-inner' trouvés :", document.querySelectorAll('.node-inner').length);
-console.log("Nombre d'éléments '.node-outer' trouvés :", document.querySelectorAll('.node-outer').length);
-let testNode = document.querySelector('.node-inner');
-if (testNode) {
-    console.log("Style 'animation' du premier cercle :", window.getComputedStyle(testNode).animation);
-}
-        
-        
-        
