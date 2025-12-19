@@ -26,7 +26,7 @@
                               radial-gradient(circle at 90% 80%, rgba(128, 0, 255, 0.05) 0%, transparent 20%);
         }
         
-        /* CANVAS FONDAMENTALE - COPRE TUTTO */
+        /* CANVAS - SOTTO TUTTO */
         #phiCanvas {
             position: fixed;
             top: 0;
@@ -38,13 +38,13 @@
             display: block !important;
         }
         
-        /* L'INTERFACCIA SOPRA IL CANVAS */
+        /* INTERFACCIA - SOPRA IL CANVAS */
         .container {
             position: relative;
             z-index: 1;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 150px 20px 20px 20px;
+            padding: 150px 20px 20px 20px; /* MODIFICATO: 150px in alto */
         }
         
         header {
@@ -118,7 +118,7 @@
         .quantum-node {
             background: rgba(0, 40, 80, 0.3);
             border-radius: 15px;
-            padding: 20px;
+            padding: 16px; /* RIDOTTO */
             text-align: center;
             border: 1px solid rgba(0, 170, 255, 0.3);
             transition: all 0.3s ease;
@@ -280,7 +280,7 @@
                 <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(0,170,255,0.3);">
                     <h4 style="color:#8af;">Canvas Animation Status</h4>
                     <div id="canvasStatus" style="color:#0f0; padding:10px; background:rgba(0,50,0,0.3); border-radius:5px;">
-                        ✅ Canvas animato attivo - Onde e nodi visibili
+                        ✅ Canvas animato attivo - Versione pulita
                     </div>
                 </div>
             </div>
@@ -288,8 +288,8 @@
     </div>
 
     <script>
-        // ==================== CANVAS ANIMATO Φ ====================
-        console.log("🌀 Inizializzazione Canvas Animato Φ...");
+        // ==================== CANVAS ANIMATO Φ (VERSIONE PULITA) ====================
+        console.log("🌀 Inizializzazione Canvas Animato Φ (versione pulita)...");
         
         class PhiCanvasRenderer {
             constructor() {
@@ -307,13 +307,12 @@
                 this.time = 0;
                 this.initNodes();
                 
-                console.log("✅ CanvasRenderer pronto - Dimensioni:", this.canvas.width, "x", this.canvas.height);
+                console.log("✅ CanvasRenderer pronto");
             }
             
             resize() {
                 this.canvas.width = window.innerWidth;
                 this.canvas.height = window.innerHeight;
-                console.log("📐 Canvas ridimensionato a:", this.canvas.width, "x", this.canvas.height);
             }
             
             initNodes() {
@@ -321,7 +320,7 @@
                 for (let i = 0; i < 6; i++) {
                     this.nodes.push({
                         name: nodeNames[i],
-                        radius: 15 + Math.random() * 10,
+                        radius: 15 + Math.random() * 10, // CERCHI PICCOLI
                         color: i % 2 === 0 ? [0, 170, 255] : [180, 0, 255],
                         phase: Math.random() * Math.PI * 2,
                         speed: 0.5 + Math.random() * 0.5
@@ -337,22 +336,22 @@
                     node.phase += deltaTime * node.speed;
                 });
                 
-                // Crea nuove onde casuali
-                if (Math.random() < 0.03) {
+                // Onde casuali MOLTO RARE (quasi assenti)
+                if (Math.random() < 0.003) { // MOLTO RARE
                     this.waves.push({
                         x: Math.random() * this.canvas.width,
                         y: Math.random() * this.canvas.height,
                         radius: 5,
-                        maxRadius: 150 + Math.random() * 200,
-                        alpha: 0.7,
+                        maxRadius: 100,
+                        alpha: 0.5,
                         color: [100, 200, 255]
                     });
                 }
                 
                 // Aggiorna onde
                 this.waves.forEach(wave => {
-                    wave.radius += 2;
-                    wave.alpha -= 0.01;
+                    wave.radius += 1.5;
+                    wave.alpha -= 0.015;
                 });
                 this.waves = this.waves.filter(wave => wave.alpha > 0);
             }
@@ -362,102 +361,91 @@
                 
                 const centerX = this.canvas.width / 2;
                 const centerY = this.canvas.height / 2;
-                const radius = Math.min(centerX, centerY) * 0.25;
+                const radius = Math.min(centerX, centerY) * 0.25; // CERCHI VICINI AL CENTRO
                 
                 // Sfondo trasparente
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 
-                // 1. ONDE CONCENTRICHE PULSANTI
-                for (let i = 0; i < 6; i++) {
-                    const waveRadius = 100 + i * 55 + Math.sin(this.time + i) * 25;
+                // 1. ONDE CONCENTRICHE SOTTILI (3 invece di 6)
+                for (let i = 0; i < 3; i++) {
+                    const waveRadius = 80 + i * 70 + Math.sin(this.time + i) * 15;
                     this.ctx.beginPath();
                     this.ctx.arc(centerX, centerY, waveRadius, 0, Math.PI * 2);
-                    this.ctx.strokeStyle = `rgba(0, 200, 255, ${0.1 * (1 - i/6)})`;
-                    this.ctx.lineWidth = 1.5;
+                    this.ctx.strokeStyle = `rgba(0, 180, 255, ${0.08 * (1 - i/3)})`;
+                    this.ctx.lineWidth = 1;
                     this.ctx.stroke();
                 }
                 
-                // 2. LINEA DI CONNESSIONE CIRCOLARE
-                this.ctx.strokeStyle = 'rgba(0, 170, 255, 0.2)';
-                this.ctx.lineWidth = 3;
+                // 2. LINEA DI CONNESSIONE CIRCOLARE SOTTILE
+                this.ctx.strokeStyle = 'rgba(0, 150, 255, 0.15)';
+                this.ctx.lineWidth = 2;
                 this.ctx.beginPath();
                 this.ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
                 this.ctx.stroke();
                 
                 // 3. DISEGNA I 6 NODI IN CERCHIO
                 this.nodes.forEach((node, i) => {
-                    const angle = (i / 6) * Math.PI * 2 + this.time * 0.3;
+                    const angle = (i / 6) * Math.PI * 2 + this.time * 0.2;
                     const x = centerX + Math.cos(angle) * radius;
                     const y = centerY + Math.sin(angle) * radius;
                     
-                    // Cerchio del nodo
+                    // Cerchio del nodo (PICCOLO)
                     this.ctx.beginPath();
                     this.ctx.arc(x, y, node.radius, 0, Math.PI * 2);
                     this.ctx.fillStyle = `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, 0.7)`;
                     this.ctx.fill();
                     
-                    // Bordo luminoso
+                    // Bordo luminoso sottile
                     this.ctx.beginPath();
                     this.ctx.arc(x, y, node.radius, 0, Math.PI * 2);
-                    this.ctx.strokeStyle = `rgba(255, 255, 255, 0.9)`;
-                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeStyle = `rgba(255, 255, 255, 0.8)`;
+                    this.ctx.lineWidth = 1.5;
                     this.ctx.stroke();
                     
-                    // Punto rotante interno
+                    // Punto rotante interno (PICCOLO)
                     this.ctx.save();
                     this.ctx.translate(x, y);
                     this.ctx.rotate(node.phase);
                     this.ctx.beginPath();
-                    this.ctx.arc(node.radius * 0.6, 0, 8, 0, Math.PI * 2);
-                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                    this.ctx.arc(node.radius * 0.5, 0, 5, 0, Math.PI * 2);
+                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                     this.ctx.fill();
                     this.ctx.restore();
                     
-                    // Linee di connessione tra nodi
+                    // Linee di connessione tra nodi (SOFT)
                     if (i < 5) {
-                        const nextAngle = ((i + 1) / 6) * Math.PI * 2 + this.time * 0.3;
+                        const nextAngle = ((i + 1) / 6) * Math.PI * 2 + this.time * 0.2;
                         const nextX = centerX + Math.cos(nextAngle) * radius;
                         const nextY = centerY + Math.sin(nextAngle) * radius;
                         
                         this.ctx.beginPath();
                         this.ctx.moveTo(x, y);
                         this.ctx.lineTo(nextX, nextY);
-                        this.ctx.strokeStyle = `rgba(0, 170, 255, 0.4)`;
-                        this.ctx.lineWidth = 2;
+                        this.ctx.strokeStyle = `rgba(0, 150, 255, 0.3)`;
+                        this.ctx.lineWidth = 1.5;
                         this.ctx.stroke();
                     }
                 });
                 
-                // 4. DISEGNA ONDE ESPANSIVE
+                // 4. DISEGNA ONDE ESPANSIVE (se ce ne sono)
                 this.waves.forEach(wave => {
                     this.ctx.beginPath();
                     this.ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
                     this.ctx.strokeStyle = `rgba(${wave.color[0]}, ${wave.color[1]}, ${wave.color[2]}, ${wave.alpha})`;
-                    this.ctx.lineWidth = 2;
+                    this.ctx.lineWidth = 1.5;
                     this.ctx.stroke();
                 });
                 
-                // 5. PARTICOLINE LUMINOSE
-                for (let i = 0; i < 20; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = Math.random() * radius * 1.5;
-                    const px = centerX + Math.cos(angle) * dist;
-                    const py = centerY + Math.sin(angle) * dist;
-                    
-                    this.ctx.beginPath();
-                    this.ctx.arc(px, py, 1 + Math.random() * 2, 0, Math.PI * 2);
-                    this.ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.random() * 0.4})`;
-                    this.ctx.fill();
-                }
+                // NOTA: NESSUNA PARTICOLINA LUMINOSA (RIMOSSA)
             }
         }
         
-        // ==================== INIZIALIZZAZIONE E AVVIO ====================
+        // ==================== INIZIALIZZAZIONE ====================
         let phiRenderer = null;
         let animationId = null;
         
         function initPhiSystem() {
-            console.log("🚀 Avvio Sistema Φ con Canvas Animato...");
+            console.log("🚀 Avvio Sistema Φ (versione pulita)...");
             
             // Crea il renderer
             phiRenderer = new PhiCanvasRenderer();
@@ -478,23 +466,16 @@
             
             animationId = requestAnimationFrame(animate);
             
-            // Aggiorna stato nella UI
-            const statusEl = document.getElementById('canvasStatus');
-            if (statusEl) {
-                statusEl.innerHTML = `✅ Canvas animato attivo - ${phiRenderer.canvas.width}x${phiRenderer.canvas.height}`;
-                statusEl.style.backgroundColor = 'rgba(0, 50, 0, 0.4)';
-            }
-            
             // Simula aggiornamento valori Φ
             setInterval(() => {
-                const phiValue = 0.5 + Math.sin(Date.now() / 3000) * 0.2;
+                const phiValue = 0.5 + Math.sin(Date.now() / 4000) * 0.15;
                 const phiBar = document.getElementById('phiValueBar');
                 const phiText = document.getElementById('phiValueText');
                 if (phiBar) phiBar.style.width = `${phiValue * 100}%`;
                 if (phiText) phiText.textContent = `Φ: ${phiValue.toFixed(3)}`;
             }, 100);
             
-            console.log("🎉 Sistema Φ Canvas Animato ATTIVO!");
+            console.log("✅ Sistema Φ Canvas (pulito) ATTIVO!");
         }
         
         // Avvia quando la pagina è pronta
@@ -508,28 +489,26 @@
         document.getElementById('resetBtn').onclick = function() {
             if (phiRenderer) {
                 phiRenderer.waves = [];
-                console.log("🔄 Simulazione resettata - Onde pulite");
+                console.log("🔄 Simulazione resettata");
             }
         };
         
         document.getElementById('forceCollapseBtn').onclick = function() {
             if (phiRenderer) {
-                // Crea un'onda di collasso
-                for (let i = 0; i < 10; i++) {
-                    phiRenderer.waves.push({
-                        x: phiRenderer.canvas.width / 2,
-                        y: phiRenderer.canvas.height / 2,
-                        radius: i * 20,
-                        maxRadius: 400,
-                        alpha: 0.8 - i * 0.08,
-                        color: [255, 50, 100]
-                    });
-                }
-                console.log("💥 Collasso forzato attivato");
+                // Crea un'onda di collasso centrale
+                phiRenderer.waves.push({
+                    x: phiRenderer.canvas.width / 2,
+                    y: phiRenderer.canvas.height / 2,
+                    radius: 10,
+                    maxRadius: 300,
+                    alpha: 0.7,
+                    color: [255, 50, 100]
+                });
+                console.log("💥 Onda di collasso aggiunta");
             }
         };
         
-        console.log("✅ Script Φ Canvas Animato caricato e pronto.");
+        console.log("✅ Script Φ (versione pulita) caricato.");
     </script>
 </body>
 </html>
