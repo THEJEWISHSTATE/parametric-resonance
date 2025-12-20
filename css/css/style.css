@@ -1,0 +1,344 @@
+/* BASE STYLES FOR Φ-FRAMEWORK */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Exo 2', 'Segoe UI', sans-serif;
+    background: #0a0a1a;
+    color: #e0e0ff;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 170, 255, 0.3);
+}
+
+header h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, #0af, #80f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    text-shadow: 0 0 30px rgba(0, 170, 255, 0.3);
+}
+
+.subtitle {
+    color: #a0a0ff;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Main Panel */
+.main-panel {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .main-panel {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Quantum Visualization */
+.quantum-viz {
+    background: rgba(20, 25, 45, 0.7);
+    border: 1px solid rgba(0, 170, 255, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.quantum-viz h2 {
+    color: #4ecdc4;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+/* Phi Meter */
+.phi-meter-container {
+    margin-bottom: 30px;
+}
+
+.phi-meter-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #a0a0ff;
+}
+
+.phi-value {
+    font-family: 'Orbitron', monospace;
+    font-weight: bold;
+    color: #0af;
+    font-size: 1.1rem;
+}
+
+.phi-meter {
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 170, 255, 0.2);
+    margin-bottom: 5px;
+}
+
+.phi-meter-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0a0a1a, #0af, #80f);
+    width: 50%;
+    transition: width 0.3s ease;
+}
+
+.phi-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* Nodes Container */
+.nodes-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.cognitive-node {
+    background: rgba(30, 35, 60, 0.6);
+    border: 1px solid rgba(0, 170, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.cognitive-node:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 170, 255, 0.4);
+    box-shadow: 0 10px 20px rgba(0, 170, 255, 0.1);
+}
+
+.node-core {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    box-shadow: 0 0 20px currentColor;
+}
+
+.node-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #e0e0ff;
+}
+
+.node-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    color: #0af;
+}
+
+/* Volition Controls */
+.volition-controls {
+    background: rgba(25, 30, 50, 0.6);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.volition-slider {
+    margin-bottom: 15px;
+}
+
+.volition-slider label {
+    display: block;
+    margin-bottom: 8px;
+    color: #a0a0ff;
+    font-size: 0.9rem;
+}
+
+.volition-slider input[type="range"] {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.volition-value {
+    float: right;
+    font-family: 'Orbitron', monospace;
+    color: #0af;
+}
+
+/* Control Panel */
+.control-panel {
+    background: rgba(20, 25, 45, 0.7);
+    border: 1px solid rgba(0, 170, 255, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.control-panel h3 {
+    color: #55efc4;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.param-control {
+    margin-bottom: 20px;
+}
+
+.param-control label {
+    display: block;
+    margin-bottom: 8px;
+    color: #a0a0ff;
+    font-size: 0.95rem;
+}
+
+.param-control input[type="range"] {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.param-value {
+    float: right;
+    font-family: 'Orbitron', monospace;
+    color: #0af;
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+    background: linear-gradient(135deg, rgba(0, 170, 255, 0.2), rgba(128, 0, 255, 0.2));
+    border: 1px solid rgba(0, 170, 255, 0.3);
+    color: #a0a0ff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, rgba(0, 170, 255, 0.3), rgba(128, 0, 255, 0.3));
+    border-color: #0af;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 170, 255, 0.3);
+}
+
+.control-buttons {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 170, 255, 0.2);
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 170, 255, 0.2);
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #4ecdc4;
+    animation: pulse 2s infinite;
+}
+
+.version {
+    color: #a0a0ff;
+}
+
+/* Range Sliders Styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: rgba(0, 170, 255, 0.1);
+    border-radius: 4px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0af;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 170, 255, 0.8);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0af;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 170, 255, 0.8);
+    border: none;
+}
+
+/* Pulsating animation */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .nodes-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
