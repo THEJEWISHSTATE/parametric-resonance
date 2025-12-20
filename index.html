@@ -31,22 +31,21 @@
         /* === ANIMAZIONI PRINCIPALI - IN ALTO === */
         /* CONTENITORE NODI */
         #nodesContainer {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 40px;
-            padding: 30px;
-            min-height: 250px;
             position: relative;
+            width: 100%;
+            height: 400px;
+            min-height: 400px;
+            margin: 20px 0;
+            overflow: hidden;
         }
         
         /* NODO QUANTISTICO COMPLETO */
         .quantum-node {
-            position: absolute; /* Cambiato da relative per posizionamento circolare */
+            position: absolute;
             width: 120px;
             height: 120px;
             cursor: pointer;
-            transform: translate(-50%, -50%); /* Centratura precisa */
+            transform: translate(-50%, -50%);
         }
         
         /* CERCHIO INTERNO (FASE) - RUOTA */
@@ -172,6 +171,60 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
+        /* METER PHI - CORRETTA POSIZIONE */
+        .phi-meter-container {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: rgba(0, 20, 40, 0.6);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+        }
+        
+        .phi-meter-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .phi-meter {
+            height: 30px;
+            background: rgba(0, 30, 60, 0.7);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .phi-value-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple));
+            width: 50%;
+            border-radius: 15px;
+            transition: width 0.5s ease;
+        }
+        
+        .phi-value-text {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            line-height: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 5px black;
+            z-index: 2;
+        }
+        
+        .collapse-threshold {
+            position: absolute;
+            left: 75%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 50, 50, 0.8);
+        }
+        
         .control-group {
             margin-top: 25px;
             padding-top: 20px;
@@ -194,6 +247,26 @@
             color: var(--quantum-cyan);
             font-size: 16px;
             text-align: center;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+            height: 8px;
+            background: rgba(0, 30, 60, 0.7);
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--quantum-purple);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(128, 0, 255, 0.8);
         }
         
         .control-btn {
@@ -235,21 +308,15 @@
             justify-content: space-between;
         }
         
-        .phi-meter {
-            height: 30px;
-            background: rgba(0, 30, 60, 0.7);
-            border-radius: 15px;
+        /* STILI PER VOLITION CONTROLS */
+        .volition-slider {
             margin: 15px 0;
-            position: relative;
-            overflow: hidden;
         }
         
-        .phi-value-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple));
-            width: 50%;
-            border-radius: 15px;
-            transition: width 0.5s ease;
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
         }
         
         /* Responsive */
@@ -281,6 +348,8 @@
             <!-- PRIMA: VISUALIZZAZIONE ANIMATA -->
             <div class="quantum-viz">
                 <h2>Quantum Coherence Field</h2>
+                
+                <!-- METER Φ SOPRA I NODI (NON SOVRAPPOSTO) -->
                 <div class="phi-meter-container">
                     <div class="phi-meter-label">
                         <span>Integrated Information (Φ)</span>
@@ -298,9 +367,10 @@
                     <!-- I nodi saranno generati qui dal JavaScript -->
                 </div>
                 
+                <!-- VOLITION CONTROLS (3 SLIDER) -->
                 <div id="volitionControls">
                     <h3>Volition Control</h3>
-                    <!-- Gli slider saranno generati qui -->
+                    <!-- Gli slider saranno generati qui dinamicamente -->
                 </div>
                 <div class="budget-display">
                     <div>Willpower Budget: <span id="budgetValue">1.000</span></div>
@@ -363,6 +433,7 @@
         let coherence = 0.5;
         let alpha = 2.5, beta = 1.5, gamma = 2.0, delta = 0.2;
         let animationId = null;
+        let volitionValues = [0.5, 0.5, 0.5]; // Valori dei 3 slider volition
         
         // ========== FUNZIONE PRINCIPALE: CREA NODI ANIMATI ==========
         function createAnimatedNodes() {
@@ -376,12 +447,12 @@
             container.innerHTML = '';
             
             const nodeNames = ['Intuition', 'Emotion', 'Logic', 'Memory', 'Ethics', 'Will'];
-            const centerX = container.offsetWidth / 2 || 250;
-            const centerY = container.offsetHeight / 2 || 150;
-            const radius = 180;
+            const centerX = container.offsetWidth / 2 || 300;
+            const centerY = container.offsetHeight / 2 || 200;
+            const radius = Math.min(centerX, centerY) * 0.6; // Adattivo
             
             for (let i = 0; i < 6; i++) {
-                const angle = (i / 6) * Math.PI * 2;
+                const angle = (i / 6) * Math.PI * 2 - Math.PI / 2; // Inizia dall'alto
                 const x = centerX + Math.cos(angle) * radius;
                 const y = centerY + Math.sin(angle) * radius;
                 
@@ -403,6 +474,58 @@
             console.log("✅ 6 animated nodes created");
         }
         
+        // ========== FUNZIONE: CREA VOLITION CONTROLS ==========
+        function createVolitionControls() {
+            console.log("🎛️ Creating volition controls...");
+            const container = document.getElementById('volitionControls');
+            if (!container) {
+                console.error("❌ volitionControls not found!");
+                return;
+            }
+            
+            const controlNames = ['Focus Control', 'Emotional Dampening', 'Cognitive Load'];
+            
+            container.innerHTML = '<h3>Volition Control</h3>';
+            
+            for (let i = 0; i < 3; i++) {
+                const sliderDiv = document.createElement('div');
+                sliderDiv.className = 'volition-slider';
+                sliderDiv.innerHTML = `
+                    <div class="slider-label">
+                        <span>${controlNames[i]}</span>
+                        <span id="volitionValue${i}">0.50</span>
+                    </div>
+                    <input type="range" 
+                           id="volitionSlider${i}" 
+                           min="0" 
+                           max="1" 
+                           step="0.01" 
+                           value="0.5" 
+                           class="volition-slider">
+                `;
+                container.appendChild(sliderDiv);
+                
+                // Aggiungi event listener
+                const slider = document.getElementById(`volitionSlider${i}`);
+                const valueDisplay = document.getElementById(`volitionValue${i}`);
+                
+                slider.addEventListener('input', function() {
+                    const value = parseFloat(this.value);
+                    volitionValues[i] = value;
+                    valueDisplay.textContent = value.toFixed(2);
+                    console.log(`🔧 Volition ${i} = ${value}`);
+                    
+                    // Aggiorna dinamicamente il parametro delta in base al volition
+                    if (i === 2) { // Cognitive Load influisce sul conflict
+                        delta = 0.1 + value * 0.4; // Range 0.1-0.5
+                        document.getElementById('deltaParam').value = delta.toFixed(1);
+                    }
+                });
+            }
+            
+            console.log("✅ 3 volition sliders created");
+        }
+        
         // ========== FUNZIONE: AGGIORNA ANIMAZIONI ==========
         function updateAnimations() {
             const nodes = document.querySelectorAll('.quantum-node');
@@ -411,32 +534,54 @@
                 const outer = node.querySelector('.node-outer');
                 
                 if (inner && outer) {
-                    // Dinamica basata su phi e coerenza
-                    const speedFactor = 1 + (phi - 0.5);
-                    const pulseFactor = 1 + (coherence - 0.5);
+                    // Dinamica basata su phi e volition values
+                    const volitionEffect = 1 + (volitionValues[i % 3] - 0.5) * 0.5;
+                    const speedFactor = 1 + (phi - 0.5) * volitionEffect;
+                    const pulseFactor = 1 + (coherence - 0.5) * volitionEffect;
                     
                     inner.style.animationDuration = `${8 / speedFactor}s`;
                     outer.style.animationDuration = `${3 / pulseFactor}s`;
-                    outer.style.opacity = `${0.5 + coherence * 0.5}`;
+                    outer.style.opacity = `${0.5 + coherence * 0.3 + volitionValues[i % 3] * 0.2}`;
+                    
+                    // Effetto visivo in base al volition
+                    if (volitionValues[i % 3] > 0.7) {
+                        outer.style.boxShadow = `0 0 45px rgba(180, 0, 255, 0.7)`;
+                    } else if (volitionValues[i % 3] < 0.3) {
+                        outer.style.boxShadow = `0 0 25px rgba(180, 0, 255, 0.3)`;
+                    }
                 }
             });
         }
         
         // ========== FUNZIONE: CALCOLA PHI ==========
         function calculatePhi() {
-            // Formula di risonanza parametrica semplificata
+            // Formula di risonanza parametrica migliorata con volition
             const time = Date.now() / 1000;
-            phi = 0.5 + 0.3 * Math.sin(alpha * time * 0.1) * 
-                          Math.cos(beta * time * 0.07) * 
-                          (1 - delta * 0.5);
+            const volitionAvg = volitionValues.reduce((a, b) => a + b, 0) / 3;
             
-            coherence = 0.4 + 0.4 * Math.sin(gamma * time * 0.05);
+            phi = 0.5 + 0.25 * Math.sin(alpha * time * 0.1) * 
+                          Math.cos(beta * time * 0.07) * 
+                          (1 - delta * 0.5) * 
+                          (0.8 + volitionAvg * 0.4);
+            
+            coherence = 0.4 + 0.3 * Math.sin(gamma * time * 0.05) * volitionAvg;
             
             // Aggiorna UI
             document.getElementById('phiLabel').textContent = phi.toFixed(3);
             document.getElementById('phiValueText').textContent = `Φ: ${phi.toFixed(3)}`;
-            document.getElementById('phiValueBar').style.width = `${phi * 100}%`;
+            document.getElementById('phiValueBar').style.width = `${Math.min(phi * 100, 100)}%`;
             document.getElementById('budgetValue').textContent = (1.0 - delta).toFixed(3);
+            document.getElementById('regenRate').textContent = `${(volitionAvg * 0.05).toFixed(3)}/s`;
+            
+            // Colore dinamico della barra
+            const phiBar = document.getElementById('phiValueBar');
+            if (phi > 0.75) {
+                phiBar.style.background = 'linear-gradient(90deg, #ff5500, #ff0000)';
+            } else if (phi > 0.6) {
+                phiBar.style.background = 'linear-gradient(90deg, #ffaa00, #ff5500)';
+            } else {
+                phiBar.style.background = 'linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple))';
+            }
             
             // Aggiorna animazioni
             updateAnimations();
@@ -502,20 +647,53 @@
             // Pulsanti di controllo
             document.getElementById('resetBtn').onclick = () => {
                 phi = 0.5;
+                volitionValues = [0.5, 0.5, 0.5];
+                // Resetta slider volition
+                for (let i = 0; i < 3; i++) {
+                    const slider = document.getElementById(`volitionSlider${i}`);
+                    const valueDisplay = document.getElementById(`volitionValue${i}`);
+                    if (slider && valueDisplay) {
+                        slider.value = 0.5;
+                        valueDisplay.textContent = '0.50';
+                    }
+                }
                 console.log("🔄 Simulation reset");
             };
             
             document.getElementById('forceCollapseBtn').onclick = () => {
                 if (phi > 0.75) {
-                    document.querySelectorAll('.node-outer').forEach(node => {
+                    document.querySelectorAll('.node-outer').forEach((node, i) => {
                         node.style.animation = 'none';
+                        node.style.opacity = '0.3';
+                        node.style.transform = 'scale(0.8)';
+                        node.style.boxShadow = '0 0 10px rgba(255, 0, 0, 0.5)';
+                        
                         setTimeout(() => {
                             node.style.animation = '';
-                        }, 1000);
+                            node.style.opacity = '';
+                            node.style.transform = '';
+                            node.style.boxShadow = '';
+                        }, 2000);
                     });
                     console.log("💥 Force collapse triggered!");
+                } else {
+                    console.log("⚠️ Φ must be > 0.75 for force collapse");
                 }
             };
+            
+            document.getElementById('experimentBtn').onclick = () => {
+                console.log("🧪 Starting resilience experiment...");
+                // Simula un esperimento di risonanza
+                const originalAlpha = alpha;
+                alpha = 3.0;
+                setTimeout(() => alpha = originalAlpha, 3000);
+            };
+            
+            // Dilemma selector
+            document.getElementById('dilemmaSelect').addEventListener('change', function() {
+                console.log(`📖 Selected dilemma: ${this.value}`);
+                // Qui puoi aggiungere logica specifica per ogni dilemma
+            });
         }
         
         // ========== AVVIO SISTEMA ==========
@@ -525,11 +703,19 @@
             // 1. Crea i nodi animati
             createAnimatedNodes();
             
-            // 2. Inizializza i controlli
+            // 2. Crea i controlli volition
+            createVolitionControls();
+            
+            // 3. Inizializza i controlli
             initializeControls();
             
-            // 3. Avvia il loop di animazione
+            // 4. Avvia il loop di animazione
             animationLoop();
+            
+            // 5. Ridisegna su resize
+            window.addEventListener('resize', () => {
+                createAnimatedNodes();
+            });
             
             console.log("✅ System fully operational!");
         }
@@ -542,7 +728,7 @@
         }
     </script>
 </body>
-</html
+</html>
         
         
         
