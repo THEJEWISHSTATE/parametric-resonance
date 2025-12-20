@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,269 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Φ Introspect - Unified System v3.0</title>
     <style>
-        /* LO STILE CSS SARA' AGGIUNTO NEL BLOCCO 2 */
+        /* === STILI BASE E LAYOUT === */
+        :root {
+            --quantum-blue: #0af;
+            --quantum-purple: #80f;
+            --quantum-cyan: #0ff;
+            --bg-dark: #0a0a1a;
+            --card-bg: rgba(20, 25, 40, 0.92);
+            --text-primary: #e0f7ff;
+            --text-secondary: #a0d2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(10, 100, 255, 0.05) 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, rgba(128, 0, 255, 0.05) 0%, transparent 20%);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* === ANIMAZIONI PRINCIPALI - IN ALTO === */
+        /* CONTENITORE NODI */
+        #nodesContainer {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 30px;
+            min-height: 250px;
+            position: relative;
+        }
+        
+        /* NODO QUANTISTICO COMPLETO */
+        .quantum-node {
+            position: absolute; /* Cambiato da relative per posizionamento circolare */
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+            transform: translate(-50%, -50%); /* Centratura precisa */
+        }
+        
+        /* CERCHIO INTERNO (FASE) - RUOTA */
+        .node-inner {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            top: 25px;
+            left: 25px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, 
+                rgba(0, 255, 255, 0.9) 0%, 
+                rgba(0, 100, 200, 0.3) 70%,
+                transparent 90%);
+            border: 3px solid rgba(0, 200, 255, 0.8);
+            box-shadow: 
+                0 0 25px rgba(0, 200, 255, 0.6),
+                inset 0 0 15px rgba(0, 150, 255, 0.4);
+            animation: rotatePhase 8s linear infinite;
+            transform-origin: center;
+            will-change: transform;
+            transition: opacity 0.5s, transform 0.3s;
+        }
+        
+        /* CERCHIO ESTERNO (INTERFERENZA) - PULSA */
+        .node-outer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid rgba(180, 0, 255, 0.7);
+            box-shadow: 
+                0 0 35px rgba(180, 0, 255, 0.5),
+                inset 0 0 20px rgba(140, 0, 220, 0.3);
+            animation: pulseInterference 3s ease-in-out infinite alternate;
+            opacity: 0.85;
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        /* ETICHETTA */
+        .node-label {
+            position: absolute;
+            top: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #a0e8ff;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+            white-space: nowrap;
+        }
+        
+        /* STATO COLLASSATO */
+        .quantum-node.collapsed .node-outer {
+            opacity: 0.2;
+            transform: scale(0.7);
+            animation: none;
+        }
+        
+        /* DEFINIZIONE ANIMAZIONI KEYFRAMES */
+        @keyframes rotatePhase {
+            from { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.05); }
+            to { transform: rotate(360deg) scale(1); }
+        }
+        
+        @keyframes pulseInterference {
+            from { 
+                transform: scale(1);
+                box-shadow: 0 0 35px rgba(180, 0, 255, 0.5);
+            }
+            to { 
+                transform: scale(1.08);
+                box-shadow: 0 0 50px rgba(180, 0, 255, 0.8);
+            }
+        }
+        
+        /* === STILI UI (HEADER, CONTROLLI, PANNELLI) === */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(10, 20, 40, 0.7);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+        }
+        h1 {
+            color: var(--quantum-cyan);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
+        }
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .main-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .quantum-viz {
+            flex: 3;
+            min-width: 300px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 100, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-panel {
+            flex: 1;
+            min-width: 280px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(128, 0, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-group {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .param-row {
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        input[type="number"] {
+            width: 80px;
+            padding: 8px 12px;
+            background: rgba(0, 30, 60, 0.7);
+            border: 2px solid rgba(0, 150, 255, 0.5);
+            border-radius: 6px;
+            color: var(--quantum-cyan);
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .control-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: linear-gradient(45deg, rgba(0, 100, 255, 0.8), rgba(100, 0, 255, 0.8));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 100, 255, 0.4);
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            background: rgba(0, 30, 60, 0.8);
+            border: 2px solid rgba(0, 150, 255, 0.6);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .budget-display {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(0, 40, 80, 0.5);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .phi-meter {
+            height: 30px;
+            background: rgba(0, 30, 60, 0.7);
+            border-radius: 15px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .phi-value-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple));
+            width: 50%;
+            border-radius: 15px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-panel {
+                flex-direction: column;
+            }
+            .quantum-node {
+                width: 100px;
+                height: 100px;
+            }
+            .node-inner {
+                width: 60px;
+                height: 60px;
+                top: 20px;
+                left: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -17,6 +278,7 @@
         </header>
 
         <div class="main-panel">
+            <!-- PRIMA: VISUALIZZAZIONE ANIMATA -->
             <div class="quantum-viz">
                 <h2>Quantum Coherence Field</h2>
                 <div class="phi-meter-container">
@@ -30,9 +292,12 @@
                         <div class="collapse-threshold"></div>
                     </div>
                 </div>
+                
+                <!-- CONTENITORE NODI (ANIMATI) -->
                 <div id="nodesContainer">
-                    <!-- I nodi quantistici saranno generati qui da JavaScript -->
+                    <!-- I nodi saranno generati qui dal JavaScript -->
                 </div>
+                
                 <div id="volitionControls">
                     <h3>Volition Control</h3>
                     <!-- Gli slider saranno generati qui -->
@@ -43,6 +308,7 @@
                 </div>
             </div>
 
+            <!-- SECONDA: CONTROLLI (IN BASSO) -->
             <div class="control-panel">
                 <h3>System Controls</h3>
                 <select id="dilemmaSelect">
@@ -76,415 +342,207 @@
                         <input type="number" id="deltaParam" value="0.2" step="0.1">
                     </div>
                 </div>
+                
+                <!-- PULSANTI PRESET -->
+                <div class="control-group" id="presetButtons">
+                    <h4>Formula Presets</h4>
+                    <button id="presetDefault" class="control-btn">Default (2.5, 1.5, 2.0, 0.2)</button>
+                    <button id="presetBalanced" class="control-btn">Balanced (1.0, 1.0, 1.0, 0.1)</button>
+                    <button id="presetWillpower" class="control-btn">Willpower Focus (1.0, 0.5, 3.0, 0.3)</button>
+                </div>
             </div>
         </div>
-        <!-- Il pannello del log sarà qui -->
     </div>
 
+    <!-- JAVASCRIPT: TUTTA LA LOGICA IN BASSO -->
     <script>
-        // IL CODICE JAVASCRIPT SARA' AGGIUNTO NEL BLOCCO 3
+        console.log("🌀 Quantum Φ System initializing...");
+        
+        // ========== VARIABILI GLOBALI ==========
+        let phi = 0.5;
+        let coherence = 0.5;
+        let alpha = 2.5, beta = 1.5, gamma = 2.0, delta = 0.2;
+        let animationId = null;
+        
+        // ========== FUNZIONE PRINCIPALE: CREA NODI ANIMATI ==========
+        function createAnimatedNodes() {
+            console.log("🎨 Creating animated quantum nodes...");
+            const container = document.getElementById('nodesContainer');
+            if (!container) {
+                console.error("❌ nodesContainer not found!");
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            const nodeNames = ['Intuition', 'Emotion', 'Logic', 'Memory', 'Ethics', 'Will'];
+            const centerX = container.offsetWidth / 2 || 250;
+            const centerY = container.offsetHeight / 2 || 150;
+            const radius = 180;
+            
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                const nodeDiv = document.createElement('div');
+                nodeDiv.className = 'quantum-node';
+                nodeDiv.id = `node-${i}`;
+                nodeDiv.style.left = `${x}px`;
+                nodeDiv.style.top = `${y}px`;
+                
+                nodeDiv.innerHTML = `
+                    <div class="node-inner" style="animation-duration: ${8 + i}s;"></div>
+                    <div class="node-outer" style="animation-duration: ${3 + i/2}s;"></div>
+                    <div class="node-label">${nodeNames[i]}</div>
+                `;
+                
+                container.appendChild(nodeDiv);
+            }
+            
+            console.log("✅ 6 animated nodes created");
+        }
+        
+        // ========== FUNZIONE: AGGIORNA ANIMAZIONI ==========
+        function updateAnimations() {
+            const nodes = document.querySelectorAll('.quantum-node');
+            nodes.forEach((node, i) => {
+                const inner = node.querySelector('.node-inner');
+                const outer = node.querySelector('.node-outer');
+                
+                if (inner && outer) {
+                    // Dinamica basata su phi e coerenza
+                    const speedFactor = 1 + (phi - 0.5);
+                    const pulseFactor = 1 + (coherence - 0.5);
+                    
+                    inner.style.animationDuration = `${8 / speedFactor}s`;
+                    outer.style.animationDuration = `${3 / pulseFactor}s`;
+                    outer.style.opacity = `${0.5 + coherence * 0.5}`;
+                }
+            });
+        }
+        
+        // ========== FUNZIONE: CALCOLA PHI ==========
+        function calculatePhi() {
+            // Formula di risonanza parametrica semplificata
+            const time = Date.now() / 1000;
+            phi = 0.5 + 0.3 * Math.sin(alpha * time * 0.1) * 
+                          Math.cos(beta * time * 0.07) * 
+                          (1 - delta * 0.5);
+            
+            coherence = 0.4 + 0.4 * Math.sin(gamma * time * 0.05);
+            
+            // Aggiorna UI
+            document.getElementById('phiLabel').textContent = phi.toFixed(3);
+            document.getElementById('phiValueText').textContent = `Φ: ${phi.toFixed(3)}`;
+            document.getElementById('phiValueBar').style.width = `${phi * 100}%`;
+            document.getElementById('budgetValue').textContent = (1.0 - delta).toFixed(3);
+            
+            // Aggiorna animazioni
+            updateAnimations();
+            
+            return phi;
+        }
+        
+        // ========== FUNZIONE: LOOP PRINCIPALE ==========
+        function animationLoop() {
+            calculatePhi();
+            animationId = requestAnimationFrame(animationLoop);
+        }
+        
+        // ========== INIZIALIZZAZIONE CONTROLLI ==========
+        function initializeControls() {
+            console.log("🎛️ Initializing controls...");
+            
+            // Parametri Master Formula
+            const params = ['alphaParam', 'betaParam', 'gammaParam', 'deltaParam'];
+            params.forEach(paramId => {
+                const input = document.getElementById(paramId);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        const value = parseFloat(this.value);
+                        const paramName = paramId.replace('Param', '').toLowerCase();
+                        
+                        if (window[paramName] !== undefined) {
+                            window[paramName] = value;
+                            console.log(`✅ ${paramName} = ${value}`);
+                        }
+                    });
+                }
+            });
+            
+            // Pulsanti Preset
+            document.getElementById('presetDefault').onclick = () => {
+                document.getElementById('alphaParam').value = 2.5;
+                document.getElementById('betaParam').value = 1.5;
+                document.getElementById('gammaParam').value = 2.0;
+                document.getElementById('deltaParam').value = 0.2;
+                alpha = 2.5; beta = 1.5; gamma = 2.0; delta = 0.2;
+                console.log("🎯 Default preset applied");
+            };
+            
+            document.getElementById('presetBalanced').onclick = () => {
+                document.getElementById('alphaParam').value = 1.0;
+                document.getElementById('betaParam').value = 1.0;
+                document.getElementById('gammaParam').value = 1.0;
+                document.getElementById('deltaParam').value = 0.1;
+                alpha = 1.0; beta = 1.0; gamma = 1.0; delta = 0.1;
+                console.log("⚖️ Balanced preset applied");
+            };
+            
+            document.getElementById('presetWillpower').onclick = () => {
+                document.getElementById('alphaParam').value = 1.0;
+                document.getElementById('betaParam').value = 0.5;
+                document.getElementById('gammaParam').value = 3.0;
+                document.getElementById('deltaParam').value = 0.3;
+                alpha = 1.0; beta = 0.5; gamma = 3.0; delta = 0.3;
+                console.log("💪 Willpower focus preset applied");
+            };
+            
+            // Pulsanti di controllo
+            document.getElementById('resetBtn').onclick = () => {
+                phi = 0.5;
+                console.log("🔄 Simulation reset");
+            };
+            
+            document.getElementById('forceCollapseBtn').onclick = () => {
+                if (phi > 0.75) {
+                    document.querySelectorAll('.node-outer').forEach(node => {
+                        node.style.animation = 'none';
+                        setTimeout(() => {
+                            node.style.animation = '';
+                        }, 1000);
+                    });
+                    console.log("💥 Force collapse triggered!");
+                }
+            };
+        }
+        
+        // ========== AVVIO SISTEMA ==========
+        function startSystem() {
+            console.log("🚀 Starting Quantum Φ System...");
+            
+            // 1. Crea i nodi animati
+            createAnimatedNodes();
+            
+            // 2. Inizializza i controlli
+            initializeControls();
+            
+            // 3. Avvia il loop di animazione
+            animationLoop();
+            
+            console.log("✅ System fully operational!");
+        }
+        
+        // ========== AVVIA QUANDO LA PAGINA È PRONTA ==========
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startSystem);
+        } else {
+            startSystem();
+        }
     </script>
 </body>
-</html>
-/* === INIZIO BLOCCO CSS === */
-:root {
-    --quantum-blue: #0af;
-    --quantum-purple: #80f;
-    --quantum-cyan: #0ff;
-    --bg-dark: #0a0a1a;
-    --card-bg: rgba(20, 25, 40, 0.92);
-    --text-primary: #e0f7ff;
-    --text-secondary: #a0d2ff;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg-dark);
-    color: var(--text-primary);
-    line-height: 1.6;
-    min-height: 100vh;
-    padding: 20px;
-    background-image: radial-gradient(circle at 10% 20%, rgba(10, 100, 255, 0.05) 0%, transparent 20%),
-                      radial-gradient(circle at 90% 80%, rgba(128, 0, 255, 0.05) 0%, transparent 20%);
-}
-.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-
-/* Stili per Header, Main Panel, Quantum Viz, Nodi, Controlli... */
-/* ... (Il codice CSS continuerebbe qui per diverse centinaia di righe) ... */
-
-/* === FINE BLOCCO CSS === */
-// ========== RIPARAZIONE VISUALE NODI QUANTISTICI ==========
-console.log("🌀 Ricostruzione nodi quantistici...");
-
-// 1. STILI CSS AVANZATI PER ANIMAZIONE
-const styleTag = document.createElement('style');
-styleTag.id = 'phi-quantum-styles';
-styleTag.textContent = `
-    /* CONTENITORE PRINCIPALE */
-    #nodesContainer {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 40px;
-        padding: 30px;
-        min-height: 250px;
-    }
-    
-    /* NODO QUANTISTICO COMPLETO */
-    .quantum-node {
-        position: relative;
-        width: 120px;
-        height: 120px;
-        cursor: pointer;
-    }
-    
-    /* CERCHIO INTERNO (FASE) - RUOTA */
-    .node-inner {
-        position: absolute;
-        width: 70px;
-        height: 70px;
-        top: 25px;
-        left: 25px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 35%, 
-            rgba(0, 255, 255, 0.9) 0%, 
-            rgba(0, 100, 200, 0.3) 70%,
-            transparent 90%);
-        border: 3px solid rgba(0, 200, 255, 0.8);
-        box-shadow: 
-            0 0 25px rgba(0, 200, 255, 0.6),
-            inset 0 0 15px rgba(0, 150, 255, 0.4);
-        animation: rotatePhase 8s linear infinite;
-        transform-origin: center;
-        will-change: transform;
-        transition: opacity 0.5s, transform 0.3s;
-    }
-    
-    /* CERCHIO ESTERNO (INTERFERENZA) - PULSA */
-    .node-outer {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 4px solid rgba(180, 0, 255, 0.7);
-        box-shadow: 
-            0 0 35px rgba(180, 0, 255, 0.5),
-            inset 0 0 20px rgba(140, 0, 220, 0.3);
-        animation: pulseInterference 3s ease-in-out infinite alternate;
-        opacity: 0.85;
-        transition: opacity 0.5s, transform 0.5s;
-    }
-    
-    /* ETICHETTA */
-    .node-label {
-        position: absolute;
-        top: 130%;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #a0e8ff;
-        font-weight: bold;
-        font-size: 14px;
-        text-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
-        white-space: nowrap;
-    }
-    
-    /* STATO COLLASSATO */
-    .quantum-node.collapsed .node-outer {
-        opacity: 0.2;
-        transform: scale(0.7);
-        animation: none;
-    }
-    
-    /* ANIMAZIONI */
-    @keyframes rotatePhase {
-        from { transform: rotate(0deg) scale(1); }
-        50% { transform: rotate(180deg) scale(1.05); }
-        to { transform: rotate(360deg) scale(1); }
-    }
-    
-    @keyframes pulseInterference {
-        from { 
-            transform: scale(1);
-            box-shadow: 0 0 35px rgba(180, 0, 255, 0.5);
-        }
-        to { 
-            transform: scale(1.08);
-            box-shadow: 0 0 50px rgba(180, 0, 255, 0.8);
-        }
-    }
-    
-    /* INDICATORE K-MATRIX (linee di connessione) */
-    .k-connection {
-        position: absolute;
-        height: 3px;
-        background: linear-gradient(90deg, 
-            transparent, 
-            rgba(255, 100, 255, 0.6), 
-            transparent);
-        transform-origin: 0 0;
-        z-index: -1;
-        opacity: 0.6;
-    }
-`;
-document.head.appendChild(styleTag);
-console.log("✅ Stili animati applicati.");
-
-// 2. RICREAZIONE COMPLETA DEI NODI
-const container = document.getElementById('nodesContainer');
-if (container) {
-    container.innerHTML = '';
-    
-    const nodeNames = ['Intuition', 'Emotion', 'Logic', 'Memory', 'Ethics', 'Will'];
-    
-    for (let i = 0; i < 6; i++) {
-        const nodeDiv = document.createElement('div');
-        nodeDiv.className = 'quantum-node';
-        nodeDiv.id = `node-${i}`;
-        
-        nodeDiv.innerHTML = `
-            <div class="node-inner"></div>
-            <div class="node-outer"></div>
-            <div class="node-label">${nodeNames[i]}</div>
-        `;
-        
-        // Imposta posizione circolare
-        const angle = (i / 6) * Math.PI * 2;
-        const radius = 200;
-        const centerX = 150;
-        const centerY = 150;
-        
-        nodeDiv.style.position = 'absolute';
-        nodeDiv.style.left = `${centerX + Math.cos(angle) * radius - 60}px`;
-        nodeDiv.style.top = `${centerY + Math.sin(angle) * radius - 60}px`;
-        
-        container.appendChild(nodeDiv);
-    }
-    
-    console.log("✅ 6 nodi quantistici ricreati con animazioni.");
-}
-
-// 3. AGGIORNAMENTO DINAMICO (collegamento al motore)
-function updateQuantumVisuals() {
-    if (!window.uiManager?.quantumEngine) return;
-    
-    for (let i = 0; i < 6; i++) {
-        const node = document.getElementById(`node-${i}`);
-        if (!node) continue;
-        
-        const state = window.uiManager.quantumEngine.getNodeState(i);
-        const inner = node.querySelector('.node-inner');
-        const outer = node.querySelector('.node-outer');
-        
-        // Aggiorna rotazione in base alla fase
-        if (inner) {
-            inner.style.animationDuration = `${8 / (Math.abs(state.phase) + 0.5)}s`;
-            inner.style.opacity = `${0.5 + state.willpower * 0.5}`;
-        }
-        
-        // Aggiorna pulsazione in base alla coerenza
-        if (outer && window.coherence) {
-            const pulseIntensity = 0.5 + window.coherence * 0.5;
-            outer.style.animationDuration = `${3 / pulseIntensity}s`;
-            outer.style.opacity = `${0.3 + window.coherence * 0.7}`;
-        }
-        
-        // Stato collassato
-        if (state.collapsed) {
-            node.classList.add('collapsed');
-        } else {
-            node.classList.remove('collapsed');
-        }
-    }
-}
-
-// 4. AVVIO AGGIORNAMENTO CONTINUO
-setInterval(updateQuantumVisuals, 100);
-console.log("✅ Aggiornamento visivo dinamico attivo.");
-        // ========== ATTIVAZIONE CONTROLLI MASTER FORMULA ==========
-console.log("🧮 Attivazione controlli Master Formula...");
-
-// 1. TRASFORMA I CAMPI IN INPUT EDITABILI
-const params = ['alphaParam', 'betaParam', 'gammaParam', 'deltaParam'];
-params.forEach(paramId => {
-    const input = document.getElementById(paramId);
-    if (input) {
-        input.readOnly = false;  // Rendi editabile
-        input.style.background = 'rgba(0, 50, 100, 0.5)';
-        input.style.border = '2px solid rgba(0, 200, 255, 0.6)';
-        input.style.color = '#0ff';
-        
-        // Aggiungi listener per aggiornare il sistema
-        input.addEventListener('change', function() {
-            const value = parseFloat(this.value.replace(',', '.'));
-            const paramName = paramId.replace('Param', '').toLowerCase();
-            
-            // Aggiorna la variabile globale corrispondente
-            if (window[paramName] !== undefined) {
-                window[paramName] = value;
-                console.log(`✅ Parametro ${paramName} aggiornato a: ${value}`);
-                
-                // Forza ricalcolo del Phi
-                if (window.uiManager?.quantumEngine?.updatePhi) {
-                    window.uiManager.quantumEngine.updatePhi();
-                }
-            }
-        });
-        
-        console.log(`✅ Controllo ${paramId} attivato.`);
-    }
-});
-
-// 2. CREA PULSANTI PRESET
-const paramControls = document.querySelector('.param-controls');
-if (paramControls && !document.getElementById('presetButtons')) {
-    const presetDiv = document.createElement('div');
-    presetDiv.id = 'presetButtons';
-    presetDiv.innerHTML = `
-        <h4 style="margin-top:20px; color:#8af;">Formula Presets</h4>
-        <button id="presetDefault" style="margin:5px; padding:8px; background:#0a5; border:none; border-radius:4px; color:white;">Default (2.5, 1.5, 2.0, 0.2)</button>
-        <button id="presetBalanced" style="margin:5px; padding:8px; background:#08a; border:none; border-radius:4px; color:white;">Balanced (1.0, 1.0, 1.0, 0.1)</button>
-        <button id="presetWillpower" style="margin:5px; padding:8px; background:#a08; border:none; border-radius:4px; color:white;">Willpower Focus (1.0, 0.5, 3.0, 0.3)</button>
-    `;
-    paramControls.appendChild(presetDiv);
-    
-    // Preset: Default
-    document.getElementById('presetDefault').onclick = function() {
-        document.getElementById('alphaParam').value = 2.5;
-        document.getElementById('betaParam').value = 1.5;
-        document.getElementById('gammaParam').value = 2.0;
-        document.getElementById('deltaParam').value = 0.2;
-        updateAllParams();
-    };
-    
-    // Preset: Balanced
-    document.getElementById('presetBalanced').onclick = function() {
-        document.getElementById('alphaParam').value = 1.0;
-        document.getElementById('betaParam').value = 1.0;
-        document.getElementById('gammaParam').value = 1.0;
-        document.getElementById('deltaParam').value = 0.1;
-        updateAllParams();
-    };
-    
-    // Preset: Willpower Focus
-    document.getElementById('presetWillpower').onclick = function() {
-        document.getElementById('alphaParam').value = 1.0;
-        document.getElementById('betaParam').value = 0.5;
-        document.getElementById('gammaParam').value = 3.0;
-        document.getElementById('deltaParam').value = 0.3;
-        updateAllParams();
-    };
-    
-    function updateAllParams() {
-        params.forEach(paramId => {
-            const input = document.getElementById(paramId);
-            if (input) input.dispatchEvent(new Event('change'));
-        });
-        console.log("🎛️ Preset applicato e sistema aggiornato.");
-    }
-    
-    console.log("✅ Pulsanti preset creati.");
-}
-
-console.log("🎉 CONTROLLI MASTER FORMULA ATTIVI!");
-console.log("Ora puoi:");
-console.log("1. Modificare α, β, γ, δ direttamente nei campi");
-console.log("2. Usare i preset per configurazioni rapide");
-console.log("3. I nodi dovrebbero mostrare cerchi doppi animati");
-        <style id="phi-emergency-styles">
-    /* Styles de secours pour les cercles doppï et l'animation */
-    .quantum-node {
-        position: relative;
-        width: 80px;
-        height: 80px;
-        display: inline-block;
-        margin: 15px;
-    }
-    .node-inner {
-        position: absolute;
-        width: 60%;
-        height: 60%;
-        top: 20%;
-        left: 20%;
-        border-radius: 50%;
-        background: radial-gradient(circle at 30% 30%, rgba(0, 200, 255, 0.9), rgba(0, 80, 160, 0.3));
-        border: 2px solid rgba(0, 170, 255, 0.9);
-        animation: spin 4s linear infinite;
-    }
-    .node-outer {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 2px solid rgba(160, 0, 255, 0.7);
-        box-shadow: 0 0 20px rgba(160, 0, 255, 0.5);
-    }
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-</style>
-        <script>
-    // Initialisateur de secours pour le système Φ
-    console.log("🔧 Initialisateur de secours Φ chargé.");
-
-    // Cette fonction sera appelée dès que le corps de la page est prêt
-    function phiEmergencyInit() {
-        console.log("🚀 Tentative de démarrage du système...");
-
-        // 1. Attendre un peu que le reste du code se charge
-        setTimeout(function() {
-            // 2. Vérifier si l'UIManager principal a échoué
-            if (typeof UIManager === 'function' && !window.uiManager) {
-                console.log("⚠️ UIManager global non créé. Création d'urgence...");
-                try {
-                    window.uiManager = new UIManager();
-                    console.log("✅ UIManager de secours créé.");
-                } catch (e) {
-                    console.error("❌ Échec de la création d'urgence :", e);
-                }
-            }
-
-            // 3. S'assurer qu'il y a un loop d'animation
-            if (window.uiManager && (!state || !state.animationId)) {
-                console.log("🔄 Démarrage du loop d'animation de secours...");
-                let lastTime = performance.now();
-                function animate(time) {
-                    if (!window.uiManager) return;
-                    const delta = (time - lastTime) / 1000;
-                    lastTime = time;
-                    window.uiManager.update(delta);
-                    requestAnimationFrame(animate);
-                }
-                requestAnimationFrame(animate);
-                console.log("✅ Animation de secours démarrée.");
-            }
-
-            // 4. Afficher un état final
-            setTimeout(() => {
-                console.log("📊 État final de l'init de secours :", {
-                    hasUIManager: !!window.uiManager,
-                    hasQuantumEngine: !!(window.uiManager && window.uiManager.quantumEngine),
-                    phiValue: window.phi
-                });
-            }, 1000);
-
-        }, 500); // Délai initial
-    }
-
-    // Lancer l'initialisateur quand la page est prête
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', phiEmergencyInit);
-    } else {
-        phiEmergencyInit();
-    }
-</script>
-        // Vérification rapide du DOM et des styles
-console.log("Nombre d'éléments '.node-inner' trouvés :", document.querySelectorAll('.node-inner').length);
-console.log("Nombre d'éléments '.node-outer' trouvés :", document.querySelectorAll('.node-outer').length);
-let testNode = document.querySelector('.node-inner');
-if (testNode) {
-    console.log("Style 'animation' du premier cercle :", window.getComputedStyle(testNode).animation);
-}
+</html
         
         
         
