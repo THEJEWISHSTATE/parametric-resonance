@@ -8,6 +8,7 @@ let isInitialized = false;
 
 // Funzione di inizializzazione
 async function initUnifiedSystem() {
+    initDynamicNodes();
     console.log("🚀 Initializing Unified Φ-Framework v4.0...");
     
     try {
@@ -718,7 +719,84 @@ window.addEventListener('resize', () => {
 
 // Carica stato salvato al load
 window.addEventListener('load', () => {
-    const saved = localStorage.getItem('phiFrameworkState');
+    const saved = localStorage.getItem('phiFrameworkState');// ============================================================================
+// FUNZIONE PER INIZIALIZZARE I 6 NODI DINAMICI
+// (Ripristina le animazioni mancanti dalla tua UI originale)
+// ============================================================================
+
+function initDynamicNodes() {
+    const container = document.getElementById('nodesContainer');
+    if (!container) return;
+    
+    // Svuota il container (per sicurezza)
+    container.innerHTML = '';
+    
+    // Definisci i 6 nodi originali con le loro proprietà
+    const nodesConfig = [
+        { id: 'node0', label: 'Intuition', color: '#7B68EE', frequency: 0.8 },
+        { id: 'node1', label: 'Emotion', color: '#FF6B8B', frequency: 1.2 },
+        { id: 'node2', label: 'Logic', color: '#20B2AA', frequency: 0.9 },
+        { id: 'node3', label: 'Memory', color: '#FFA500', frequency: 1.1 },
+        { id: 'node4', label: 'Will', color: '#32CD32', frequency: 0.7 },
+        { id: 'node5', label: 'Conflict', color: '#DC143C', frequency: 1.3 }
+    ];
+    
+    // Crea e aggiunge ogni nodo al DOM
+    nodesConfig.forEach((node, index) => {
+        const nodeElement = document.createElement('div');
+        nodeElement.className = 'node';
+        nodeElement.id = node.id;
+        nodeElement.dataset.index = index;
+        nodeElement.dataset.frequency = node.frequency;
+        
+        // Stile base con posizione assoluta (sarà posizionato da CSS/JS)
+        nodeElement.style.cssText = `
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, ${node.color}44, ${node.color});
+            border: 2px solid ${node.color}CC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 0 15px ${node.color}88, inset 0 0 10px rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            z-index: 10;
+        `;
+        
+        // Label interna
+        const label = document.createElement('span');
+        label.textContent = node.label;
+        label.style.fontSize = '10px';
+        label.style.textAlign = 'center';
+        label.style.padding = '4px';
+        nodeElement.appendChild(label);
+        
+        // Aggiungi l'elemento al container
+        container.appendChild(nodeElement);
+    });
+    
+    console.log('✅ 6 Nodi dinamici inizializzati');
+}
+
+// ============================================================================
+// AGGIUNGI LA CHIAMATA ALLA FUNZIONE initUnifiedSystem ESISTENTE
+// ============================================================================
+
+// Trova la funzione initUnifiedSystem nel tuo file (di solito è all'inizio)
+// e aggiungi initDynamicNodes(); al suo interno
+
+// PER FARLO: Cerca nel file questa riga:
+// function initUnifiedSystem() {
+// 
+// E DOPO la parentesi graffa aperta {, aggiungi:
+// initDynamicNodes();
     if (saved) {
         console.log("📁 Saved state found, press 'Load' button to restore");
     }
@@ -730,6 +808,81 @@ if (document.readyState === 'loading') {
 } else {
     initUnifiedSystem();
 }
+// ============================================================================
+// FUNZIONE PER INIZIALIZZARE I 6 NODI DINAMICI
+// (Ripristina le animazioni mancanti dalla tua UI originale)
+// ============================================================================
+
+function initDynamicNodes() {
+    const container = document.getElementById('nodesContainer');
+    if (!container) return;
+    
+    // Svuota il container (per sicurezza)
+    container.innerHTML = '';
+    
+    // Definisci i 6 nodi originali con le loro proprietà
+    const nodesConfig = [
+        { id: 'node0', label: 'Intuition', color: '#7B68EE', frequency: 0.8 },
+        { id: 'node1', label: 'Emotion', color: '#FF6B8B', frequency: 1.2 },
+        { id: 'node2', label: 'Logic', color: '#20B2AA', frequency: 0.9 },
+        { id: 'node3', label: 'Memory', color: '#FFA500', frequency: 1.1 },
+        { id: 'node4', label: 'Will', color: '#32CD32', frequency: 0.7 },
+        { id: 'node5', label: 'Conflict', color: '#DC143C', frequency: 1.3 }
+    ];
+    
+    // Crea e aggiunge ogni nodo al DOM
+    nodesConfig.forEach((node, index) => {
+        const nodeElement = document.createElement('div');
+        nodeElement.className = 'node';
+        nodeElement.id = node.id;
+        nodeElement.dataset.index = index;
+        nodeElement.dataset.frequency = node.frequency;
+        
+        // Stile base con posizione assoluta (sarà posizionato da CSS/JS)
+        nodeElement.style.cssText = `
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, ${node.color}44, ${node.color});
+            border: 2px solid ${node.color}CC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 0 15px ${node.color}88, inset 0 0 10px rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            z-index: 10;
+        `;
+        
+        // Label interna
+        const label = document.createElement('span');
+        label.textContent = node.label;
+        label.style.fontSize = '10px';
+        label.style.textAlign = 'center';
+        label.style.padding = '4px';
+        nodeElement.appendChild(label);
+        
+        // Aggiungi l'elemento al container
+        container.appendChild(nodeElement);
+    });
+    
+    console.log('✅ 6 Nodi dinamici inizializzati');
+}
+
+// Export per debug
+window.PhiFramework = {
+    version: '4.0',
+    reinitialize: initUnifiedSystem,
+    reset: resetSystem,
+    randomize: randomizeSystem,
+    save: saveSystemState,
+    load: loadSystemState
+};
 
 // Export per debug
 window.PhiFramework = {
