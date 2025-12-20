@@ -342,3 +342,96 @@ input[type="range"]::-moz-range-thumb {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+/* ============================================================================
+   CORREZIONI PER VISIBILITÀ E POSIZIONAMENTO - Φ-FRAMEWORK v4.0
+   ============================================================================ */
+
+/* 1. RENDE VISIBILE IL TESTO DELLA TUA INTERFACCIA */
+.container {
+    position: relative;
+    z-index: 5; /* Sopra il canvas ma sotto i controlli Claude */
+}
+
+header h1, .subtitle, .quantum-viz h2, 
+.phi-meter-label, .phi-scale span,
+.volition-slider label, .param-control label,
+.footer span, .version {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7),
+                 0 0 20px rgba(0, 200, 255, 0.5);
+}
+
+/* 2. POSIZIONA CORRETTAMENTE IL PANNELLO CLAUDE */
+.claude-overlay-controls {
+    position: fixed;
+    top: 20px !important;  /* Sposta in basso per non coprire intestazione */
+    right: 20px;
+    z-index: 1000;
+    background: rgba(10, 15, 30, 0.85);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid rgba(100, 200, 255, 0.3);
+    box-shadow: 0 0 30px rgba(0, 150, 255, 0.4);
+    max-width: 320px;
+    backdrop-filter: blur(10px);
+}
+
+/* 3. STILE PER I 6 NODI (assicura che siano visibili) */
+.nodes-container {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Altezza fissa per contenere i nodi */
+    min-height: 300px;
+    margin: 20px 0;
+    border: 1px dashed rgba(100, 200, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(5, 10, 20, 0.5);
+    overflow: visible !important;
+}
+
+.node {
+    position: absolute !important;
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Posizioni specifiche per i 6 nodi */
+#node0 { left: 15%; top: 20%; background: radial-gradient(circle at 30% 30%, #7B68EE44, #7B68EE) !important; }
+#node1 { left: 35%; top: 40%; background: radial-gradient(circle at 30% 30%, #FF6B8B44, #FF6B8B) !important; }
+#node2 { left: 55%; top: 20%; background: radial-gradient(circle at 30% 30%, #20B2AA44, #20B2AA) !important; }
+#node3 { left: 20%; top: 60%; background: radial-gradient(circle at 30% 30%, #FFA50044, #FFA500) !important; }
+#node4 { left: 45%; top: 60%; background: radial-gradient(circle at 30% 30%, #32CD3244, #32CD32) !important; }
+#node5 { left: 70%; top: 50%; background: radial-gradient(circle at 30% 30%, #DC143C44, #DC143C) !important; }
+
+/* 4. CORREZIONE SFONDO GENERALE */
+body {
+    background: linear-gradient(135deg, #0a0f1a 0%, #121a2d 50%, #0c1424 100%) !important;
+    color: #ffffff !important;
+    overflow-x: hidden;
+}
+
+/* 5. MIGLIORA VISIBILITÀ SLIDER */
+.param-control, .volition-slider {
+    background: rgba(20, 30, 50, 0.6);
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    border: 1px solid rgba(100, 150, 255, 0.2);
+}
+
+.param-value, .volition-value {
+    color: #7cfcff !important;
+    font-weight: bold;
+    min-width: 40px;
+    display: inline-block;
+}
