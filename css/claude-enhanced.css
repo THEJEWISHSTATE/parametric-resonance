@@ -15,11 +15,9 @@
 /* Overlay Controls */
 .claude-overlay-controls {
     position: fixed;
-    top: 20px;
+    top: 20px !important;  /* MODIFICA: era probabilmente 0 o 10px */
     right: 20px;
     z-index: 1000;
-    max-width: 350px;
-    transition: all 0.3s ease;
 }
 
 .claude-control-panel {
