@@ -1,437 +1,97 @@
-/* BASE STYLES FOR Φ-FRAMEWORK */
-
+/* FIX EMERGENZA - TESTO VISIBILE */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    color: white !important;
 }
 
 body {
-    font-family: 'Exo 2', 'Segoe UI', sans-serif;
-    background: #0a0a1a;
-    color: #e0e0ff;
-    line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
+    background: #0a0a1a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
 }
 
-/* Container */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    position: relative;
-    z-index: 10;
+/* HEADER FISSO IN ALTO */
+#titleHeader {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 60px !important;
+    background: #1a1a2e !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    z-index: 1000 !important;
+    border-bottom: 2px solid #4a4a8a !important;
 }
 
-/* Header */
-header {
-    text-align: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(0, 170, 255, 0.3);
+/* CONTENITORE PRINCIPALE */
+#appContainer {
+    position: absolute !important;
+    top: 60px !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100vh - 60px) !important;
 }
 
-header h1 {
-    font-family: 'Orbitron', monospace;
-    font-size: 2.5rem;
-    background: linear-gradient(90deg, #0af, #80f);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 10px;
-    text-shadow: 0 0 30px rgba(0, 170, 255, 0.3);
-}
-
-.subtitle {
-    color: #a0a0ff;
-    font-size: 1rem;
-    opacity: 0.8;
-}
-
-/* Main Panel */
-.main-panel {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-@media (max-width: 768px) {
-    .main-panel {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Quantum Visualization */
-.quantum-viz {
-    background: rgba(20, 25, 45, 0.7);
-    border: 1px solid rgba(0, 170, 255, 0.2);
-    border-radius: 15px;
-    padding: 25px;
-    backdrop-filter: blur(10px);
-}
-
-.quantum-viz h2 {
-    color: #4ecdc4;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-}
-
-/* Phi Meter */
-.phi-meter-container {
-    margin-bottom: 30px;
-}
-
-.phi-meter-label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-    color: #a0a0ff;
-}
-
-.phi-value {
-    font-family: 'Orbitron', monospace;
-    font-weight: bold;
-    color: #0af;
-    font-size: 1.1rem;
-}
-
-.phi-meter {
-    height: 20px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid rgba(0, 170, 255, 0.2);
-    margin-bottom: 5px;
-}
-
-.phi-meter-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #0a0a1a, #0af, #80f);
-    width: 50%;
-    transition: width 0.3s ease;
-}
-
-.phi-scale {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: #888;
-}
-
-/* Nodes Container */
-.nodes-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin: 25px 0;
-}
-
-.cognitive-node {
-    background: rgba(30, 35, 60, 0.6);
-    border: 1px solid rgba(0, 170, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
-    transition: all 0.3s;
-    position: relative;
-}
-
-.cognitive-node:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 170, 255, 0.4);
-    box-shadow: 0 10px 20px rgba(0, 170, 255, 0.1);
-}
-
-.node-core {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin: 0 auto 10px;
-    box-shadow: 0 0 20px currentColor;
-}
-
-.node-label {
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: #e0e0ff;
-}
-
-.node-value {
-    font-family: 'Orbitron', monospace;
-    font-size: 0.9rem;
-    color: #0af;
-}
-
-/* Volition Controls */
-.volition-controls {
-    background: rgba(25, 30, 50, 0.6);
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.volition-slider {
-    margin-bottom: 15px;
-}
-
-.volition-slider label {
-    display: block;
-    margin-bottom: 8px;
-    color: #a0a0ff;
-    font-size: 0.9rem;
-}
-
-.volition-slider input[type="range"] {
-    width: 100%;
-    margin-bottom: 5px;
-}
-
-.volition-value {
-    float: right;
-    font-family: 'Orbitron', monospace;
-    color: #0af;
-}
-
-/* Control Panel */
-.control-panel {
-    background: rgba(20, 25, 45, 0.7);
-    border: 1px solid rgba(0, 170, 255, 0.2);
-    border-radius: 15px;
-    padding: 25px;
-    backdrop-filter: blur(10px);
-}
-
-.control-panel h3 {
-    color: #55efc4;
-    margin-bottom: 20px;
-    font-size: 1.3rem;
-}
-
-.param-control {
-    margin-bottom: 20px;
-}
-
-.param-control label {
-    display: block;
-    margin-bottom: 8px;
-    color: #a0a0ff;
-    font-size: 0.95rem;
-}
-
-.param-control input[type="range"] {
-    width: 100%;
-    margin-bottom: 5px;
-}
-
-.param-value {
-    float: right;
-    font-family: 'Orbitron', monospace;
-    color: #0af;
-    font-weight: bold;
-}
-
-/* Buttons */
-.btn {
-    background: linear-gradient(135deg, rgba(0, 170, 255, 0.2), rgba(128, 0, 255, 0.2));
-    border: 1px solid rgba(0, 170, 255, 0.3);
-    color: #a0a0ff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'Exo 2', sans-serif;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-    display: inline-block;
-    margin-right: 10px;
-    margin-bottom: 10px;
-}
-
-.btn:hover {
-    background: linear-gradient(135deg, rgba(0, 170, 255, 0.3), rgba(128, 0, 255, 0.3));
-    border-color: #0af;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 170, 255, 0.3);
-}
-
-.control-buttons {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(0, 170, 255, 0.2);
-}
-
-/* Footer */
-.footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 20px;
-    border-top: 1px solid rgba(0, 170, 255, 0.2);
-    font-size: 0.9rem;
-    color: #888;
-}
-
-.status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #4ecdc4;
-    animation: pulse 2s infinite;
-}
-
-.version {
-    color: #a0a0ff;
-}
-
-/* Range Sliders Styling */
-input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    height: 8px;
-    background: rgba(0, 170, 255, 0.1);
-    border-radius: 4px;
-    outline: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #0af;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 170, 255, 0.8);
-}
-
-input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #0af;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 170, 255, 0.8);
-    border: none;
-}
-
-/* Pulsating animation */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .container {
-        padding: 10px;
-    }
-    
-    header h1 {
-        font-size: 1.8rem;
-    }
-    
-    .nodes-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-/* ============================================================================
-   CORREZIONI PER VISIBILITÀ E POSIZIONAMENTO - Φ-FRAMEWORK v4.0
-   ============================================================================ */
-
-/* 1. RENDE VISIBILE IL TESTO DELLA TUA INTERFACCIA */
-.container {
-    position: relative;
-    z-index: 5; /* Sopra il canvas ma sotto i controlli Claude */
-}
-
-header h1, .subtitle, .quantum-viz h2, 
-.phi-meter-label, .phi-scale span,
-.volition-slider label, .param-control label,
-.footer span, .version {
-    color: #ffffff !important;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7),
-                 0 0 20px rgba(0, 200, 255, 0.5);
-}
-
-/* 2. POSIZIONA CORRETTAMENTE IL PANNELLO CLAUDE */
-.claude-overlay-controls {
-    position: fixed;
-    top: 20px !important;  /* Sposta in basso per non coprire intestazione */
-    right: 20px;
-    z-index: 1000;
-    background: rgba(10, 15, 30, 0.85);
-    border-radius: 12px;
-    padding: 15px;
-    border: 1px solid rgba(100, 200, 255, 0.3);
-    box-shadow: 0 0 30px rgba(0, 150, 255, 0.4);
-    max-width: 320px;
-    backdrop-filter: blur(10px);
-}
-
-/* 3. STILE PER I 6 NODI (assicura che siano visibili) */
-.nodes-container {
-    position: relative;
-    width: 100%;
-    height: 300px; /* Altezza fissa per contenere i nodi */
-    min-height: 300px;
-    margin: 20px 0;
-    border: 1px dashed rgba(100, 200, 255, 0.3);
-    border-radius: 8px;
-    background: rgba(5, 10, 20, 0.5);
-    overflow: visible !important;
+/* NODI VISIBILI */
+#nodesContainer {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .node {
     position: absolute !important;
-    width: 60px !important;
-    height: 60px !important;
+    width: 80px !important;
+    height: 80px !important;
     border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    background: radial-gradient(circle, red, darkred) !important;
+    box-shadow: 0 0 30px red !important;
+    animation: pulse 2s infinite !important;
+}
+
+/* PANNELLO PARAMETRI A SINISTRA */
+.parameter-panel {
+    position: fixed !important;
+    top: 80px !important;  /* 60px header + 20px margine */
+    left: 20px !important;
+    width: 300px !important;
+    background: rgba(30, 30, 60, 0.95) !important;
     color: white !important;
-    font-weight: 600 !important;
-    font-size: 12px !important;
+    padding: 20px !important;
+    border-radius: 15px !important;
+    border: 2px solid #4a4a8a !important;
+    z-index: 1001 !important;
+}
+
+/* SLIDER VISIBILI */
+input[type="range"] {
+    width: 100% !important;
+    margin: 10px 0 !important;
+    background: #4a4a8a !important;
+}
+
+/* BOTTONI VISIBILI */
+button {
+    background: #4a4a8a !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    margin: 5px !important;
+    border-radius: 5px !important;
     cursor: pointer !important;
-    z-index: 10 !important;
-    transition: all 0.3s ease !important;
 }
 
-/* Posizioni specifiche per i 6 nodi */
-#node0 { left: 15%; top: 20%; background: radial-gradient(circle at 30% 30%, #7B68EE44, #7B68EE) !important; }
-#node1 { left: 35%; top: 40%; background: radial-gradient(circle at 30% 30%, #FF6B8B44, #FF6B8B) !important; }
-#node2 { left: 55%; top: 20%; background: radial-gradient(circle at 30% 30%, #20B2AA44, #20B2AA) !important; }
-#node3 { left: 20%; top: 60%; background: radial-gradient(circle at 30% 30%, #FFA50044, #FFA500) !important; }
-#node4 { left: 45%; top: 60%; background: radial-gradient(circle at 30% 30%, #32CD3244, #32CD32) !important; }
-#node5 { left: 70%; top: 50%; background: radial-gradient(circle at 30% 30%, #DC143C44, #DC143C) !important; }
-
-/* 4. CORREZIONE SFONDO GENERALE */
-body {
-    background: linear-gradient(135deg, #0a0f1a 0%, #121a2d 50%, #0c1424 100%) !important;
-    color: #ffffff !important;
-    overflow-x: hidden;
+/* ANIMAZIONI */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
-/* 5. MIGLIORA VISIBILITÀ SLIDER */
-.param-control, .volition-slider {
-    background: rgba(20, 30, 50, 0.6);
-    padding: 10px;
-    border-radius: 8px;
-    margin: 10px 0;
-    border: 1px solid rgba(100, 150, 255, 0.2);
-}
-
-.param-value, .volition-value {
-    color: #7cfcff !important;
-    font-weight: bold;
-    min-width: 40px;
-    display: inline-block;
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
