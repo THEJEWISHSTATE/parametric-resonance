@@ -1,0 +1,66 @@
+/* GARANTISCI 6 NODI VISIBILI */
+#nodesContainer {
+    min-height: 600px !important;
+    display: block !important;
+}
+
+/* NODI DI EMERGENZA - SEMPRE VISIBILI */
+.emergency-node {
+    position: absolute !important;
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    animation: pulse 3s infinite !important;
+    z-index: 10 !important;
+}
+
+/* POSIZIONI DEI 6 NODI */
+.emergency-node:nth-child(1) {
+    top: 100px !important; left: 100px !important;
+    background: radial-gradient(circle, #ff0000, #880000) !important;
+    animation-delay: 0s !important;
+}
+
+.emergency-node:nth-child(2) {
+    top: 100px !important; left: 300px !important;
+    background: radial-gradient(circle, #00ff00, #008800) !important;
+    animation-delay: 0.5s !important;
+}
+
+.emergency-node:nth-child(3) {
+    top: 100px !important; left: 500px !important;
+    background: radial-gradient(circle, #0000ff, #000088) !important;
+    animation-delay: 1s !important;
+}
+
+.emergency-node:nth-child(4) {
+    top: 300px !important; left: 100px !important;
+    background: radial-gradient(circle, #ffff00, #888800) !important;
+    animation-delay: 1.5s !important;
+}
+
+.emergency-node:nth-child(5) {
+    top: 300px !important; left: 300px !important;
+    background: radial-gradient(circle, #ff00ff, #880088) !important;
+    animation-delay: 2s !important;
+}
+
+.emergency-node:nth-child(6) {
+    top: 300px !important; left: 500px !important;
+    background: radial-gradient(circle, #00ffff, #008888) !important;
+    animation-delay: 2.5s !important;
+}
+
+/* FORZA TESTO BIANCO SU TUTTO */
+body * {
+    color: #ffffff !important;
+}
+
+/* GARANTISCI VISIBILITÀ CONTROLLI */
+.parameter-panel * {
+    color: #ffffff !important;
+}
+
+.claude-overlay-controls * {
+    color: #ffffff !important;
+}
