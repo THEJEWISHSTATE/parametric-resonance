@@ -1,256 +1,32 @@
-/* CLAUDE ENHANCED STYLES v4.0 */
-
-/* Canvas Claude */
-#claudeCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background: linear-gradient(135deg, #0a0a1a 0%, #151530 50%, #0a0a1a 100%);
-    pointer-events: none;
-}
-
-/* Overlay Controls */
+/* PANNELLO CLAUDE A DESTRA - POSIZIONE CORRETTA */
 .claude-overlay-controls {
-    position: fixed;
-    top: 20px !important;  /* MODIFICA: era probabilmente 0 o 10px */
-    right: 20px;
-    z-index: 1000;
+    position: fixed !important;
+    top: 80px !important;      /* SOTTO L'HEADER */
+    right: 20px !important;
+    width: 320px !important;
+    background: rgba(40, 40, 80, 0.95) !important;
+    color: white !important;
+    padding: 20px !important;
+    border-radius: 15px !important;
+    border: 2px solid #6a6aaa !important;
+    z-index: 1002 !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
 }
 
-.claude-control-panel {
-    background: rgba(10, 10, 26, 0.95);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(0, 170, 255, 0.3);
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    font-family: 'Exo 2', sans-serif;
+/* PANNELLO DEBUG SOTTO */
+#claudeDebugPanel {
+    position: fixed !important;
+    top: 400px !important;     /* SOTTO I CONTROLLI CLAUDE */
+    right: 20px !important;
+    width: 320px !important;
+    height: 200px !important;
+    background: rgba(50, 50, 100, 0.95) !important;
+    color: white !important;
+    padding: 15px !important;
+    border-radius: 10px !important;
+    border: 2px solid #8a8aff !important;
+    z-index: 1001 !important;
+    overflow-y: auto !important;
+    font-size: 12px !important;
 }
-
-.claude-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(0, 170, 255, 0.2);
-}
-
-.claude-header h3 {
-    margin: 0;
-    color: #0af;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-.toggle-btn {
-    background: rgba(0, 170, 255, 0.2);
-    border: 1px solid rgba(0, 170, 255, 0.4);
-    color: #0af;
-    border-radius: 5px;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
-/* Control Grid */
-.control-grid {
-    display: grid;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.control-item {
-    background: rgba(20, 25, 45, 0.6);
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 170, 255, 0.1);
-}
-
-.control-label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    color: #a0a0ff;
-}
-
-.control-value {
-    color: #0af;
-    font-weight: 600;
-    font-family: 'Orbitron', monospace;
-}
-
-/* Claude Sliders */
-.claude-slider {
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, 
-        rgba(10, 10, 26, 0.8) 0%, 
-        #0af 50%, 
-        #80f 100%);
-    border-radius: 3px;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.claude-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #fff;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(0, 170, 255, 0.8);
-    border: 2px solid #0af;
-}
-
-.claude-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #fff;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(0, 170, 255, 0.8);
-    border: 2px solid #0af;
-}
-
-/* Scenario Buttons */
-.scenario-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.btn-scenario {
-    background: linear-gradient(135deg, 
-        rgba(0, 170, 255, 0.2), 
-        rgba(128, 0, 255, 0.2));
-    border: 1px solid rgba(0, 170, 255, 0.3);
-    color: #a0a0ff;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.2s;
-    font-family: 'Exo 2', sans-serif;
-}
-
-.btn-scenario:hover {
-    background: linear-gradient(135deg, 
-        rgba(0, 170, 255, 0.3), 
-        rgba(128, 0, 255, 0.3));
-    border-color: #0af;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 170, 255, 0.3);
-}
-
-/* Metrics Display */
-.metrics-display {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    background: rgba(20, 25, 45, 0.6);
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 170, 255, 0.1);
-}
-
-.metric {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.metric span:first-child {
-    font-size: 0.75rem;
-    color: #888;
-    margin-bottom: 4px;
-}
-
-.metric span:last-child {
-    font-size: 1rem;
-    font-weight: 600;
-    font-family: 'Orbitron', monospace;
-}
-
-/* States */
-.state-harmonic { 
-    color: #4ecdc4; 
-    text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
-}
-
-.state-resonant { 
-    color: #0af; 
-    animation: pulse 1s infinite;
-    text-shadow: 0 0 15px rgba(0, 170, 255, 0.7);
-}
-
-.state-chaotic { 
-    color: #ff6b6b; 
-    animation: shake 0.5s infinite;
-    text-shadow: 0 0 15px rgba(255, 107, 107, 0.7);
-}
-
-.state-turbulent { 
-    color: #fd79a8; 
-    animation: turbulence 0.3s infinite;
-    text-shadow: 0 0 15px rgba(253, 121, 168, 0.7);
-}
-
-/* Audio Indicator */
-.audio-indicator {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(10, 10, 26, 0.9);
-    border: 1px solid rgba(0, 170, 255, 0.3);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #0af;
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 1000;
-    transition: all 0.3s;
-}
-
-.audio-indicator:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(0, 170, 255, 0.5);
-}
-
-.audio-status {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #0af;
-    color: #000;
-    font-size: 0.6rem;
-    padding: 2px 5px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-/* Animations */
-@keyframes pulse {
-    0%, 100% { 
-        opacity: 1; 
-        transform: scale(1);
-    }
-    50% { 
-        opacity: 0.7; 
-        transform: scale(1.05);
-   
