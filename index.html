@@ -10,6 +10,7 @@
     
     <!-- Nuovi stili Claude -->
     <link rel="stylesheet" href="css/claude-enhanced.css">
+    <link rel="stylesheet" href="css/emergency-fixes.css">
     
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -48,28 +49,15 @@
                     </div>
                 </div>
                 
-                <!-- I tuoi 6 nodi -->
-                <!-- I tuoi 6 nodi - VERSIONE FISSA GARANTITA -->
-<div id="nodesContainer" class="nodes-container">
-    <div id="node0" class="node" style="left: 15%; top: 20%;">
-        <span>Intuition</span>
-    </div>
-    <div id="node1" class="node" style="left: 35%; top: 40%;">
-        <span>Emotion</span>
-    </div>
-    <div id="node2" class="node" style="left: 55%; top: 20%;">
-        <span>Logic</span>
-    </div>
-    <div id="node3" class="node" style="left: 20%; top: 60%;">
-        <span>Memory</span>
-    </div>
-    <div id="node4" class="node" style="left: 45%; top: 60%;">
-        <span>Will</span>
-    </div>
-    <div id="node5" class="node" style="left: 70%; top: 50%;">
-        <span>Conflict</span>
-    </div>
-</div>
+                <!-- I tuoi 6 nodi - VERSIONE EMERGENZA GARANTITA -->
+                <div id="nodesContainer">
+                    <div class="emergency-node" data-id="1" title="Intuition"></div>
+                    <div class="emergency-node" data-id="2" title="Emotion"></div>
+                    <div class="emergency-node" data-id="3" title="Logic"></div>
+                    <div class="emergency-node" data-id="4" title="Memory"></div>
+                    <div class="emergency-node" data-id="5" title="Will"></div>
+                    <div class="emergency-node" data-id="6" title="Conflict"></div>
+                </div>
                 
                 <!-- I tuoi 3 slider volition -->
                 <div id="volitionControls" class="volition-controls">
@@ -211,6 +199,72 @@
             🔊 <span class="audio-status">ON</span>
         </div>
     </div>
+    
+    <!-- Debug Panel -->
+    <div id="claudeDebugPanel">
+        <h4>Debug Console</h4>
+        <div id="debugMessages">
+            <div class="debug-message">System initialized...</div>
+        </div>
+    </div>
+    
+    <!-- Script di emergenza -->
+    <script>
+        // Script di emergenza per garantire visibilità
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🌀 Φ-Framework v4.0 - Emergency System Active');
+            
+            // Forza sfondo e testo
+            document.body.style.backgroundColor = '#0a0a1a';
+            document.body.style.color = '#ffffff';
+            
+            // Verifica nodi
+            const nodes = document.querySelectorAll('.emergency-node');
+            console.log(`✅ Nodi di emergenza trovati: ${nodes.length}/6`);
+            
+            if (nodes.length === 0) {
+                console.log('⚠️ Nessun nodo trovato, creo nodi di emergenza...');
+                const container = document.getElementById('nodesContainer');
+                if (container) {
+                    for (let i = 0; i < 6; i++) {
+                        const node = document.createElement('div');
+                        node.className = 'emergency-node';
+                        node.style.cssText = `
+                            position: absolute;
+                            width: 80px;
+                            height: 80px;
+                            border-radius: 50%;
+                            background: red;
+                            top: ${100 + (i % 3) * 150}px;
+                            left: ${100 + Math.floor(i / 3) * 200}px;
+                            animation: pulse 2s infinite;
+                        `;
+                        container.appendChild(node);
+                    }
+                }
+            }
+            
+            // Debug info
+            setTimeout(() => {
+                const info = document.createElement('div');
+                info.id = 'emergencyDebugInfo';
+                info.style.cssText = `
+                    position: fixed;
+                    bottom: 10px;
+                    right: 10px;
+                    background: rgba(0,0,0,0.8);
+                    color: #0f0;
+                    padding: 8px 12px;
+                    font-size: 11px;
+                    font-family: monospace;
+                    border-radius: 5px;
+                    z-index: 9999;
+                `;
+                info.textContent = `Φ-System: ACTIVE | Nodes: ${nodes.length}/6`;
+                document.body.appendChild(info);
+            }, 1000);
+        });
+    </script>
     
     <!-- JAVASCRIPT MODULARE -->
     <script src="js/audio-engine.js"></script>
