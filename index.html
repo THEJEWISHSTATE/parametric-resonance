@@ -3,1301 +3,1462 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Φ-Risonanza - Sistema Parametrico</title>
+    <title>Φ Unified Model - Sistema Osservabile</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-medium: #1a1a1a;
+            --bg-light: #2a2a2a;
+            --text-white: #f0f0f0;
+            --text-dim: #888;
+            --border-color: #333;
+            --accent-primary: #4ecdc4;
+            --accent-secondary: #ff6b6b;
+            --node-base-color: #ffffff;
+            --node-glow-color: rgba(255, 255, 255, 0.3);
+            --connection-color: rgba(255, 255, 255, 0.2);
+            --axis-color: rgba(255, 255, 255, 0.3);
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
-            color: #e0e0e0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(78, 205, 196, 0.3);
-        }
-
-        h1 {
-            font-size: 2.5em;
-            background: linear-gradient(90deg, #4ECDC4, #2E86AB);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 1.1em;
-            color: #8a8a8a;
-            font-style: italic;
-        }
-
-        .main-content {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        @media (max-width: 1024px) {
-            .main-content {
-                flex-direction: column;
-            }
-        }
-
-        .canvas-container {
-            flex: 1;
-            position: relative;
-            background: rgba(10, 10, 20, 0.7);
-            border-radius: 15px;
+            background: var(--bg-dark);
+            color: var(--text-white);
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            min-height: 600px;
+            height: 100vh;
+            user-select: none;
         }
-
-        #constellationCanvas {
-            display: block;
-            width: 100%;
-            height: 100%;
+        
+        .main-container {
+            display: grid;
+            grid-template-columns: 320px 1fr 320px;
+            grid-template-rows: 70px 1fr 120px;
+            height: 100vh;
+            gap: 1px;
+            background: var(--border-color);
         }
-
-        .controls-panel {
-            width: 400px;
-            background: rgba(20, 25, 35, 0.9);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
+        
+        /* HEADER */
+        header {
+            grid-column: 1 / -1;
+            background: var(--bg-medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            border-bottom: 1px solid var(--border-color);
         }
-
-        @media (max-width: 1024px) {
-            .controls-panel {
-                width: 100%;
-            }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-
-        .control-group {
-            margin-bottom: 30px;
+        
+        .logo h1 {
+            font-size: 1.6em;
+            font-weight: 300;
+            color: var(--text-white);
         }
-
-        h2 {
-            color: #4ECDC4;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid rgba(78, 205, 196, 0.2);
+        
+        .logo .phi-symbol {
+            font-size: 2em;
+            color: var(--accent-primary);
+            font-weight: bold;
         }
-
-        h3 {
-            color: #2E86AB;
-            font-size: 1.2em;
-            margin-bottom: 12px;
+        
+        .mode-selector {
+            display: flex;
+            gap: 2px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            overflow: hidden;
         }
-
-        .node-control {
-            background: rgba(30, 35, 45, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+        
+        .mode-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 0.9em;
+            font-weight: 500;
         }
-
-        .node-control:hover {
-            background: rgba(40, 45, 55, 0.8);
-            transform: translateY(-2px);
+        
+        .mode-btn.active {
+            background: var(--accent-primary);
+            color: var(--bg-dark);
         }
-
-        .node-label {
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .phi-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .phi-label {
+            font-size: 0.8em;
+            color: var(--text-dim);
+            margin-bottom: 2px;
+        }
+        
+        .phi-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--accent-primary);
+        }
+        
+        /* PANEL STYLES */
+        .panel {
+            background: var(--bg-medium);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .panel-section {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .section-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 16px;
+            background: var(--accent-primary);
+            border-radius: 2px;
+        }
+        
+        /* LEFT PANEL - Controls */
+        .dilemma-grid {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .dilemma-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9em;
+        }
+        
+        .dilemma-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-primary);
+        }
+        
+        .dilemma-btn.active {
+            background: rgba(78, 205, 196, 0.15);
+            border-color: var(--accent-primary);
+        }
+        
+        .dilemma-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-white);
+        }
+        
+        .dilemma-desc {
+            font-size: 0.8em;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+        
+        .param-control {
+            margin-bottom: 18px;
+        }
+        
+        .param-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
         }
-
-        .node-value {
-            background: rgba(78, 205, 196, 0.1);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-family: 'Courier New', monospace;
+        
+        .param-label {
+            font-size: 0.9em;
+            color: var(--text-white);
+        }
+        
+        .param-value {
+            font-size: 0.9em;
+            color: var(--accent-primary);
             font-weight: bold;
         }
-
+        
         .slider-container {
-            margin: 12px 0;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            background: #4ECDC4;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        input[type="range"]::-webkit-slider-thumb:hover {
-            background: #2E86AB;
-            transform: scale(1.2);
-        }
-
-        .toggle-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-
-        .toggle-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 12px 20px;
-            background: rgba(40, 45, 55, 0.8);
-            border: 2px solid rgba(78, 205, 196, 0.3);
-            border-radius: 8px;
-            color: #e0e0e0;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .toggle-btn:hover {
-            background: rgba(78, 205, 196, 0.1);
-            border-color: #4ECDC4;
-            transform: translateY(-2px);
-        }
-
-        .toggle-btn.active {
-            background: rgba(78, 205, 196, 0.2);
-            border-color: #4ECDC4;
-            box-shadow: 0 0 15px rgba(78, 205, 196, 0.3);
-        }
-
-        .dilemma-btn {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, rgba(46, 134, 171, 0.2), rgba(78, 205, 196, 0.1));
-            border: 1px solid rgba(78, 205, 196, 0.2);
-            border-radius: 10px;
-            color: #e0e0e0;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .dilemma-btn:hover {
-            background: linear-gradient(135deg, rgba(46, 134, 171, 0.3), rgba(78, 205, 196, 0.2));
-            border-color: #4ECDC4;
-            transform: translateY(-3px);
-        }
-
-        .timeline-container {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .timeline-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
             position: relative;
+            height: 28px;
+        }
+        
+        .slider-track {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+        
+        .slider-fill {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 2px;
+            transform: translateY(-50%);
+            transition: width 0.2s ease;
+        }
+        
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            width: 16px;
+            height: 16px;
+            background: var(--text-white);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid var(--bg-light);
+        }
+        
+        .slider-thumb:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        
+        .slider-thumb.active {
+            background: var(--accent-primary);
+            box-shadow: 0 0 0 2px var(--accent-primary);
+        }
+        
+        input[type="range"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        /* ACTION BUTTONS */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg-dark);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-white);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        /* RIGHT PANEL - Metrics */
+        .metric-display {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+        }
+        
+        .metric-label {
+            font-size: 0.85em;
+            color: var(--text-dim);
+        }
+        
+        .metric-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text-white);
+        }
+        
+        .axis-display {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .axis-item {
             margin-bottom: 15px;
         }
-
+        
+        .axis-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+        }
+        
+        .axis-name {
+            color: var(--text-dim);
+        }
+        
+        .axis-number {
+            color: var(--text-white);
+            font-weight: bold;
+        }
+        
+        .axis-bar {
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .axis-fill {
+            height: 100%;
+            background: var(--accent-primary);
+            transition: width 0.5s ease;
+        }
+        
+        /* CENTER CANVAS */
+        .canvas-container {
+            background: var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #mainCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .canvas-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        /* BOTTOM PANEL */
+        .bottom-panel {
+            grid-column: 1 / -1;
+            background: var(--bg-medium);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .timeline-container {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .timeline-bar {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            position: relative;
+            margin: 10px 0;
+        }
+        
         .timeline-progress {
             position: absolute;
             height: 100%;
-            background: linear-gradient(90deg, #4ECDC4, #2E86AB);
-            border-radius: 3px;
+            background: var(--accent-primary);
+            border-radius: 2px;
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 0.3s ease;
         }
-
-        .timeline-marker {
-            position: absolute;
-            top: -5px;
-            width: 16px;
-            height: 16px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            transform: translateX(-50%);
-        }
-
-        .timeline-label {
+        
+        .timeline-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9em;
-            color: #8a8a8a;
-        }
-
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(20, 25, 35, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(78, 205, 196, 0.3);
-            max-width: 300px;
-            backdrop-filter: blur(10px);
-        }
-
-        .legend h4 {
-            color: #4ECDC4;
-            margin-bottom: 10px;
-            font-size: 1em;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.9em;
-        }
-
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            margin-right: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background: rgba(20, 25, 35, 0.9);
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 1px solid rgba(78, 205, 196, 0.2);
-        }
-
-        .metric-display {
-            display: flex;
-            gap: 20px;
-        }
-
-        .metric {
-            text-align: center;
-        }
-
-        .metric-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #4ECDC4;
-            font-family: 'Courier New', monospace;
-        }
-
-        .metric-label {
-            font-size: 0.9em;
-            color: #8a8a8a;
-            margin-top: 5px;
-        }
-
-        .param-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .param-metric {
-            text-align: center;
-            padding: 8px;
-            background: rgba(30, 35, 45, 0.7);
-            border-radius: 6px;
-        }
-
-        .param-value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #2E86AB;
-            font-family: 'Courier New', monospace;
-        }
-
-        .param-label {
             font-size: 0.8em;
-            color: #8a8a8a;
-            margin-top: 3px;
+            color: var(--text-dim);
         }
-
-        .experimental-console {
-            background: rgba(10, 15, 25, 0.95);
-            border: 2px solid #4ECDC4;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 30px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .console-header {
-            color: #4ECDC4;
-            margin-bottom: 15px;
+        
+        .feedback-container {
+            flex: 1;
+            padding: 15px 20px;
+            overflow-x: auto;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 15px;
         }
-
-        .console-output {
-            color: #8a8a8a;
-            line-height: 1.5;
-        }
-
-        .export-btn {
-            padding: 10px 20px;
-            background: rgba(78, 205, 196, 0.2);
-            border: 1px solid #4ECDC4;
+        
+        .feedback-item {
+            background: var(--bg-light);
             border-radius: 6px;
-            color: #e0e0e0;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 12px 15px;
+            min-width: 200px;
+            animation: feedback-enter 0.3s ease;
         }
-
-        .export-btn:hover {
-            background: rgba(78, 205, 196, 0.3);
-            transform: translateY(-2px);
+        
+        @keyframes feedback-enter {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(78, 205, 196, 0.2);
-            color: #8a8a8a;
-            font-size: 0.9em;
+        
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
         }
-
-        .epistemic-note {
-            font-style: italic;
-            margin-top: 10px;
-            color: #666;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.5;
+        
+        .feedback-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .feedback-icon.resonance { background: var(--accent-primary); }
+        .feedback-icon.change { background: var(--accent-secondary); }
+        .feedback-icon.sync { background: #55efc4; }
+        
+        .feedback-title {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text-white);
+        }
+        
+        .feedback-text {
+            font-size: 0.8em;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+        
+        /* UTILITY */
+        .dimmed {
+            opacity: 0.5;
+        }
+        
+        .highlight {
+            color: var(--accent-primary) !important;
+        }
+        
+        .color-pulse {
+            animation: color-pulse 2s ease infinite;
+        }
+        
+        @keyframes color-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="main-container">
+        <!-- HEADER -->
         <header>
-            <h1>Φ-RISONANZA - SISTEMA PARAMETRICO</h1>
-            <p class="subtitle">Versione 4.0 - Consolidamento Parametrico | Data: 23 dicembre 2025</p>
-            <p class="epistemic-note">
-                OSSERVAZIONE: Questo progetto applica metodi parametrici esistenti allo studio della risonanza 
-                in sistemi complessi, definendo osservabili quantitativi per fenomeni prima solo qualitativi.
-                Non stiamo fondando una nuova scienza. Stiamo applicando scienza esistente a un nuovo dominio.
-            </p>
+            <div class="logo">
+                <div class="phi-symbol">Φ</div>
+                <h1>Unified Model - Sistema Osservabile</h1>
+            </div>
+            
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('scientific')">Scientifica</button>
+                <button class="mode-btn" onclick="setMode('artistic')">Artistica</button>
+            </div>
+            
+            <div class="system-status">
+                <div class="phi-display">
+                    <div class="phi-label">Risonanza Φ</div>
+                    <div class="phi-value" id="phiValue">0.000</div>
+                </div>
+            </div>
         </header>
-
-        <div class="main-content">
-            <div class="canvas-container">
-                <canvas id="constellationCanvas"></canvas>
-                <div class="legend">
-                    <h4>LEGENDA PARAMETRICA</h4>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: hsl(240, 100%, 50%);"></div>
-                        <span>α = -1 (fasi opposte)</span>
+        
+        <!-- LEFT PANEL - Controls -->
+        <aside class="panel left-panel">
+            <div class="panel-section">
+                <div class="section-title">🎭 Dilemmi</div>
+                <div class="dilemma-grid">
+                    <button class="dilemma-btn active" data-dilemma="0">
+                        <div class="dilemma-title">💝 La Dichiarazione</div>
+                        <div class="dilemma-desc">Emozione e corpo spingono, logica frena</div>
+                    </button>
+                    <button class="dilemma-btn" data-dilemma="1">
+                        <div class="dilemma-title">⚖️ Il Whistleblower</div>
+                        <div class="dilemma-desc">Etica chiama all'azione, paura paralizza</div>
+                    </button>
+                    <button class="dilemma-btn" data-dilemma="2">
+                        <div class="dilemma-title">🎨 La Biforcazione</div>
+                        <div class="dilemma-desc">Vocazione vs pragmatismo, tempo stringe</div>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="section-title">⚙️ Parametri Dinamici</div>
+                
+                <div class="param-control">
+                    <div class="param-header">
+                        <span class="param-label">Velocità Sistema</span>
+                        <span class="param-value" id="speedValue">1.0x</span>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: hsl(120, 100%, 50%);"></div>
-                        <span>α = +1 (fasi identiche)</span>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-fill" id="speedFill"></div>
+                        <div class="slider-thumb" id="speedThumb"></div>
+                        <input type="range" id="speedControl" min="10" max="100" value="100">
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #888;"></div>
-                        <span>β = 0 (valori ortogonali)</span>
+                </div>
+                
+                <div class="param-control">
+                    <div class="param-header">
+                        <span class="param-label">Accoppiamento</span>
+                        <span class="param-value" id="couplingValue">1.00</span>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #fff;"></div>
-                        <span>γ = 1 (complementarietà perfetta)</span>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-fill" id="couplingFill"></div>
+                        <div class="slider-thumb" id="couplingThumb"></div>
+                        <input type="range" id="couplingControl" min="0" max="200" value="100">
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #000;"></div>
-                        <span>γ = 0 (dominanza completa)</span>
+                </div>
+                
+                <div class="param-control">
+                    <div class="param-header">
+                        <span class="param-label">Rumore Sistema</span>
+                        <span class="param-value" id="noiseValue">0.10</span>
                     </div>
-                    <div style="margin-top: 10px; font-size: 0.8em; color: #aaa;">
-                        <div>Colore: Hue = α ∈ [-1,1]</div>
-                        <div>Saturazione: |β| ∈ [0,1]</div>
-                        <div>Luminosità: γ ∈ [0,1]</div>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-fill" id="noiseFill"></div>
+                        <div class="slider-thumb" id="noiseThumb"></div>
+                        <input type="range" id="noiseControl" min="0" max="50" value="10">
                     </div>
                 </div>
             </div>
-
-            <div class="controls-panel">
-                <div class="control-group">
-                    <h2>STATO DEL SISTEMA</h2>
-                    <div class="node-control">
-                        <div class="node-label">
-                            <span>Coerenza Φ</span>
-                            <span class="node-value" id="phiValue">0.00</span>
-                        </div>
-                        <div class="slider-container">
-                            <input type="range" id="phiRange" min="0" max="1" step="0.01" value="0.5">
-                        </div>
-                    </div>
-                    <div class="node-control">
-                        <div class="node-label">
-                            <span>Temperatura Risonanza</span>
-                            <span class="node-value" id="resonanceTemp">0.50</span>
-                        </div>
-                        <div class="slider-container">
-                            <input type="range" id="tempRange" min="0" max="1" step="0.01" value="0.5">
-                        </div>
-                    </div>
-                    <div class="toggle-group">
-                        <button class="toggle-btn active" id="toggleAnimation">Animazione ON</button>
-                        <button class="toggle-btn active" id="toggleParametric">Osservabili ON</button>
-                        <button class="toggle-btn" id="resetSystem">Reset Sistema</button>
-                    </div>
+            
+            <div class="panel-section">
+                <div class="section-title">🎯 Azioni</div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="toggleBtn" onclick="toggleSystem()">
+                        ▶ AVVIA
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetSystem()">
+                        ↻ RESET
+                    </button>
                 </div>
-
-                <div class="control-group">
-                    <h2>OSSERVABILI PARAMETRICI GLOBALI</h2>
-                    <div class="param-metrics">
-                        <div class="param-metric">
-                            <div class="param-value" id="alphaGlobal">0.00</div>
-                            <div class="param-label">α medio<br>Sincronizzazione</div>
+            </div>
+        </aside>
+        
+        <!-- CENTER CANVAS -->
+        <main class="canvas-container">
+            <canvas id="mainCanvas"></canvas>
+            <div class="canvas-overlay" id="canvasOverlay"></div>
+        </main>
+        
+        <!-- RIGHT PANEL - Metrics -->
+        <aside class="panel right-panel">
+            <div class="panel-section">
+                <div class="section-title">📊 Assi Globali</div>
+                <div class="axis-display">
+                    <div class="axis-item">
+                        <div class="axis-label">
+                            <span class="axis-name">Coerenza Φ</span>
+                            <span class="axis-number" id="axisCoherence">0.00</span>
                         </div>
-                        <div class="param-metric">
-                            <div class="param-value" id="betaGlobal">0.00</div>
-                            <div class="param-label">β medio<br>Allineamento</div>
-                        </div>
-                        <div class="param-metric">
-                            <div class="param-value" id="gammaGlobal">0.00</div>
-                            <div class="param-label">γ medio<br>Complementarietà</div>
-                        </div>
-                    </div>
-                    <div class="node-control" style="margin-top: 15px;">
-                        <div class="node-label">
-                            <span>Indice di Equità η</span>
-                            <span class="node-value" id="equityIndex">0.00</span>
-                        </div>
-                        <div class="node-label">
-                            <span>Potenziale Emergente ε</span>
-                            <span class="node-value" id="emergencePotential">0.00</span>
+                        <div class="axis-bar">
+                            <div class="axis-fill" id="axisCoherenceFill" style="width: 0%"></div>
                         </div>
                     </div>
-                </div>
-
-                <div class="control-group">
-                    <h2>DILEMMI ETICI PREIMPOSTATI</h2>
-                    <button class="dilemma-btn" id="dilemma1">Dilemma 1: Equilibrio Individuale</button>
-                    <button class="dilemma-btn" id="dilemma2">Dilemma 2: Conflitto Valoriale</button>
-                    <button class="dilemma-btn" id="dilemma3">Dilemma 3: Emergenza Collettiva</button>
-                </div>
-
-                <div class="control-group">
-                    <h2>TIMELINE EVOLUTIVA</h2>
-                    <div class="timeline-container">
-                        <div class="timeline-bar">
-                            <div class="timeline-progress" id="timelineProgress"></div>
-                            <div class="timeline-marker" style="left: 25%;"></div>
-                            <div class="timeline-marker" style="left: 50%;"></div>
-                            <div class="timeline-marker" style="left: 75%;"></div>
+                    
+                    <div class="axis-item">
+                        <div class="axis-label">
+                            <span class="axis-name">Allineamento Etico</span>
+                            <span class="axis-number" id="axisEthical">0.00</span>
                         </div>
-                        <div class="timeline-label">
-                            <span>Inizio</span>
-                            <span>Equilibrio</span>
-                            <span>Risonanza</span>
-                            <span>Fine</span>
+                        <div class="axis-bar">
+                            <div class="axis-fill" id="axisEthicalFill" style="width: 50%"></div>
                         </div>
-                        <div class="toggle-group">
-                            <button class="toggle-btn" id="prevPhase">← Fase Precedente</button>
-                            <button class="toggle-btn" id="nextPhase">Fase Successiva →</button>
+                    </div>
+                    
+                    <div class="axis-item">
+                        <div class="axis-label">
+                            <span class="axis-name">Potenziale Emergente</span>
+                            <span class="axis-number" id="axisEmergence">0.00</span>
+                        </div>
+                        <div class="axis-bar">
+                            <div class="axis-fill" id="axisEmergenceFill" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="status-bar">
-            <div class="metric-display">
-                <div class="metric">
-                    <div class="metric-value" id="coherenceMetric">0.00</div>
-                    <div class="metric-label">Coerenza C</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" id="connectionsMetric">0</div>
-                    <div class="metric-label">Connessioni Attive</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value" id="emergenceMetric">0.00</div>
-                    <div class="metric-label">Potenziale ε</div>
+            
+            <div class="panel-section">
+                <div class="section-title">📈 Metriche Sistema</div>
+                <div class="metric-display">
+                    <div class="metric-row">
+                        <span class="metric-label">Nodi Attivi</span>
+                        <span class="metric-value" id="activeNodes">6</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Connessioni</span>
+                        <span class="metric-value" id="activeConnections">15</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Sync Rate</span>
+                        <span class="metric-value" id="syncRate">0.00</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Energia Media</span>
+                        <span class="metric-value" id="avgEnergy">0.00</span>
+                    </div>
                 </div>
             </div>
-            <button class="export-btn" id="exportData">Esporta Dati Parametrici</button>
-        </div>
-
-        <div class="experimental-console">
-            <div class="console-header">
-                <span>CONSOLE SPERIMENTALE - Spazio Parametrico</span>
-                <span style="color: #2E86AB;">Attivo</span>
+            
+            <div class="panel-section">
+                <div class="section-title">🎛️ Controlli Nodi</div>
+                <div id="nodeControls"></div>
             </div>
-            <div class="console-output" id="consoleOutput">
-                > Sistema parametrico inizializzato<br>
-                > MetricLayer attivo - Calcolo osservabili passivo<br>
-                > α, β, γ in calcolo per tutte le coppie (N=6, 15 connessioni)<br>
-                > Nessuna modifica alla dinamica esistente<br>
-                > Stato: PRONTO PER RACCOLTA DATI<br>
+        </aside>
+        
+        <!-- BOTTOM PANEL -->
+        <footer class="bottom-panel">
+            <div class="timeline-container">
+                <div class="timeline-bar">
+                    <div class="timeline-progress" id="timelineProgress"></div>
+                </div>
+                <div class="timeline-labels">
+                    <span>Inizio</span>
+                    <span>Sviluppo</span>
+                    <span>Picco</span>
+                    <span>Fine</span>
+                </div>
             </div>
-        </div>
-
-        <footer>
-            <p>Φ-Risonanza Sistema Parametrico v4.0 | Implementazione completa del contesto definito il 23/12/2025</p>
-            <p class="epistemic-note">
-                Dichiarazione Epistemologica: Questo progetto NON è una nuova scienza ("Paramatica"), 
-                NON implementa la coscienza, NON è una teoria definitiva. Questo progetto È: un'applicazione 
-                di metodi parametrici alla risonanza, uno strumento per esplorare spazi parametrici complessi, 
-                un contributo alla quantificazione di fenomeni qualitativi, un esperimento in collaborazione 
-                AI-umana aperta e verificabile.
-            </p>
+            
+            <div class="feedback-container" id="feedbackContainer">
+                <!-- Feedback messages will appear here -->
+            </div>
         </footer>
     </div>
 
     <script>
-        // ==============================================
-        // STRATO 0: SISTEMA ESISTENTE (INALTERATO)
-        // ==============================================
-
-        class CognitiveNode {
-            constructor(id, phase = 0, weight = 1.0, omega = 0.01, valence = 1.0, urgency = 0.5) {
-                this.id = id;
-                this.phase = phase;
-                this.weight = weight;
-                this.omega = omega;
-                this.valence = valence;
-                this.urgency = urgency;
+        // ============================================
+        // ENHANCED OBSERVABLE NODE CLASS
+        // ============================================
+        class ObservableNode {
+            constructor(name, config) {
+                this.name = name;
+                this.color = config.color;
+                this.baseWeight = config.baseWeight || 0.5;
+                this.weight = this.baseWeight;
+                this.phase = Math.random() * Math.PI * 2;
+                this.omega = config.omega * 0.1; // RIDOTTO A 1/10
+                this.alpha = config.alpha;
+                this.valence = config.valence;
+                this.urgency = config.urgency;
                 this.active = true;
-                this.color = this.generateColor();
+                
+                // Feedback state for color pulsing
+                this.feedbackTimer = 0;
+                this.lastWeight = this.weight;
+                this.resonanceLevel = 0;
+                
+                // Position
                 this.x = 0;
                 this.y = 0;
-                this.radius = 20 + weight * 15;
-                this.history = [];
-                this.pulsePhase = 0;
+                this.targetX = 0;
+                this.targetY = 0;
             }
-
-            generateColor() {
-                const hue = (this.id * 60) % 360;
-                const saturation = 70 + this.valence * 30;
-                const lightness = 40 + (1 - this.urgency) * 30;
-                return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-            }
-
-            update(deltaTime, temperature) {
+            
+            update(dt, allNodes, coupling, noise) {
                 if (!this.active) return;
-
-                // Dinamica Kuramoto con peso e urgenza
-                this.phase += this.omega * deltaTime * (1 + this.urgency * 0.5);
                 
-                // Aggiungi rumore termico
-                this.phase += (Math.random() - 0.5) * temperature * 0.1;
+                // Extremely slow phase evolution for observability
+                this.phase += this.omega * dt * 0.3;
                 
-                // Normalizza fase
-                this.phase = this.phase % (Math.PI * 2);
+                // Add very slight noise
+                this.phase += (Math.random() - 0.5) * noise * 0.05 * dt;
                 
-                // Aggiorna storia
-                this.history.push(this.phase);
-                if (this.history.length > 100) this.history.shift();
-                
-                // Fase di pulsazione per effetti visivi
-                this.pulsePhase = (this.pulsePhase + 0.05) % (Math.PI * 2);
-            }
-
-            get pulseIntensity() {
-                return 0.7 + 0.3 * Math.sin(this.pulsePhase);
-            }
-        }
-
-        // ==============================================
-        // STRATO 1: METRICLAYER (NUOVO - OVERLAY)
-        // ==============================================
-
-        /**
-         * SPAZIO PARAMETRICO DELLA RISONANZA
-         * 
-         * Calcola osservabili senza influenzare la dinamica.
-         * Approccio parametrico standard.
-         */
-        class MetricLayer {
-            constructor() {
-                this.connections = new Map(); // "i-j" → {α, β, γ, S}
-                this.globalObservables = {
-                    coherence: 0,      // C (collegato a Φ)
-                    equityIndex: 0,    // η (media pesata β)
-                    emergencePotential: 0 // ε (basato su varianza)
-                };
-                this.history = [];
-                this.maxHistory = 100;
-            }
-            
-            computeAll(nodes) {
-                const connectionMetrics = [];
-                
-                // Calcolo pairwise O(N²) - accettabile per N≤20
-                for (let i = 0; i < nodes.length; i++) {
-                    for (let j = i + 1; j < nodes.length; j++) {
-                        const key = `${i}-${j}`;
-                        const metrics = this.compute(nodes[i], nodes[j]);
-                        this.connections.set(key, metrics);
-                        connectionMetrics.push(metrics);
+                // Calculate coupling with other nodes
+                let couplingEffect = 0;
+                allNodes.forEach(other => {
+                    if (other !== this && other.active) {
+                        const phaseDiff = other.phase - this.phase;
+                        couplingEffect += other.weight * Math.sin(phaseDiff);
                     }
-                }
-                
-                this.updateGlobalObservables(connectionMetrics, nodes);
-                this.updateHistory();
-            }
-            
-            compute(a, b) {
-                // α: Sincronizzazione di fase [-1, 1]
-                const alpha = Math.cos(a.phase - b.phase);
-                
-                // β: Allineamento valoriale [-1, 1]
-                const beta = a.valence * b.valence;
-                
-                // γ: Complementarietà [0, 1]
-                const gamma = 1 - Math.abs(a.weight - b.weight);
-                
-                // S: Forza complessiva della connessione [0, 1]
-                const strength = 0.4 * Math.abs(alpha) + 0.4 * Math.abs(beta) + 0.2 * gamma;
-                
-                return { 
-                    alpha, 
-                    beta, 
-                    gamma, 
-                    strength,
-                    nodeA: a.id,
-                    nodeB: b.id
-                };
-            }
-            
-            updateGlobalObservables(connectionMetrics, nodes) {
-                if (connectionMetrics.length === 0) return;
-                
-                // Coerenza media (C)
-                const alphaSum = connectionMetrics.reduce((sum, m) => sum + Math.abs(m.alpha), 0);
-                this.globalObservables.coherence = alphaSum / connectionMetrics.length;
-                
-                // Indice di equità (η) - media pesata di β
-                const betaSum = connectionMetrics.reduce((sum, m) => sum + m.beta, 0);
-                this.globalObservables.equityIndex = betaSum / connectionMetrics.length;
-                
-                // Potenziale emergente (ε) - basato su varianza dei pesi
-                const weights = nodes.map(n => n.weight);
-                const weightMean = weights.reduce((a, b) => a + b) / weights.length;
-                const weightVariance = weights.reduce((sum, w) => sum + Math.pow(w - weightMean, 2), 0) / weights.length;
-                this.globalObservables.emergencePotential = 1 - Math.min(1, weightVariance * 2);
-                
-                // Calcola medie parametriche globali
-                this.globalAlpha = connectionMetrics.reduce((sum, m) => sum + m.alpha, 0) / connectionMetrics.length;
-                this.globalBeta = connectionMetrics.reduce((sum, m) => sum + m.beta, 0) / connectionMetrics.length;
-                this.globalGamma = connectionMetrics.reduce((sum, m) => sum + m.gamma, 0) / connectionMetrics.length;
-            }
-            
-            updateHistory() {
-                this.history.push({
-                    timestamp: Date.now(),
-                    coherence: this.globalObservables.coherence,
-                    equityIndex: this.globalObservables.equityIndex,
-                    emergencePotential: this.globalObservables.emergencePotential,
-                    alpha: this.globalAlpha || 0,
-                    beta: this.globalBeta || 0,
-                    gamma: this.globalGamma || 0
                 });
                 
-                if (this.history.length > this.maxHistory) {
-                    this.history.shift();
+                this.phase += coupling * couplingEffect * dt * 0.1;
+                
+                // Decay feedback timer
+                if (this.feedbackTimer > 0) {
+                    this.feedbackTimer -= dt;
+                }
+                
+                // Update last weight for change detection
+                const weightChange = Math.abs(this.weight - this.lastWeight);
+                if (weightChange > 0.001) {
+                    this.feedbackTimer = 2.0; // 2 seconds of color feedback
+                    this.lastWeight = this.weight;
                 }
             }
             
-            exportData() {
-                return {
-                    timestamp: new Date().toISOString(),
-                    globalObservables: this.globalObservables,
-                    connections: Array.from(this.connections.entries()).map(([key, value]) => ({
-                        connection: key,
-                        ...value
-                    })),
-                    history: this.history,
-                    parametricSpace: {
-                        dimensions: [
-                            { name: "α", range: [-1, 1], description: "Sincronizzazione di fase" },
-                            { name: "β", range: [-1, 1], description: "Allineamento valoriale" },
-                            { name: "γ", range: [0, 1], description: "Complementarietà dei pesi" }
-                        ],
-                        currentPoint: {
-                            alpha: this.globalAlpha,
-                            beta: this.globalBeta,
-                            gamma: this.globalGamma
-                        }
-                    }
-                };
+            calculateResonance(otherNode) {
+                const phaseDiff = Math.cos(this.phase - otherNode.phase);
+                const valenceAlign = this.valence * otherNode.valence;
+                const weightSimilarity = 1 - Math.abs(this.weight - otherNode.weight);
+                
+                return (phaseDiff + valenceAlign + weightSimilarity) / 3;
             }
-        }
-
-        // ==============================================
-        // INIZIALIZZAZIONE DEL SISTEMA
-        // ==============================================
-
-        const canvas = document.getElementById('constellationCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Inizializza dimensioni canvas
-        function resizeCanvas() {
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-        }
-        
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-        
-        // Parametri sistema
-        const nodes = [];
-        const N_NODES = 6;
-        let temperature = 0.5;
-        let phi = 0.5;
-        let animationRunning = true;
-        let showParametric = true;
-        let currentPhase = 0;
-        
-        // Inizializza MetricLayer
-        const metricLayer = new MetricLayer();
-        
-        // Inizializza nodi
-        for (let i = 0; i < N_NODES; i++) {
-            const phase = (i / N_NODES) * Math.PI * 2;
-            const weight = 0.5 + Math.random() * 0.5;
-            const valence = Math.random() > 0.5 ? 1 : -1;
-            const urgency = Math.random() * 0.5 + 0.25;
             
-            nodes.push(new CognitiveNode(i, phase, weight, 0.01 + Math.random() * 0.02, valence, urgency));
-        }
-        
-        // Calcola posizioni nodi su cerchio
-        function calculatePositions() {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = Math.min(canvas.width, canvas.height) * 0.35;
-            
-            nodes.forEach((node, i) => {
-                const angle = (i / N_NODES) * Math.PI * 2 + currentPhase * 0.1;
-                node.x = centerX + Math.cos(angle) * radius;
-                node.y = centerY + Math.sin(angle) * radius;
-            });
-        }
-        
-        // ==============================================
-        // FUNZIONI DI CALCOLO ESISTENTI (INALTERATE)
-        // ==============================================
-        
-        function calculatePhi() {
-            // Calcola coerenza di fase media
-            let sumCos = 0;
-            let sumSin = 0;
-            
-            nodes.forEach(node => {
-                sumCos += Math.cos(node.phase);
-                sumSin += Math.sin(node.phase);
-            });
-            
-            const R = Math.sqrt(sumCos * sumCos + sumSin * sumSin) / nodes.length;
-            return R;
-        }
-        
-        function updateSystem(deltaTime) {
-            // Aggiorna nodi
-            nodes.forEach(node => {
-                node.update(deltaTime, temperature);
-            });
-            
-            // Calcola Φ
-            phi = calculatePhi();
-            
-            // Aggiorna MetricLayer (NUOVA RIGA AGGIUNTA)
-            metricLayer.computeAll(nodes);
-            
-            // Aggiorna UI
-            updateUI();
-        }
-        
-        // ==============================================
-        // STRATO 2: VISUALIZZAZIONE PARAMETRICA
-        // ==============================================
-        
-        function getParametricVisual(metrics) {
-            // Mappatura parametrica → visuale
-            const hue = (metrics.alpha + 1) * 60;      // α ∈ [-1,1] → [0°,120°]
-            const saturation = Math.abs(metrics.beta) * 80 + 20;  // |β| → saturazione
-            const lightness = 30 + metrics.gamma * 40; // γ ∈ [0,1] → [30%,70%]
-            
-            return {
-                color: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
-                thickness: 1 + metrics.strength * 3,
-                dashPattern: metrics.gamma > 0.5 ? [] : [5, 5],
-                opacity: 0.3 + metrics.strength * 0.7
-            };
-        }
-        
-        function renderConstellation() {
-            // Sfondo
-            ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Calcola posizioni
-            calculatePositions();
-            
-            // Renderizza connessioni
-            if (showParametric) {
-                // Modalità parametrica
-                for (let i = 0; i < nodes.length; i++) {
-                    for (let j = i + 1; j < nodes.length; j++) {
-                        const key = `${i}-${j}`;
-                        const metrics = metricLayer.connections.get(key);
-                        
-                        if (metrics && metrics.strength > 0.2) {
-                            const visual = getParametricVisual(metrics);
-                            
-                            ctx.beginPath();
-                            ctx.moveTo(nodes[i].x, nodes[i].y);
-                            ctx.lineTo(nodes[j].x, nodes[j].y);
-                            
-                            ctx.strokeStyle = visual.color.replace('%)', `, ${visual.opacity})`);
-                            ctx.lineWidth = visual.thickness;
-                            ctx.setLineDash(visual.dashPattern);
-                            ctx.stroke();
-                            ctx.setLineDash([]);
-                        }
+            getColor() {
+                // Base: white/gray
+                let color = `rgba(255, 255, 255, ${0.5 + this.weight * 0.3})`;
+                
+                // Add color only during feedback
+                if (this.feedbackTimer > 0) {
+                    const intensity = this.feedbackTimer / 2.0;
+                    if (this.resonanceLevel > 0.7) {
+                        // High resonance: cyan
+                        color = `rgba(78, 205, 196, ${0.3 + intensity * 0.5})`;
+                    } else if (Math.abs(this.valence) > 0.8) {
+                        // Strong valence: pink/red
+                        color = this.valence > 0 
+                            ? `rgba(255, 107, 107, ${0.3 + intensity * 0.5})` // positive
+                            : `rgba(255, 107, 107, ${0.3 + intensity * 0.5})`; // negative
+                    } else {
+                        // Generic feedback: original color
+                        color = this.color.replace(')', `, ${0.3 + intensity * 0.7})`);
                     }
                 }
-            } else {
-                // Modalità originale
-                for (let i = 0; i < nodes.length; i++) {
-                    for (let j = i + 1; j < nodes.length; j++) {
-                        const alignment = Math.cos(nodes[i].phase - nodes[j].phase);
-                        
-                        if (alignment > 0.5) {
-                            const opacity = (alignment - 0.5) * 2 * Math.min(nodes[i].weight, nodes[j].weight);
-                            
-                            ctx.beginPath();
-                            ctx.moveTo(nodes[i].x, nodes[i].y);
-                            ctx.lineTo(nodes[j].x, nodes[j].y);
-                            
-                            ctx.strokeStyle = `rgba(78, 205, 196, ${opacity * 0.5})`;
-                            ctx.lineWidth = 1 + opacity * 2;
-                            ctx.stroke();
-                        }
-                    }
-                }
+                
+                return color;
             }
             
-            // Renderizza nodi
-            nodes.forEach(node => {
-                if (!node.active) return;
-                
-                // Cerchio esterno
-                ctx.beginPath();
-                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-                ctx.fillStyle = node.color.replace(')', `, ${0.2 + node.pulseIntensity * 0.3})`);
-                ctx.fill();
-                
-                // Cerchio interno
-                ctx.beginPath();
-                ctx.arc(node.x, node.y, node.radius * 0.6, 0, Math.PI * 2);
-                ctx.fillStyle = node.color.replace(')', `, ${0.6 + node.pulseIntensity * 0.4})`);
-                ctx.fill();
-                
-                // Indicatore fase
-                ctx.beginPath();
-                ctx.moveTo(node.x, node.y);
-                const phaseX = node.x + Math.cos(node.phase) * node.radius * 0.8;
-                const phaseY = node.y + Math.sin(node.phase) * node.radius * 0.8;
-                ctx.lineTo(phaseX, phaseY);
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.8 + node.pulseIntensity * 0.2})`;
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                
-                // Etichetta nodo
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                ctx.font = 'bold 14px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(`N${node.id}`, node.x, node.y);
-                
-                // Indicatore valenza
-                const valenceSymbol = node.valence > 0 ? '+' : '−';
-                ctx.fillStyle = node.valence > 0 ? 'rgba(100, 255, 100, 0.8)' : 'rgba(255, 100, 100, 0.8)';
-                ctx.font = 'bold 12px Arial';
-                ctx.fillText(valenceSymbol, node.x, node.y + 20);
-                
-                // Indicatore peso
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                ctx.font = '10px Arial';
-                ctx.fillText(`w:${node.weight.toFixed(1)}`, node.x, node.y - 20);
-            });
-            
-            // Traiettorie
-            if (nodes[0].history.length > 2) {
-                ctx.strokeStyle = 'rgba(78, 205, 196, 0.2)';
-                ctx.lineWidth = 1;
-                
-                nodes.forEach(node => {
-                    if (node.history.length < 2) return;
-                    
-                    ctx.beginPath();
-                    const startAngle = node.history[0];
-                    const startX = node.x + Math.cos(startAngle) * node.radius * 1.5;
-                    const startY = node.y + Math.sin(startAngle) * node.radius * 1.5;
-                    ctx.moveTo(startX, startY);
-                    
-                    for (let i = 1; i < node.history.length; i += 3) {
-                        const angle = node.history[i];
-                        const x = node.x + Math.cos(angle) * node.radius * 1.5;
-                        const y = node.y + Math.sin(angle) * node.radius * 1.5;
-                        ctx.lineTo(x, y);
-                    }
-                    
-                    ctx.stroke();
-                });
+            getSize() {
+                // Base size + weight contribution
+                return 12 + this.weight * 25;
             }
             
-            // Legenda parametrica in tempo reale
-            if (showParametric && metricLayer.connections.size > 0) {
-                renderParametricLegend();
+            getGlowSize() {
+                return this.getSize() * (1.5 + this.resonanceLevel * 1.5);
             }
         }
         
-        function renderParametricLegend() {
-            const legendX = 20;
-            const legendY = 100;
-            const boxWidth = 200;
-            const boxHeight = 120;
-            
-            // Sfondo legenda
-            ctx.fillStyle = 'rgba(20, 25, 35, 0.8)';
-            ctx.fillRect(legendX, legendY, boxWidth, boxHeight);
-            ctx.strokeStyle = 'rgba(78, 205, 196, 0.5)';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(legendX, legendY, boxWidth, boxHeight);
-            
-            // Titolo
-            ctx.fillStyle = '#4ECDC4';
-            ctx.font = 'bold 12px Arial';
-            ctx.textAlign = 'left';
-            ctx.fillText('PARAMETRI ATTIVI', legendX + 10, legendY + 20);
-            
-            // Valori correnti
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-            ctx.font = '11px Arial';
-            
-            const alphaVal = metricLayer.globalAlpha?.toFixed(2) || '0.00';
-            const betaVal = metricLayer.globalBeta?.toFixed(2) || '0.00';
-            const gammaVal = metricLayer.globalGamma?.toFixed(2) || '0.00';
-            
-            ctx.fillText(`α: ${alphaVal} (sincronizzazione)`, legendX + 10, legendY + 40);
-            ctx.fillText(`β: ${betaVal} (allineamento)`, legendX + 10, legendY + 60);
-            ctx.fillText(`γ: ${gammaVal} (complementarietà)`, legendX + 10, legendY + 80);
-            
-            // Stato connessioni
-            const activeConnections = Array.from(metricLayer.connections.values())
-                .filter(m => m.strength > 0.3).length;
-            ctx.fillText(`Connessioni attive: ${activeConnections}/15`, legendX + 10, legendY + 100);
-        }
-        
-        // ==============================================
-        // STRATO 3: CONTROLLI PARAMETRICI UI
-        // ==============================================
-        
-        function updateUI() {
-            // Valori globali
-            document.getElementById('phiValue').textContent = phi.toFixed(2);
-            document.getElementById('resonanceTemp').textContent = temperature.toFixed(2);
-            
-            // Aggiorna range slider
-            document.getElementById('phiRange').value = phi;
-            document.getElementById('tempRange').value = temperature;
-            
-            // Aggiorna metriche parametriche globali
-            if (metricLayer.globalAlpha !== undefined) {
-                document.getElementById('alphaGlobal').textContent = metricLayer.globalAlpha.toFixed(2);
-                document.getElementById('betaGlobal').textContent = metricLayer.globalBeta.toFixed(2);
-                document.getElementById('gammaGlobal').textContent = metricLayer.globalGamma.toFixed(2);
-                document.getElementById('equityIndex').textContent = metricLayer.globalObservables.equityIndex.toFixed(2);
-                document.getElementById('emergencePotential').textContent = metricLayer.globalObservables.emergencePotential.toFixed(2);
-            }
-            
-            // Aggiorna barra di stato
-            document.getElementById('coherenceMetric').textContent = metricLayer.globalObservables.coherence.toFixed(2);
-            document.getElementById('connectionsMetric').textContent = 
-                Array.from(metricLayer.connections.values()).filter(m => m.strength > 0.3).length;
-            document.getElementById('emergenceMetric').textContent = metricLayer.globalObservables.emergencePotential.toFixed(2);
-            
-            // Aggiorna timeline
-            const progressPercent = (currentPhase % 100) + 1;
-            document.getElementById('timelineProgress').style.width = `${progressPercent}%`;
-            currentPhase = (currentPhase + 0.5) % 100;
-        }
-        
-        // ==============================================
-        // STRATO 4: CONSOLE SPERIMENTALE
-        // ==============================================
-        
-        /**
-         * INTERFACCIA SPERIMENTALE
-         * Per testing e raccolta dati
-         */
-        window.ParametricResonance = {
-            // Modifica parametri nodo
-            setNodeObservable: (nodeId, observable, value) => {
-                if (nodeId >= 0 && nodeId < nodes.length) {
-                    const node = nodes[nodeId];
-                    switch(observable) {
-                        case 'valence':
-                            node.valence = Math.max(-1, Math.min(1, value));
-                            node.color = node.generateColor();
-                            break;
-                        case 'weight':
-                            node.weight = Math.max(0.1, Math.min(2, value));
-                            node.radius = 20 + node.weight * 15;
-                            break;
-                        case 'urgency':
-                            node.urgency = Math.max(0, Math.min(1, value));
-                            break;
-                    }
-                    logToConsole(`Nodo ${nodeId}: ${observable}=${value}`);
-                }
-            },
-            
-            // Modifica connessione
-            setConnectionParams: (nodeA, nodeB, {alpha, beta, gamma}) => {
-                const key = `${nodeA}-${nodeB}`;
-                if (metricLayer.connections.has(key)) {
-                    const existing = metricLayer.connections.get(key);
-                    metricLayer.connections.set(key, {
-                        ...existing,
-                        alpha: alpha !== undefined ? alpha : existing.alpha,
-                        beta: beta !== undefined ? beta : existing.beta,
-                        gamma: gamma !== undefined ? gamma : existing.gamma,
-                        strength: 0.4 * Math.abs(alpha || existing.alpha) + 
-                                 0.4 * Math.abs(beta || existing.beta) + 
-                                 0.2 * (gamma || existing.gamma)
-                    });
-                    logToConsole(`Connessione ${nodeA}-${nodeB} aggiornata`);
-                }
-            },
-            
-            // Esporta dati per analisi
-            exportParametricSpace: () => {
-                const data = metricLayer.exportData();
-                const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `parametric_space_${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                logToConsole(`Spazio parametrico esportato: ${data.connections.length} connessioni`);
-                return data;
-            },
-            
-            // Ottieni stato corrente
-            getCurrentState: () => {
-                return {
-                    nodes: nodes.map(n => ({
-                        id: n.id,
-                        phase: n.phase,
-                        weight: n.weight,
-                        valence: n.valence,
-                        urgency: n.urgency
-                    })),
-                    globalObservables: metricLayer.globalObservables,
-                    parametricMetrics: {
-                        alpha: metricLayer.globalAlpha,
-                        beta: metricLayer.globalBeta,
-                        gamma: metricLayer.globalGamma
-                    }
-                };
-            }
-        };
-        
-        function logToConsole(message) {
-            const consoleOutput = document.getElementById('consoleOutput');
-            consoleOutput.innerHTML += `> ${message}<br>`;
-            consoleOutput.scrollTop = consoleOutput.scrollHeight;
-        }
-        
-        // ==============================================
-        // CONFIGURAZIONI DILEMMI (ESISTENTI)
-        // ==============================================
-        
+        // ============================================
+        // SYSTEM CONFIGURATIONS
+        // ============================================
         const dilemmas = [
             {
-                name: "Equilibrio Individuale",
-                setup: () => {
-                    nodes.forEach((node, i) => {
-                        node.valence = 1;
-                        node.weight = 0.7;
-                        node.urgency = 0.3;
-                        node.omega = 0.01 + (i % 3) * 0.005;
-                    });
-                    temperature = 0.3;
-                    logToConsole("Dilemma 1 attivo: Equilibrio Individuale");
+                name: "La Dichiarazione",
+                nodes: {
+                    "Emozione": { omega: 0.8, alpha: 0.9, valence: 0.9, urgency: 0.8, color: "#ffffff", baseWeight: 0.7 },
+                    "Logica": { omega: 0.3, alpha: 0.7, valence: -0.3, urgency: 0.3, color: "#ffffff", baseWeight: 0.6 },
+                    "Intuizione": { omega: 0.6, alpha: 0.8, valence: 0.7, urgency: 0.7, color: "#ffffff", baseWeight: 0.7 },
+                    "Memoria": { omega: 0.4, alpha: 0.6, valence: -0.2, urgency: 0.4, color: "#ffffff", baseWeight: 0.5 },
+                    "Etica": { omega: 0.2, alpha: 0.5, valence: 0.4, urgency: 0.2, color: "#ffffff", baseWeight: 0.3 },
+                    "Corpo": { omega: 0.7, alpha: 0.8, valence: 0.8, urgency: 0.9, color: "#ffffff", baseWeight: 0.8 }
                 }
             },
             {
-                name: "Conflitto Valoriale", 
-                setup: () => {
-                    nodes.forEach((node, i) => {
-                        node.valence = i % 2 === 0 ? 1 : -1;
-                        node.weight = 0.5 + Math.random() * 0.5;
-                        node.urgency = 0.6;
-                        node.omega = 0.02;
-                    });
-                    temperature = 0.6;
-                    logToConsole("Dilemma 2 attivo: Conflitto Valoriale");
+                name: "Il Whistleblower",
+                nodes: {
+                    "Etica": { omega: 0.9, alpha: 0.95, valence: 0.95, urgency: 0.8, color: "#ffffff", baseWeight: 0.9 },
+                    "Logica": { omega: 0.6, alpha: 0.8, valence: 0.3, urgency: 0.5, color: "#ffffff", baseWeight: 0.6 },
+                    "Paura": { omega: 0.8, alpha: 0.9, valence: -0.9, urgency: 0.95, color: "#ffffff", baseWeight: 0.8 },
+                    "Memoria": { omega: 0.5, alpha: 0.6, valence: -0.4, urgency: 0.4, color: "#ffffff", baseWeight: 0.5 },
+                    "Identità": { omega: 0.7, alpha: 0.85, valence: 0.8, urgency: 0.7, color: "#ffffff", baseWeight: 0.7 },
+                    "Intuizione": { omega: 0.4, alpha: 0.5, valence: 0.2, urgency: 0.3, color: "#ffffff", baseWeight: 0.4 }
                 }
             },
             {
-                name: "Emergenza Collettiva",
-                setup: () => {
-                    nodes.forEach((node, i) => {
-                        node.valence = 1;
-                        node.weight = i === 0 ? 1.5 : 0.8; // Un nodo dominante
-                        node.urgency = 0.8;
-                        node.omega = 0.015;
-                    });
-                    temperature = 0.8;
-                    logToConsole("Dilemma 3 attivo: Emergenza Collettiva");
+                name: "La Biforcazione",
+                nodes: {
+                    "Vocazione": { omega: 0.85, alpha: 0.9, valence: 0.95, urgency: 0.9, color: "#ffffff", baseWeight: 0.85 },
+                    "Pragmatismo": { omega: 0.7, alpha: 0.8, valence: -0.7, urgency: 0.7, color: "#ffffff", baseWeight: 0.7 },
+                    "Paura": { omega: 0.6, alpha: 0.7, valence: -0.8, urgency: 0.8, color: "#ffffff", baseWeight: 0.6 },
+                    "Intuizione": { omega: 0.8, alpha: 0.85, valence: 0.9, urgency: 0.85, color: "#ffffff", baseWeight: 0.8 },
+                    "Memoria": { omega: 0.5, alpha: 0.6, valence: 0, urgency: 0.4, color: "#ffffff", baseWeight: 0.5 },
+                    "SensoTempo": { omega: 0.7, alpha: 0.75, valence: 0.6, urgency: 0.9, color: "#ffffff", baseWeight: 0.7 }
                 }
             }
         ];
         
-        // ==============================================
-        // GESTIONE EVENTI UI
-        // ==============================================
+        // ============================================
+        // GLOBAL STATE
+        // ============================================
+        let canvas, ctx;
+        let nodes = [];
+        let currentDilemma = 0;
+        let systemRunning = false;
+        let time = 0;
+        let timeSpeed = 1.0;
+        let coupling = 1.0;
+        let noise = 0.1;
+        let mode = 'scientific';
+        let selectedNode = null;
+        let feedbackMessages = [];
+        let lastUpdateTime = 0;
         
-        // Slider Φ
-        document.getElementById('phiRange').addEventListener('input', (e) => {
-            phi = parseFloat(e.target.value);
-            // In un sistema reale, questo modificherebbe l'accoppiamento
-        });
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        function init() {
+            canvas = document.getElementById('mainCanvas');
+            ctx = canvas.getContext('2d');
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            loadDilemma(0);
+            setupControls();
+            setupSliders();
+            createNodeControls();
+            
+            // Start animation loop
+            requestAnimationFrame(animate);
+            
+            addFeedback('Sistema inizializzato', 'Sistema pronto per osservazione', 'sync');
+        }
         
-        // Slider temperatura
-        document.getElementById('tempRange').addEventListener('input', (e) => {
-            temperature = parseFloat(e.target.value);
-        });
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
         
-        // Toggle animazione
-        document.getElementById('toggleAnimation').addEventListener('click', function() {
-            animationRunning = !animationRunning;
-            this.classList.toggle('active');
-            this.textContent = animationRunning ? 'Animazione ON' : 'Animazione OFF';
-            logToConsole(`Animazione ${animationRunning ? 'attivata' : 'disattivata'}`);
-        });
-        
-        // Toggle visualizzazione parametrica
-        document.getElementById('toggleParametric').addEventListener('click', function() {
-            showParametric = !showParametric;
-            this.classList.toggle('active');
-            this.textContent = showParametric ? 'Osservabili ON' : 'Osservabili OFF';
-            logToConsole(`Visualizzazione parametrica ${showParametric ? 'attivata' : 'disattivata'}`);
-        });
-        
-        // Reset sistema
-        document.getElementById('resetSystem').addEventListener('click', () => {
-            nodes.forEach((node, i) => {
-                node.phase = (i / N_NODES) * Math.PI * 2;
-                node.weight = 0.5 + Math.random() * 0.5;
-                node.valence = Math.random() > 0.5 ? 1 : -1;
-                node.urgency = Math.random() * 0.5 + 0.25;
-                node.color = node.generateColor();
+        function loadDilemma(index) {
+            currentDilemma = index;
+            const dilemma = dilemmas[index];
+            nodes = [];
+            
+            Object.entries(dilemma.nodes).forEach(([name, config]) => {
+                nodes.push(new ObservableNode(name, config));
             });
-            temperature = 0.5;
-            phi = 0.5;
-            currentPhase = 0;
-            logToConsole("Sistema resettato - Stato iniziale");
-        });
+            
+            time = 0;
+            updateUI();
+            
+            // Update dilemma buttons
+            document.querySelectorAll('.dilemma-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            addFeedback(`Dilemma caricato: ${dilemma.name}`, 'Sistema reimpostato', 'change');
+        }
         
-        // Dilemmi etici
-        document.getElementById('dilemma1').addEventListener('click', () => dilemmas[0].setup());
-        document.getElementById('dilemma2').addEventListener('click', () => dilemmas[1].setup());
-        document.getElementById('dilemma3').addEventListener('click', () => dilemmas[2].setup());
+        // ============================================
+        // CONTROL SYSTEM
+        // ============================================
+        function setupControls() {
+            // Dilemma buttons
+            document.querySelectorAll('.dilemma-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    loadDilemma(parseInt(btn.dataset.dilemma));
+                });
+            });
+            
+            // Mode selector
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    mode = btn.textContent.toLowerCase().includes('scientific') ? 'scientific' : 'artistic';
+                });
+            });
+        }
         
-        // Controlli timeline
-        document.getElementById('prevPhase').addEventListener('click', () => {
-            currentPhase = Math.max(0, currentPhase - 10);
-            logToConsole(`Fase precedente: ${currentPhase.toFixed(1)}%`);
-        });
+        function setupSliders() {
+            const sliders = [
+                { id: 'speedControl', fill: 'speedFill', thumb: 'speedThumb', value: 'speedValue', factor: 0.01 },
+                { id: 'couplingControl', fill: 'couplingFill', thumb: 'couplingThumb', value: 'couplingValue', factor: 0.01 },
+                { id: 'noiseControl', fill: 'noiseFill', thumb: 'noiseThumb', value: 'noiseValue', factor: 0.01 }
+            ];
+            
+            sliders.forEach(slider => {
+                const input = document.getElementById(slider.id);
+                const fill = document.getElementById(slider.fill);
+                const thumb = document.getElementById(slider.thumb);
+                const valueDisplay = document.getElementById(slider.value);
+                
+                function updateSlider() {
+                    const value = parseInt(input.value);
+                    const max = parseInt(input.max);
+                    const min = parseInt(input.min);
+                    const percentage = ((value - min) / (max - min)) * 100;
+                    
+                    fill.style.width = `${percentage}%`;
+                    thumb.style.left = `${percentage}%`;
+                    
+                    let displayValue;
+                    if (slider.id === 'speedControl') {
+                        displayValue = (value / 100).toFixed(1) + 'x';
+                        timeSpeed = value / 100;
+                    } else {
+                        displayValue = (value * slider.factor).toFixed(2);
+                        if (slider.id === 'couplingControl') coupling = value * slider.factor;
+                        if (slider.id === 'noiseControl') noise = value * slider.factor;
+                    }
+                    
+                    valueDisplay.textContent = displayValue;
+                    
+                    // Add feedback for significant changes
+                    if (Math.abs(value - input.previousValue || 0) > 10) {
+                        const paramName = slider.id.replace('Control', '').toLowerCase();
+                        addFeedback(`Parametro modificato: ${paramName}`, `Nuovo valore: ${displayValue}`, 'change');
+                    }
+                    
+                    input.previousValue = value;
+                }
+                
+                input.addEventListener('input', updateSlider);
+                updateSlider();
+                
+                // Add active state on interaction
+                input.addEventListener('mousedown', () => {
+                    thumb.classList.add('active');
+                });
+                
+                input.addEventListener('mouseup', () => {
+                    setTimeout(() => thumb.classList.remove('active'), 100);
+                });
+            });
+        }
         
-        document.getElementById('nextPhase').addEventListener('click', () => {
-            currentPhase = Math.min(100, currentPhase + 10);
-            logToConsole(`Fase successiva: ${currentPhase.toFixed(1)}%`);
-        });
+        function createNodeControls() {
+            const container = document.getElementById('nodeControls');
+            container.innerHTML = '';
+            
+            nodes.forEach((node, i) => {
+                const control = document.createElement('div');
+                control.className = 'param-control';
+                control.innerHTML = `
+                    <div class="param-header">
+                        <span class="param-label">${node.name}</span>
+                        <span class="param-value" id="nodeValue${i}">${node.weight.toFixed(2)}</span>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-fill" id="nodeFill${i}"></div>
+                        <div class="slider-thumb" id="nodeThumb${i}"></div>
+                        <input type="range" class="node-slider" data-index="${i}" 
+                               min="0" max="100" value="${node.weight * 100}">
+                    </div>
+                `;
+                container.appendChild(control);
+            });
+            
+            // Add event listeners to node sliders
+            document.querySelectorAll('.node-slider').forEach(slider => {
+                slider.addEventListener('input', function() {
+                    const index = parseInt(this.dataset.index);
+                    const node = nodes[index];
+                    const newWeight = this.value / 100;
+                    
+                    if (Math.abs(newWeight - node.weight) > 0.01) {
+                        node.weight = newWeight;
+                        node.feedbackTimer = 3.0; // Longer feedback for direct manipulation
+                        
+                        // Update display
+                        document.getElementById(`nodeValue${index}`).textContent = newWeight.toFixed(2);
+                        document.getElementById(`nodeFill${index}`).style.width = `${this.value}%`;
+                        document.getElementById(`nodeThumb${index}`).style.left = `${this.value}%`;
+                        
+                        addFeedback(`Nodo modificato: ${node.name}`, 
+                                   `Nuovo peso: ${newWeight.toFixed(2)}`, 'change');
+                    }
+                });
+            });
+        }
         
-        // Esporta dati
-        document.getElementById('exportData').addEventListener('click', () => {
-            window.ParametricResonance.exportParametricSpace();
-        });
+        // ============================================
+        // UPDATE SYSTEM
+        // ============================================
+        function updateSystem(dt) {
+            if (!systemRunning) return;
+            
+            // Scale dt by timeSpeed
+            const scaledDt = dt * timeSpeed * 0.5;
+            time += scaledDt;
+            
+            // Update all nodes
+            nodes.forEach(node => {
+                node.update(scaledDt, nodes, coupling, noise);
+            });
+            
+            // Calculate resonances
+            calculateResonances();
+            
+            // Update UI
+            updateUI();
+            
+            // Add periodic feedback
+            if (time - lastUpdateTime > 3.0) {
+                addRandomFeedback();
+                lastUpdateTime = time;
+            }
+        }
         
-        // ==============================================
-        // LOOP DI ANIMAZIONE
-        // ==============================================
+        function calculateResonances() {
+            let totalResonance = 0;
+            let connectionCount = 0;
+            
+            // Reset all resonance levels
+            nodes.forEach(node => node.resonanceLevel = 0);
+            
+            // Calculate pairwise resonances
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (!nodes[i].active || !nodes[j].active) continue;
+                    
+                    const resonance = nodes[i].calculateResonance(nodes[j]);
+                    totalResonance += resonance;
+                    connectionCount++;
+                    
+                    // Update individual resonance levels
+                    nodes[i].resonanceLevel = Math.max(nodes[i].resonanceLevel, resonance);
+                    nodes[j].resonanceLevel = Math.max(nodes[j].resonanceLevel, resonance);
+                }
+            }
+            
+            return connectionCount > 0 ? totalResonance / connectionCount : 0;
+        }
         
+        function calculatePhi() {
+            let sumReal = 0, sumImag = 0, sumWeights = 0;
+            
+            nodes.forEach(node => {
+                if (node.active) {
+                    sumReal += node.weight * Math.cos(node.phase);
+                    sumImag += node.weight * Math.sin(node.phase);
+                    sumWeights += node.weight;
+                }
+            });
+            
+            if (sumWeights === 0) return 0;
+            
+            const magnitude = Math.sqrt(sumReal * sumReal + sumImag * sumImag);
+            return magnitude / sumWeights;
+        }
+        
+        // ============================================
+        // RENDERING
+        // ============================================
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(canvas.width, canvas.height) * 0.35;
+            
+            if (mode === 'scientific') {
+                renderScientific(centerX, centerY, radius);
+            } else {
+                renderArtistic(centerX, centerY, radius);
+            }
+        }
+        
+        function renderScientific(cx, cy, r) {
+            const phi = calculatePhi();
+            
+            // Background field based on phi
+            if (phi > 0.3) {
+                const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.5);
+                gradient.addColorStop(0, `rgba(78, 205, 196, ${phi * 0.05})`);
+                gradient.addColorStop(1, 'rgba(78, 205, 196, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r * 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Calculate node positions
+            const nodePositions = nodes.map((node, i) => {
+                const angle = (i / nodes.length) * Math.PI * 2 - Math.PI / 2 + time * 0.05;
+                const distance = r * (0.7 + node.weight * 0.3);
+                return {
+                    node: node,
+                    x: cx + Math.cos(angle) * distance,
+                    y: cy + Math.sin(angle) * distance
+                };
+            });
+            
+            // Draw connections (axes) with dynamic length
+            for (let i = 0; i < nodePositions.length; i++) {
+                for (let j = i + 1; j < nodePositions.length; j++) {
+                    const pos1 = nodePositions[i];
+                    const pos2 = nodePositions[j];
+                    
+                    if (!pos1.node.active || !pos2.node.active) continue;
+                    
+                    const resonance = pos1.node.calculateResonance(pos2.node);
+                    const connectionStrength = Math.max(0, resonance - 0.3);
+                    
+                    if (connectionStrength > 0) {
+                        // Dynamic axis length based on resonance
+                        const midX = (pos1.x + pos2.x) / 2;
+                        const midY = (pos1.y + pos2.y) / 2;
+                        
+                        // Calculate extension based on resonance
+                        const extension = connectionStrength * 40;
+                        const dx = pos2.x - pos1.x;
+                        const dy = pos2.y - pos1.y;
+                        const length = Math.sqrt(dx * dx + dy * dy);
+                        const unitX = dx / length;
+                        const unitY = dy / length;
+                        
+                        // Extended points
+                        const extX1 = pos1.x - unitX * extension;
+                        const extY1 = pos1.y - unitY * extension;
+                        const extX2 = pos2.x + unitX * extension;
+                        const extY2 = pos2.y + unitY * extension;
+                        
+                        // Draw axis with varying width
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 + connectionStrength * 0.3})`;
+                        ctx.lineWidth = 1 + connectionStrength * 4;
+                        ctx.lineCap = 'round';
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(extX1, extY1);
+                        ctx.lineTo(extX2, extY2);
+                        ctx.stroke();
+                        
+                        // Add color if resonance is high
+                        if (resonance > 0.7) {
+                            ctx.strokeStyle = `rgba(78, 205, 196, ${0.3 + connectionStrength * 0.5})`;
+                            ctx.lineWidth = 1 + connectionStrength * 2;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(pos1.x, pos1.y);
+                            ctx.lineTo(pos2.x, pos2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
+            // Draw nodes
+            nodePositions.forEach(({ node, x, y }) => {
+                const size = node.getSize();
+                const glowSize = node.getGlowSize();
+                const color = node.getColor();
+                
+                // Glow effect
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = color;
+                
+                // Outer glow for high resonance
+                if (node.resonanceLevel > 0.7) {
+                    const glowAlpha = 0.1 + node.resonanceLevel * 0.2;
+                    const gradient = ctx.createRadialGradient(x, y, size, x, y, glowSize);
+                    gradient.addColorStop(0, `rgba(78, 205, 196, ${glowAlpha})`);
+                    gradient.addColorStop(1, `rgba(78, 205, 196, 0)`);
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Node body
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.shadowBlur = 0;
+                
+                // Node border
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // Phase indicator
+                const phaseX = x + Math.cos(node.phase) * (size + 5);
+                const phaseY = y + Math.sin(node.phase) * (size + 5);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(phaseX, phaseY);
+                ctx.stroke();
+                
+                // Node label
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.font = 'bold 12px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.name, x, y - size - 15);
+                
+                // Weight indicator
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.font = '10px sans-serif';
+                ctx.fillText(node.weight.toFixed(2), x, y + size + 12);
+            });
+            
+            // Center point
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function renderArtistic(cx, cy, r) {
+            // Similar but with artistic styling
+            renderScientific(cx, cy, r);
+            
+            // Add artistic elements
+            const pulse = Math.sin(time * 0.5) * 0.5 + 0.5;
+            
+            // Pulsing center
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 0.3);
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${0.3 + pulse * 0.2})`);
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        // ============================================
+        // UI UPDATES
+        // ============================================
+        function updateUI() {
+            const phi = calculatePhi();
+            const avgResonance = calculateResonances();
+            
+            // Update phi display
+            document.getElementById('phiValue').textContent = phi.toFixed(3);
+            
+            // Update axes
+            document.getElementById('axisCoherence').textContent = phi.toFixed(2);
+            document.getElementById('axisCoherenceFill').style.width = `${phi * 100}%`;
+            
+            const ethicalAlignment = nodes.reduce((sum, n) => sum + n.valence, 0) / nodes.length;
+            document.getElementById('axisEthical').textContent = ethicalAlignment.toFixed(2);
+            document.getElementById('axisEthicalFill').style.width = `${(ethicalAlignment + 1) * 50}%`;
+            
+            const emergence = avgResonance;
+            document.getElementById('axisEmergence').textContent = emergence.toFixed(2);
+            document.getElementById('axisEmergenceFill').style.width = `${emergence * 100}%`;
+            
+            // Update metrics
+            const activeCount = nodes.filter(n => n.active).length;
+            document.getElementById('activeNodes').textContent = activeCount;
+            
+            const connectionCount = (activeCount * (activeCount - 1)) / 2;
+            document.getElementById('activeConnections').textContent = connectionCount;
+            
+            document.getElementById('syncRate').textContent = phi.toFixed(2);
+            
+            const avgEnergy = nodes.reduce((sum, n) => sum + n.weight, 0) / nodes.length;
+            document.getElementById('avgEnergy').textContent = avgEnergy.toFixed(2);
+            
+            // Update timeline
+            const progress = (time % 30) / 30 * 100;
+            document.getElementById('timelineProgress').style.width = `${progress}%`;
+            
+            // Update node controls
+            nodes.forEach((node, i) => {
+                const valueEl = document.getElementById(`nodeValue${i}`);
+                const fillEl = document.getElementById(`nodeFill${i}`);
+                const thumbEl = document.getElementById(`nodeThumb${i}`);
+                const slider = document.querySelector(`.node-slider[data-index="${i}"]`);
+                
+                if (valueEl) valueEl.textContent = node.weight.toFixed(2);
+                if (fillEl) fillEl.style.width = `${node.weight * 100}%`;
+                if (thumbEl) thumbEl.style.left = `${node.weight * 100}%`;
+                if (slider && !slider.matches(':focus')) {
+                    slider.value = node.weight * 100;
+                }
+            });
+        }
+        
+        // ============================================
+        // FEEDBACK SYSTEM
+        // ============================================
+        function addFeedback(title, text, type) {
+            const container = document.getElementById('feedbackContainer');
+            
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-item';
+            
+            const iconColor = type === 'resonance' ? 'var(--accent-primary)' :
+                            type === 'change' ? 'var(--accent-secondary)' : '#55efc4';
+            
+            feedback.innerHTML = `
+                <div class="feedback-header">
+                    <div class="feedback-icon ${type}"></div>
+                    <div class="feedback-title">${title}</div>
+                </div>
+                <div class="feedback-text">${text}</div>
+            `;
+            
+            container.appendChild(feedback);
+            feedbackMessages.push({ element: feedback, time: time });
+            
+            // Remove old messages
+            while (feedbackMessages.length > 5) {
+                const old = feedbackMessages.shift();
+                old.element.remove();
+            }
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.style.opacity = '0';
+                    feedback.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        if (feedback.parentNode) feedback.remove();
+                        feedbackMessages = feedbackMessages.filter(f => f.element !== feedback);
+                    }, 300);
+                }
+            }, 5000);
+        }
+        
+        function addRandomFeedback() {
+            const phi = calculatePhi();
+            const activeCount = nodes.filter(n => n.active).length;
+            
+            if (phi > 0.8 && Math.random() > 0.7) {
+                addFeedback('Alta Risonanza Φ', `Sincronizzazione: ${phi.toFixed(3)}`, 'resonance');
+            } else if (activeCount < nodes.length && Math.random() > 0.8) {
+                addFeedback('Nodo Disattivo', `${nodes.length - activeCount} nodi inattivi`, 'change');
+            }
+        }
+        
+        // ============================================
+        // SYSTEM CONTROLS
+        // ============================================
+        function toggleSystem() {
+            systemRunning = !systemRunning;
+            const btn = document.getElementById('toggleBtn');
+            btn.textContent = systemRunning ? '⏸ PAUSA' : '▶ AVVIA';
+            
+            addFeedback(systemRunning ? 'Sistema Avviato' : 'Sistema in Pausa', 
+                       systemRunning ? 'Dinamica attiva' : 'Dinamica sospesa', 'change');
+        }
+        
+        function resetSystem() {
+            loadDilemma(currentDilemma);
+            systemRunning = false;
+            document.getElementById('toggleBtn').textContent = '▶ AVVIA';
+            time = 0;
+            
+            addFeedback('Sistema Resettato', 'Tutti i parametri reimpostati', 'sync');
+        }
+        
+        function setMode(newMode) {
+            mode = newMode;
+            addFeedback(`Modalità ${newMode}`, 'Visualizzazione cambiata', 'change');
+        }
+        
+        // ============================================
+        // ANIMATION LOOP
+        // ============================================
         let lastTime = 0;
         function animate(currentTime) {
-            const deltaTime = currentTime - lastTime || 0;
+            const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
             lastTime = currentTime;
             
-            if (animationRunning) {
-                updateSystem(deltaTime * 0.06); // Fattore di scaling per animazione fluida
-                renderConstellation();
-            }
+            updateSystem(dt);
+            render();
             
             requestAnimationFrame(animate);
         }
         
-        // Avvia sistema
-        animate(0);
-        logToConsole("Sistema parametrico Φ-Risonanza inizializzato completamente");
-        logToConsole("MetricLayer attivo - Calcolo osservabili α, β, γ in tempo reale");
-        
-        // Demo iniziale
-        setTimeout(() => {
-            logToConsole("SISTEMA PRONTO PER ANALISI PARAMETRICA");
-            logToConsole("Usa la console JavaScript per accedere a window.ParametricResonance");
-            logToConsole("Esempio: ParametricResonance.getCurrentState()");
-        }, 1000);
+        // ============================================
+        // START SYSTEM
+        // ============================================
+        window.addEventListener('load', init);
     </script>
 </body>
-</html
+</html>
