@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Φ Unified Model FINAL - Sistema Osservabile</title>
+    <title>Φ Unified Model - Sistema Osservabile</title>
     <style>
         * {
             margin: 0;
@@ -13,106 +13,379 @@
         
         :root {
             --bg-dark: #0a0a0a;
-            --bg-medium: #1a1a2e;
-            --bg-light: #2a2a4a;
-            --accent-cyan: #4ecdc4;
-            --accent-pink: #ff6b6b;
-            --text-white: #e0e0e0;
-            --border-color: rgba(78, 205, 196, 0.3);
-            --console-bg: rgba(10, 10, 10, 0.95);
+            --bg-medium: #1a1a1a;
+            --bg-light: #2a2a2a;
+            --text-white: #f0f0f0;
+            --text-dim: #888;
+            --border-color: #333;
+            --accent-primary: #4ecdc4;
+            --accent-secondary: #ff6b6b;
+            --node-base-color: #ffffff;
+            --node-glow-color: rgba(255, 255, 255, 0.3);
+            --connection-color: rgba(255, 255, 255, 0.2);
+            --axis-color: rgba(255, 255, 255, 0.3);
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-medium) 100%);
+            background: var(--bg-dark);
             color: var(--text-white);
             overflow: hidden;
             height: 100vh;
+            user-select: none;
         }
         
-        /* MODIFICATO: Nuova struttura grid con timeline ridotta */
         .main-container {
             display: grid;
-            grid-template-columns: 300px 1fr 300px;
-            grid-template-rows: 70px 1fr 180px; /* Timeline 20px, Feedback 160px */
+            grid-template-columns: 320px 1fr 320px;
+            grid-template-rows: 70px 1fr 120px;
             height: 100vh;
-            gap: 10px;
-            padding: 10px;
+            gap: 1px;
+            background: var(--border-color);
         }
         
         /* HEADER */
         header {
             grid-column: 1 / -1;
-            background: rgba(26, 26, 46, 0.9);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
+            background: var(--bg-medium);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
-            backdrop-filter: blur(10px);
+            padding: 0 25px;
+            border-bottom: 1px solid var(--border-color);
         }
         
-        header h1 {
-            font-size: 1.5em;
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .mode-toggle {
+        .logo {
             display: flex;
-            gap: 10px;
             align-items: center;
+            gap: 15px;
+        }
+        
+        .logo h1 {
+            font-size: 1.6em;
+            font-weight: 300;
+            color: var(--text-white);
+        }
+        
+        .logo .phi-symbol {
+            font-size: 2em;
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 2px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            overflow: hidden;
         }
         
         .mode-btn {
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            color: var(--text-white);
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.85em;
+            font-size: 0.9em;
+            font-weight: 500;
         }
         
         .mode-btn.active {
-            background: var(--accent-cyan);
+            background: var(--accent-primary);
             color: var(--bg-dark);
-            font-weight: bold;
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
         
         .phi-display {
-            font-size: 1.2em;
-            padding: 8px 15px;
-            background: rgba(78, 205, 196, 0.1);
-            border-radius: 5px;
-            border: 1px solid var(--accent-cyan);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .phi-label {
+            font-size: 0.8em;
+            color: var(--text-dim);
+            margin-bottom: 2px;
         }
         
         .phi-value {
-            color: var(--accent-cyan);
+            font-size: 1.8em;
             font-weight: bold;
-            margin-left: 5px;
+            color: var(--accent-primary);
+        }
+        
+        /* PANEL STYLES */
+        .panel {
+            background: var(--bg-medium);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .panel-section {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .section-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 16px;
+            background: var(--accent-primary);
+            border-radius: 2px;
         }
         
         /* LEFT PANEL - Controls */
-        .left-panel {
-            background: rgba(26, 26, 46, 0.9);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
+        .dilemma-grid {
+            display: grid;
+            gap: 8px;
         }
         
-        /* CANVAS AREA */
-        .canvas-section {
-            background: rgba(26, 26, 46, 0.5);
+        .dilemma-btn {
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 6px;
+            padding: 15px;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9em;
+        }
+        
+        .dilemma-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-primary);
+        }
+        
+        .dilemma-btn.active {
+            background: rgba(78, 205, 196, 0.15);
+            border-color: var(--accent-primary);
+        }
+        
+        .dilemma-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-white);
+        }
+        
+        .dilemma-desc {
+            font-size: 0.8em;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+        
+        .param-control {
+            margin-bottom: 18px;
+        }
+        
+        .param-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .param-label {
+            font-size: 0.9em;
+            color: var(--text-white);
+        }
+        
+        .param-value {
+            font-size: 0.9em;
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+        
+        .slider-container {
+            position: relative;
+            height: 28px;
+        }
+        
+        .slider-track {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+        
+        .slider-fill {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 2px;
+            transform: translateY(-50%);
+            transition: width 0.2s ease;
+        }
+        
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            width: 16px;
+            height: 16px;
+            background: var(--text-white);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid var(--bg-light);
+        }
+        
+        .slider-thumb:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        
+        .slider-thumb.active {
+            background: var(--accent-primary);
+            box-shadow: 0 0 0 2px var(--accent-primary);
+        }
+        
+        input[type="range"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        /* ACTION BUTTONS */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg-dark);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-white);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        /* RIGHT PANEL - Metrics */
+        .metric-display {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+        }
+        
+        .metric-label {
+            font-size: 0.85em;
+            color: var(--text-dim);
+        }
+        
+        .metric-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text-white);
+        }
+        
+        .axis-display {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .axis-item {
+            margin-bottom: 15px;
+        }
+        
+        .axis-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+        }
+        
+        .axis-name {
+            color: var(--text-dim);
+        }
+        
+        .axis-number {
+            color: var(--text-white);
+            font-weight: bold;
+        }
+        
+        .axis-bar {
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .axis-fill {
+            height: 100%;
+            background: var(--accent-primary);
+            transition: width 0.5s ease;
+        }
+        
+        /* CENTER CANVAS */
+        .canvas-container {
+            background: var(--bg-dark);
             position: relative;
             overflow: hidden;
         }
@@ -123,146 +396,70 @@
             display: block;
         }
         
-        /* RIGHT PANEL - Metrics */
-        .right-panel {
-            background: rgba(26, 26, 46, 0.9);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
+        .canvas-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
         
-        /* MODIFICATO: TIMELINE RIDOTTA DEL 50% */
-        .timeline-section {
+        /* BOTTOM PANEL */
+        .bottom-panel {
             grid-column: 1 / -1;
-            height: 50px; /* Ridotta del 50% */
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 12px 20px; /* Padding ridotto */
+            background: var(--bg-medium);
+            border-top: 1px solid var(--border-color);
             display: flex;
-            align-items: center;
-            backdrop-filter: blur(10px);
+            flex-direction: column;
         }
         
-        .timeline-track {
-            flex: 1;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            margin: 0 15px;
+        .timeline-container {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .timeline-bar {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
             position: relative;
-            overflow: hidden;
+            margin: 10px 0;
         }
         
         .timeline-progress {
             position: absolute;
             height: 100%;
-            background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan));
-            border-radius: 3px;
+            background: var(--accent-primary);
+            border-radius: 2px;
             width: 0%;
             transition: width 0.3s ease;
         }
         
-        .timeline-marker {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
-            background: #fff;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        /* MODIFICATO: FEEDBACK ESPANSO */
-        .feedback-section {
-            grid-column: 1 / -1;
-            min-height: 110px; /* +37.5% */
-            max-height: 130px; /* +62.5% */
-            background: rgba(26, 26, 46, 0.9);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
-        }
-        
-        .feedback-header {
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--border-color);
+        .timeline-labels {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            font-size: 0.8em;
+            color: var(--text-dim);
         }
         
-        .feedback-title {
-            color: var(--accent-cyan);
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-        
-        .feedback-controls {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .feedback-btn {
-            padding: 4px 10px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 3px;
-            color: var(--text-white);
-            cursor: pointer;
-            font-size: 0.75em;
-            transition: all 0.2s ease;
-        }
-        
-        .feedback-btn:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        
-        .feedback-output {
+        .feedback-container {
             flex: 1;
-            padding: 10px;
-            overflow-y: auto;
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 0.9em;
-            line-height: 1.5;
+            padding: 15px 20px;
+            overflow-x: auto;
+            display: flex;
+            gap: 15px;
         }
         
-        .feedback-message {
-            margin: 5px 0;
-            padding: 8px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 5px;
-            border-left: 3px solid transparent;
-            animation: slideIn 0.3s ease;
+        .feedback-item {
+            background: var(--bg-light);
+            border-radius: 6px;
+            padding: 12px 15px;
+            min-width: 200px;
+            animation: feedback-enter 0.3s ease;
         }
         
-        .feedback-message.info {
-            border-left-color: var(--accent-cyan);
-        }
-        
-        .feedback-message.warning {
-            border-left-color: #fdcb6e;
-        }
-        
-        .feedback-message.error {
-            border-left-color: var(--accent-pink);
-        }
-        
-        .feedback-message.success {
-            border-left-color: #55efc4;
-        }
-        
-        .feedback-message.resonance {
-            border-left-color: #a29bfe;
-            background: rgba(162, 155, 254, 0.1);
-        }
-        
-        @keyframes slideIn {
+        @keyframes feedback-enter {
             from {
                 opacity: 0;
                 transform: translateY(10px);
@@ -273,189 +470,70 @@
             }
         }
         
-        /* NODE CONTROLS SECTION */
-        .node-controls {
-            margin-top: 20px;
-        }
-        
-        .node-control-row {
+        .feedback-header {
             display: flex;
             align-items: center;
-            margin: 8px 0;
-            gap: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
         }
         
-        .node-color {
+        .feedback-icon {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.3);
         }
         
-        .node-name {
-            flex: 1;
-            font-size: 0.8em;
-            color: rgba(255,255,255,0.7);
-        }
+        .feedback-icon.resonance { background: var(--accent-primary); }
+        .feedback-icon.change { background: var(--accent-secondary); }
+        .feedback-icon.sync { background: #55efc4; }
         
-        .node-slider {
-            flex: 2;
-            height: 4px;
-        }
-        
-        /* PANEL SECTIONS */
-        .panel-section {
-            margin-bottom: 20px;
-        }
-        
-        .panel-title {
-            color: var(--accent-cyan);
-            font-size: 0.9em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .dilemma-btn {
-            width: 100%;
-            padding: 12px;
-            margin: 5px 0;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
+        .feedback-title {
+            font-size: 0.85em;
+            font-weight: 600;
             color: var(--text-white);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            font-size: 0.85em;
         }
         
-        .dilemma-btn:hover {
-            background: rgba(78, 205, 196, 0.1);
-            transform: translateX(3px);
-        }
-        
-        .dilemma-btn.active {
-            background: rgba(78, 205, 196, 0.2);
-            border-color: var(--accent-cyan);
-        }
-        
-        .control-group {
-            margin: 15px 0;
-        }
-        
-        .control-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 0.85em;
-        }
-        
-        .control-value {
-            color: var(--accent-cyan);
-            font-weight: bold;
-        }
-        
-        input[type="range"] {
-            width: 100%;
-            height: 4px;
-            border-radius: 5px;
-            background: rgba(255,255,255,0.1);
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--accent-cyan);
-            cursor: pointer;
-        }
-        
-        .action-btn {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            background: linear-gradient(45deg, var(--accent-cyan), #45b7d1);
-            border: none;
-            border-radius: 5px;
-            color: var(--bg-dark);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.4);
-        }
-        
-        .action-btn.secondary {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-        }
-        
-        .metric-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px;
-            margin: 5px 0;
-            background: rgba(0,0,0,0.3);
-            border-radius: 5px;
-            font-size: 0.85em;
-        }
-        
-        .metric-label {
-            color: rgba(255,255,255,0.7);
-        }
-        
-        .metric-value {
-            color: var(--accent-cyan);
-            font-weight: bold;
-        }
-        
-        .axes-display {
-            background: rgba(0,0,0,0.3);
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-        }
-        
-        .axis-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 5px 0;
+        .feedback-text {
             font-size: 0.8em;
+            color: var(--text-dim);
+            line-height: 1.4;
         }
         
-        .axis-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            margin-top: 3px;
-            overflow: hidden;
-        }
-        
-        .axis-fill {
-            height: 100%;
-            background: var(--accent-cyan);
-            transition: width 0.3s ease;
-        }
-        
+        /* SCROLLBAR */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+            height: 8px;
         }
         
         ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
         }
         
         ::-webkit-scrollbar-thumb {
-            background: var(--accent-cyan);
-            border-radius: 3px;
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+        
+        /* UTILITY */
+        .dimmed {
+            opacity: 0.5;
+        }
+        
+        .highlight {
+            color: var(--accent-primary) !important;
+        }
+        
+        .color-pulse {
+            animation: color-pulse 2s ease infinite;
+        }
+        
+        @keyframes color-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
     </style>
 </head>
@@ -463,395 +541,314 @@
     <div class="main-container">
         <!-- HEADER -->
         <header>
-            <h1>Φ UNIFIED MODEL - SISTEMA OSSERVABILE FINALE</h1>
-            <div class="mode-toggle">
+            <div class="logo">
+                <div class="phi-symbol">Φ</div>
+                <h1>Unified Model - Sistema Osservabile</h1>
+            </div>
+            
+            <div class="mode-selector">
                 <button class="mode-btn active" onclick="setMode('scientific')">Scientifica</button>
                 <button class="mode-btn" onclick="setMode('artistic')">Artistica</button>
-                <button class="mode-btn" onclick="setMode('minimal')">Minimal</button>
             </div>
-            <div class="phi-display">
-                Φ: <span class="phi-value" id="phiValue">0.000</span>
+            
+            <div class="system-status">
+                <div class="phi-display">
+                    <div class="phi-label">Risonanza Φ</div>
+                    <div class="phi-value" id="phiValue">0.000</div>
+                </div>
             </div>
         </header>
         
-        <!-- LEFT PANEL -->
-        <aside class="left-panel">
+        <!-- LEFT PANEL - Controls -->
+        <aside class="panel left-panel">
             <div class="panel-section">
-                <div class="panel-title">⚖️ Dilemmi Risonanti</div>
-                <button class="dilemma-btn active" data-dilemma="0">
-                    💝 LA DICHIARAZIONE<br>
-                    <small style="opacity: 0.7;">Emozione vs Logica</small>
-                </button>
-                <button class="dilemma-btn" data-dilemma="1">
-                    ⚖️ IL WHISTLEBLOWER<br>
-                    <small style="opacity: 0.7;">Etica vs Paura</small>
-                </button>
-                <button class="dilemma-btn" data-dilemma="2">
-                    🎨 LA BIFORCAZIONE<br>
-                    <small style="opacity: 0.7;">Vocazione vs Pragmatismo</small>
-                </button>
-            </div>
-            
-            <div class="panel-section">
-                <div class="panel-title">🎛️ Parametri Dinamici</div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <span>Velocità Sistema</span>
-                        <span class="control-value" id="speedValue">0.1x</span>
-                    </div>
-                    <input type="range" id="speedControl" min="1" max="100" value="10">
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <span>Accoppiamento (K)</span>
-                        <span class="control-value" id="couplingValue">1.0</span>
-                    </div>
-                    <input type="range" id="couplingControl" min="0" max="200" value="100">
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <span>Rumore (σ)</span>
-                        <span class="control-value" id="noiseValue">0.1</span>
-                    </div>
-                    <input type="range" id="noiseControl" min="0" max="100" value="10">
-                </div>
-            </div>
-            
-            <div class="panel-section node-controls">
-                <div class="panel-title">🎯 Controlli Nodi</div>
-                <div id="nodeControlsContainer">
-                    <!-- I controlli dei nodi saranno generati dinamicamente -->
+                <div class="section-title">🎭 Dilemmi</div>
+                <div class="dilemma-grid">
+                    <button class="dilemma-btn active" data-dilemma="0">
+                        <div class="dilemma-title">💝 La Dichiarazione</div>
+                        <div class="dilemma-desc">Emozione e corpo spingono, logica frena</div>
+                    </button>
+                    <button class="dilemma-btn" data-dilemma="1">
+                        <div class="dilemma-title">⚖️ Il Whistleblower</div>
+                        <div class="dilemma-desc">Etica chiama all'azione, paura paralizza</div>
+                    </button>
+                    <button class="dilemma-btn" data-dilemma="2">
+                        <div class="dilemma-title">🎨 La Biforcazione</div>
+                        <div class="dilemma-desc">Vocazione vs pragmatismo, tempo stringe</div>
+                    </button>
                 </div>
             </div>
             
             <div class="panel-section">
-                <div class="panel-title">🚀 Azioni</div>
-                <button class="action-btn" onclick="toggleAnimation()">▶ AVVIA SISTEMA</button>
-                <button class="action-btn secondary" onclick="applyStimulus()">⚡ APPLICA STIMOLO</button>
-                <button class="action-btn" style="background: rgba(255,255,255,0.1);" onclick="resetSystem()">↻ RESET COMPLETO</button>
+                <div class="section-title">⚙️ Parametri Dinamici</div>
+                
+                <div class="param-control">
+                    <div class="param-header">
+                        <span class="param-label">Velocità Sistema</span>
+                        <span class="param-value" id="speedValue">1.0x</span>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-fill" id="speedFill"></div>
+                        <div class="slider-thumb" id="speedThumb"></div>
+                        <input type="range" id="speedControl" min="10" max="100" value="100">
+                    </div>
+                </div>
+                
+                <div class="param-control">
+                    <div class="param-header">
+                        <span class="param-label">Accoppiamento</span>
+                        <span class="param-value" id="couplingValue">1.00</span>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-fill" id="couplingFill"></div>
+                        <div class="slider-thumb" id="couplingThumb"></div>
+                        <input type="range" id="couplingControl" min="0" max="200" value="100">
+                    </div>
+                </div>
+                
+                <div class="param-control">
+                    <div class="param-header">
+                        <span class="param-label">Rumore Sistema</span>
+                        <span class="param-value" id="noiseValue">0.10</span>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-fill" id="noiseFill"></div>
+                        <div class="slider-thumb" id="noiseThumb"></div>
+                        <input type="range" id="noiseControl" min="0" max="50" value="10">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="section-title">🎯 Azioni</div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="toggleBtn" onclick="toggleSystem()">
+                        ▶ AVVIA
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetSystem()">
+                        ↻ RESET
+                    </button>
+                </div>
             </div>
         </aside>
         
-        <!-- CANVAS -->
-        <section class="canvas-section">
+        <!-- CENTER CANVAS -->
+        <main class="canvas-container">
             <canvas id="mainCanvas"></canvas>
-        </section>
+            <div class="canvas-overlay" id="canvasOverlay"></div>
+        </main>
         
-        <!-- RIGHT PANEL -->
-        <aside class="right-panel">
+        <!-- RIGHT PANEL - Metrics -->
+        <aside class="panel right-panel">
             <div class="panel-section">
-                <div class="panel-title">📊 Assi Globali</div>
-                <div class="axes-display">
+                <div class="section-title">📊 Assi Globali</div>
+                <div class="axis-display">
                     <div class="axis-item">
-                        <span>Φ_dyn (Coerenza)</span>
-                        <span class="control-value" id="axisPhi">0.00</span>
-                    </div>
-                    <div class="axis-bar">
-                        <div class="axis-fill" id="axisPhiBar" style="width: 0%"></div>
-                    </div>
-                    
-                    <div class="axis-item" style="margin-top: 10px;">
-                        <span>η_align (Equità)</span>
-                        <span class="control-value" id="axisEthical">0.00</span>
-                    </div>
-                    <div class="axis-bar">
-                        <div class="axis-fill" id="axisEthicalBar" style="width: 50%"></div>
+                        <div class="axis-label">
+                            <span class="axis-name">Coerenza Φ</span>
+                            <span class="axis-number" id="axisCoherence">0.00</span>
+                        </div>
+                        <div class="axis-bar">
+                            <div class="axis-fill" id="axisCoherenceFill" style="width: 0%"></div>
+                        </div>
                     </div>
                     
-                    <div class="axis-item" style="margin-top: 10px;">
-                        <span>ε_emerg (Potenziale)</span>
-                        <span class="control-value" id="axisEmergence">0.00</span>
+                    <div class="axis-item">
+                        <div class="axis-label">
+                            <span class="axis-name">Allineamento Etico</span>
+                            <span class="axis-number" id="axisEthical">0.00</span>
+                        </div>
+                        <div class="axis-bar">
+                            <div class="axis-fill" id="axisEthicalFill" style="width: 50%"></div>
+                        </div>
                     </div>
-                    <div class="axis-bar">
-                        <div class="axis-fill" id="axisEmergenceBar" style="width: 0%"></div>
+                    
+                    <div class="axis-item">
+                        <div class="axis-label">
+                            <span class="axis-name">Potenziale Emergente</span>
+                            <span class="axis-number" id="axisEmergence">0.00</span>
+                        </div>
+                        <div class="axis-bar">
+                            <div class="axis-fill" id="axisEmergenceFill" style="width: 0%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <div class="panel-section">
-                <div class="panel-title">📈 Metriche Sistema</div>
-                <div class="metric-item">
-                    <span class="metric-label">Nodi Attivi:</span>
-                    <span class="metric-value" id="activeNodes">6</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-label">Connessioni Attive:</span>
-                    <span class="metric-value" id="connections">15</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-label">Sync Rate (R):</span>
-                    <span class="metric-value" id="syncRate">0.00</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-label">Energia Media (E):</span>
-                    <span class="metric-value" id="avgEnergy">0.00</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-label">Risonanza Max:</span>
-                    <span class="metric-value" id="maxResonance">0.00</span>
+                <div class="section-title">📈 Metriche Sistema</div>
+                <div class="metric-display">
+                    <div class="metric-row">
+                        <span class="metric-label">Nodi Attivi</span>
+                        <span class="metric-value" id="activeNodes">6</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Connessioni</span>
+                        <span class="metric-value" id="activeConnections">15</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Sync Rate</span>
+                        <span class="metric-value" id="syncRate">0.00</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Energia Media</span>
+                        <span class="metric-value" id="avgEnergy">0.00</span>
+                    </div>
                 </div>
             </div>
             
             <div class="panel-section">
-                <div class="panel-title">🔍 Nodo Selezionato</div>
-                <div id="selectedNodeInfo" style="font-size: 0.8em; line-height: 1.6; color: rgba(255,255,255,0.7); padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;">
-                    Clicca su un nodo per analizzare i dettagli
-                </div>
+                <div class="section-title">🎛️ Controlli Nodi</div>
+                <div id="nodeControls"></div>
             </div>
         </aside>
         
-        <!-- TIMELINE RIDOTTA -->
-        <section class="timeline-section">
-            <div style="font-size: 0.8em; color: var(--accent-cyan);">Timeline</div>
-            <div class="timeline-track">
-                <div class="timeline-progress" id="timelineProgress"></div>
-            </div>
-            <div style="font-size: 0.8em; color: rgba(255,255,255,0.7);">
-                t = <span id="timeDisplay">0.0</span>s
-            </div>
-        </section>
-        
-        <!-- FEEDBACK ESPANSO -->
-        <section class="feedback-section">
-            <div class="feedback-header">
-                <span class="feedback-title">📋 SISTEMA FEEDBACK - Messaggi in tempo reale</span>
-                <div class="feedback-controls">
-                    <button class="feedback-btn" onclick="clearFeedback()">Pulisci</button>
-                    <button class="feedback-btn" onclick="toggleAutoScroll()">Auto-scroll</button>
-                    <button class="feedback-btn" onclick="exportLog()">Esporta</button>
+        <!-- BOTTOM PANEL -->
+        <footer class="bottom-panel">
+            <div class="timeline-container">
+                <div class="timeline-bar">
+                    <div class="timeline-progress" id="timelineProgress"></div>
+                </div>
+                <div class="timeline-labels">
+                    <span>Inizio</span>
+                    <span>Sviluppo</span>
+                    <span>Picco</span>
+                    <span>Fine</span>
                 </div>
             </div>
-            <div class="feedback-output" id="feedbackOutput">
-                <div class="feedback-message info">
-                    <strong>[INIZIO SISTEMA]</strong> - Φ Unified Model vFinale avviato. Velocità ridotta a 1/10 per osservabilità ottimale.
-                </div>
-                <div class="feedback-message success">
-                    <strong>[CONFIGURAZIONE]</strong> - Schema cromatico: 80% B&W base, 20% colore temporaneo per feedback.
-                </div>
-                <div class="feedback-message info">
-                    <strong>[STATUS]</strong> - Sistema in attesa di avvio. Seleziona un dilemma e premi AVVIA.
-                </div>
+            
+            <div class="feedback-container" id="feedbackContainer">
+                <!-- Feedback messages will appear here -->
             </div>
-        </section>
+        </footer>
     </div>
 
     <script>
-        // ============= NODO OSSERVABILE (VERSIONE FINALE) =============
+        // ============================================
+        // ENHANCED OBSERVABLE NODE CLASS
+        // ============================================
         class ObservableNode {
             constructor(name, config) {
                 this.name = name;
-                this.id = Math.random().toString(36).substr(2, 9);
-                this.omega = config.omega;
+                this.color = config.color;
+                this.baseWeight = config.baseWeight || 0.5;
+                this.weight = this.baseWeight;
+                this.phase = Math.random() * Math.PI * 2;
+                this.omega = config.omega * 0.1; // RIDOTTO A 1/10
                 this.alpha = config.alpha;
-                this.beta = config.beta || 0.1;
                 this.valence = config.valence;
                 this.urgency = config.urgency;
-                this.phase = Math.random() * Math.PI * 2;
-                this.baseWeight = config.baseWeight || 0.5;
-                this.weight = config.baseWeight || 0.5;
                 this.active = true;
-                this.baseColor = config.color;
                 
-                // SISTEMA FEEDBACK TEMPORANEO
+                // Feedback state for color pulsing
                 this.feedbackTimer = 0;
-                this.feedbackActive = false;
-                this.resonance = 0;
-                this.lastResonance = 0;
+                this.lastWeight = this.weight;
+                this.resonanceLevel = 0;
                 
-                // ASSI GLOBALI (come nel contesto)
-                this.axes = {
-                    coherence: 0.5,           // Φ_dyn [0,1]
-                    fairness: 0,              // η_align [-1,1]
-                    potential: 0.3            // ε_emerg [0,1]
-                };
-                
-                // CONNESSIONI CON METRICA
-                this.connections = new Map();
-                this.resonanceHistory = [];
+                // Position
+                this.x = 0;
+                this.y = 0;
+                this.targetX = 0;
+                this.targetY = 0;
             }
             
-            update(dt, stimulus, allNodes, K, noise) {
-                if (!this.active) {
-                    this.weight = Math.max(0, this.weight - 0.1 * dt);
-                    return;
-                }
+            update(dt, allNodes, coupling, noise) {
+                if (!this.active) return;
                 
-                // CALCOLO ACOPPIAMENTO (velocità ridotta a 1/10)
-                let coupling = 0;
-                let totalWeight = 0;
-                allNodes.forEach(node => {
-                    if (node !== this && node.active) {
-                        coupling += node.weight * Math.sin(node.phase - this.phase);
-                        totalWeight += node.weight;
+                // Extremely slow phase evolution for observability
+                this.phase += this.omega * dt * 0.3;
+                
+                // Add very slight noise
+                this.phase += (Math.random() - 0.5) * noise * 0.05 * dt;
+                
+                // Calculate coupling with other nodes
+                let couplingEffect = 0;
+                allNodes.forEach(other => {
+                    if (other !== this && other.active) {
+                        const phaseDiff = other.phase - this.phase;
+                        couplingEffect += other.weight * Math.sin(phaseDiff);
                     }
                 });
                 
-                const avgCoupling = totalWeight > 0 ? coupling / allNodes.length : 0;
+                this.phase += coupling * couplingEffect * dt * 0.1;
                 
-                // CORREZIONE: VELOCITÀ RIDOTTA A 1/10
-                this.phase += (this.omega + K * avgCoupling + noise * (Math.random() * 2 - 1)) * dt * 0.1;
-                
-                // CALCOLO COMPETIZIONE
-                const competition = allNodes.reduce((sum, n) => 
-                    sum + (n !== this && n.active ? n.weight : 0), 0);
-                const dwdt = this.alpha * stimulus - this.beta * this.weight - 0.05 * this.weight * competition;
-                this.weight = Math.max(0, Math.min(1, this.weight + dwdt * dt));
-                
-                // AGGIORNA ASSI E RISONANZA
-                this.updateAxes(allNodes);
-                this.updateResonance(allNodes);
-                
-                // AGGIORNA TIMER FEEDBACK
+                // Decay feedback timer
                 if (this.feedbackTimer > 0) {
                     this.feedbackTimer -= dt;
-                    if (this.feedbackTimer <= 0) {
-                        this.feedbackActive = false;
-                    }
+                }
+                
+                // Update last weight for change detection
+                const weightChange = Math.abs(this.weight - this.lastWeight);
+                if (weightChange > 0.001) {
+                    this.feedbackTimer = 2.0; // 2 seconds of color feedback
+                    this.lastWeight = this.weight;
                 }
             }
             
-            updateAxes(allNodes) {
-                // Coerenza (Φ_dyn)
-                const activeNodes = allNodes.filter(n => n.active);
-                if (activeNodes.length > 0) {
-                    let syncSum = 0;
-                    activeNodes.forEach(n => {
-                        if (n !== this) {
-                            const phaseDiff = Math.abs(this.phase - n.phase);
-                            syncSum += Math.cos(phaseDiff);
-                        }
-                    });
-                    this.axes.coherence = (syncSum / (activeNodes.length - 1) + 1) / 2;
-                }
+            calculateResonance(otherNode) {
+                const phaseDiff = Math.cos(this.phase - otherNode.phase);
+                const valenceAlign = this.valence * otherNode.valence;
+                const weightSimilarity = 1 - Math.abs(this.weight - otherNode.weight);
                 
-                // Equità (η_align) - basato su valence
-                this.axes.fairness = this.valence;
-                
-                // Potenziale emergente (ε_emerg)
-                this.axes.potential = (this.weight * this.urgency + 
-                    Math.abs(this.valence) * 0.3) / 1.3;
-            }
-            
-            updateResonance(allNodes) {
-                let totalResonance = 0;
-                let count = 0;
-                
-                allNodes.forEach(node => {
-                    if (node !== this && node.active) {
-                        const localAxes = this.calculateLocalAxes(node);
-                        const resonance = (Math.abs(localAxes.alpha) + 
-                                          Math.abs(localAxes.beta) + 
-                                          localAxes.gamma) / 3;
-                        totalResonance += resonance;
-                        count++;
-                        
-                        // Memorizza connessione
-                        this.connections.set(node.id, {
-                            node,
-                            resonance,
-                            localAxes
-                        });
-                    }
-                });
-                
-                this.lastResonance = this.resonance;
-                this.resonance = count > 0 ? totalResonance / count : 0;
-                
-                // AGGIUNGI A STORICO
-                this.resonanceHistory.push(this.resonance);
-                if (this.resonanceHistory.length > 100) {
-                    this.resonanceHistory.shift();
-                }
-                
-                // ATTIVA FEEDBACK SE RISONANZA FORTE
-                if (this.resonance > 0.7 && this.lastResonance <= 0.7) {
-                    this.activateFeedback(2.0);
-                    logFeedback(`Nodo ${this.name}: ALTA RISONANZA (${this.resonance.toFixed(3)})`, 'resonance');
-                }
-            }
-            
-            calculateLocalAxes(otherNode) {
-                const phaseDiff = Math.abs(this.phase - otherNode.phase);
-                const alpha = Math.cos(phaseDiff); // Sincronizzazione [-1,1]
-                
-                const beta = (this.valence * otherNode.valence > 0) ? 
-                    Math.min(Math.abs(this.valence), Math.abs(otherNode.valence)) * 
-                    Math.sign(this.valence * otherNode.valence) : 0; // Allineamento [-1,1]
-                
-                const gamma = 1 - Math.abs(this.omega - otherNode.omega) / 
-                    Math.max(this.omega, otherNode.omega, 0.1); // Complementarietà [0,1]
-                
-                return { alpha, beta, gamma };
-            }
-            
-            activateFeedback(duration = 1.0) {
-                this.feedbackTimer = duration;
-                this.feedbackActive = true;
+                return (phaseDiff + valenceAlign + weightSimilarity) / 3;
             }
             
             getColor() {
-                // STRATEGIA CROMATICA: 80% B&W BASE, 20% COLORE FEEDBACK
+                // Base: white/gray
+                let color = `rgba(255, 255, 255, ${0.5 + this.weight * 0.3})`;
                 
-                // BASE: Scala di grigi proporzionale al peso
-                const baseOpacity = 0.3 + this.weight * 0.4;
-                const baseColor = `rgba(255, 255, 255, ${baseOpacity})`;
-                
-                // FEEDBACK ATTIVO: Colore temporaneo
-                if (this.feedbackActive && this.feedbackTimer > 0) {
-                    const intensity = this.feedbackTimer;
-                    
-                    // ALTA RISONANZA: CIANO
-                    if (this.resonance > 0.7) {
-                        return `rgba(78, 205, 196, ${0.5 + intensity * 0.3})`;
+                // Add color only during feedback
+                if (this.feedbackTimer > 0) {
+                    const intensity = this.feedbackTimer / 2.0;
+                    if (this.resonanceLevel > 0.7) {
+                        // High resonance: cyan
+                        color = `rgba(78, 205, 196, ${0.3 + intensity * 0.5})`;
+                    } else if (Math.abs(this.valence) > 0.8) {
+                        // Strong valence: pink/red
+                        color = this.valence > 0 
+                            ? `rgba(255, 107, 107, ${0.3 + intensity * 0.5})` // positive
+                            : `rgba(255, 107, 107, ${0.3 + intensity * 0.5})`; // negative
+                    } else {
+                        // Generic feedback: original color
+                        color = this.color.replace(')', `, ${0.3 + intensity * 0.7})`);
                     }
-                    
-                    // VALENZA FORTE: ROSA
-                    if (Math.abs(this.valence) > 0.8) {
-                        return `rgba(255, 107, 107, ${0.5 + intensity * 0.3})`;
-                    }
-                    
-                    // ALTRI FEEDBACK: COLORE BASE
-                    return this.baseColor.replace(')', `, ${0.5 + intensity * 0.3})`).replace('rgb', 'rgba');
                 }
                 
-                // NORMALE: B&W
-                return baseColor;
+                return color;
             }
             
             getSize() {
-                // DIMENSIONE PROPORZIONALE AL PESO: 12-37px
+                // Base size + weight contribution
                 return 12 + this.weight * 25;
             }
             
-            getPosition(radius, index, total) {
-                const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
-                const extendedRadius = radius * (0.8 + this.axes.coherence * 0.4); // Asse dinamico
-                return {
-                    x: Math.cos(angle) * extendedRadius,
-                    y: Math.sin(angle) * extendedRadius
-                };
+            getGlowSize() {
+                return this.getSize() * (1.5 + this.resonanceLevel * 1.5);
             }
         }
         
-        // ============= DILEMMI =============
+        // ============================================
+        // SYSTEM CONFIGURATIONS
+        // ============================================
         const dilemmas = [
             {
                 name: "La Dichiarazione",
-                description: "Emozione e corpo spingono, logica frena...",
                 nodes: {
-                    "Emozione": { omega: 0.8, alpha: 0.9, valence: 1, urgency: 0.9, color: "#ffffff", baseWeight: 0.7 },
-                    "Logica": { omega: 0.3, alpha: 0.7, valence: -0.5, urgency: 0.3, color: "#ffffff", baseWeight: 0.6 },
-                    "Intuizione": { omega: 0.6, alpha: 0.8, valence: 0.7, urgency: 0.8, color: "#ffffff", baseWeight: 0.7 },
-                    "Memoria": { omega: 0.4, alpha: 0.6, valence: -0.3, urgency: 0.5, color: "#ffffff", baseWeight: 0.5 },
+                    "Emozione": { omega: 0.8, alpha: 0.9, valence: 0.9, urgency: 0.8, color: "#ffffff", baseWeight: 0.7 },
+                    "Logica": { omega: 0.3, alpha: 0.7, valence: -0.3, urgency: 0.3, color: "#ffffff", baseWeight: 0.6 },
+                    "Intuizione": { omega: 0.6, alpha: 0.8, valence: 0.7, urgency: 0.7, color: "#ffffff", baseWeight: 0.7 },
+                    "Memoria": { omega: 0.4, alpha: 0.6, valence: -0.2, urgency: 0.4, color: "#ffffff", baseWeight: 0.5 },
                     "Etica": { omega: 0.2, alpha: 0.5, valence: 0.4, urgency: 0.2, color: "#ffffff", baseWeight: 0.3 },
                     "Corpo": { omega: 0.7, alpha: 0.8, valence: 0.8, urgency: 0.9, color: "#ffffff", baseWeight: 0.8 }
                 }
             },
             {
                 name: "Il Whistleblower",
-                description: "Etica chiama all'azione, paura paralizza...",
                 nodes: {
-                    "Etica": { omega: 0.9, alpha: 0.95, valence: 1, urgency: 0.8, color: "#ffffff", baseWeight: 0.9 },
+                    "Etica": { omega: 0.9, alpha: 0.95, valence: 0.95, urgency: 0.8, color: "#ffffff", baseWeight: 0.9 },
                     "Logica": { omega: 0.6, alpha: 0.8, valence: 0.3, urgency: 0.5, color: "#ffffff", baseWeight: 0.6 },
                     "Paura": { omega: 0.8, alpha: 0.9, valence: -0.9, urgency: 0.95, color: "#ffffff", baseWeight: 0.8 },
                     "Memoria": { omega: 0.5, alpha: 0.6, valence: -0.4, urgency: 0.4, color: "#ffffff", baseWeight: 0.5 },
@@ -861,9 +858,8 @@
             },
             {
                 name: "La Biforcazione",
-                description: "Vocazione vs pragmatismo, il tempo stringe...",
                 nodes: {
-                    "Vocazione": { omega: 0.85, alpha: 0.9, valence: 1, urgency: 0.9, color: "#ffffff", baseWeight: 0.85 },
+                    "Vocazione": { omega: 0.85, alpha: 0.9, valence: 0.95, urgency: 0.9, color: "#ffffff", baseWeight: 0.85 },
                     "Pragmatismo": { omega: 0.7, alpha: 0.8, valence: -0.7, urgency: 0.7, color: "#ffffff", baseWeight: 0.7 },
                     "Paura": { omega: 0.6, alpha: 0.7, valence: -0.8, urgency: 0.8, color: "#ffffff", baseWeight: 0.6 },
                     "Intuizione": { omega: 0.8, alpha: 0.85, valence: 0.9, urgency: 0.85, color: "#ffffff", baseWeight: 0.8 },
@@ -873,20 +869,25 @@
             }
         ];
         
-        // ============= GLOBAL STATE =============
+        // ============================================
+        // GLOBAL STATE
+        // ============================================
         let canvas, ctx;
         let nodes = [];
         let currentDilemma = 0;
-        let isRunning = false;
+        let systemRunning = false;
         let time = 0;
-        let timeSpeed = 0.1; // VELOCITÀ RIDOTTA A 1/10
+        let timeSpeed = 1.0;
         let coupling = 1.0;
         let noise = 0.1;
         let mode = 'scientific';
         let selectedNode = null;
-        let autoScroll = true;
+        let feedbackMessages = [];
+        let lastUpdateTime = 0;
         
-        // ============= INIZIALIZZAZIONE =============
+        // ============================================
+        // INITIALIZATION
+        // ============================================
         function init() {
             canvas = document.getElementById('mainCanvas');
             ctx = canvas.getContext('2d');
@@ -896,12 +897,13 @@
             
             loadDilemma(0);
             setupControls();
-            updateNodeControls();
-            animate();
+            setupSliders();
+            createNodeControls();
             
-            logFeedback('Sistema Φ-Risonanza FINALE inizializzato', 'success');
-            logFeedback('Velocità sistema: 0.1x (ottimale per osservazione)', 'info');
-            logFeedback('Schema cromatico: 80% B&W base, 20% colore feedback temporaneo', 'info');
+            // Start animation loop
+            requestAnimationFrame(animate);
+            
+            addFeedback('Sistema inizializzato', 'Sistema pronto per osservazione', 'sync');
         }
         
         function resizeCanvas() {
@@ -919,155 +921,194 @@
             });
             
             time = 0;
-            selectedNode = null;
-            updateMetrics();
-            updateNodeControls();
+            updateUI();
             
-            logFeedback(`Caricato: ${dilemma.name}`, 'success');
-            logFeedback(`${dilemma.description}`, 'info');
+            // Update dilemma buttons
+            document.querySelectorAll('.dilemma-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            addFeedback(`Dilemma caricato: ${dilemma.name}`, 'Sistema reimpostato', 'change');
         }
         
-        // ============= CONTROLLI =============
+        // ============================================
+        // CONTROL SYSTEM
+        // ============================================
         function setupControls() {
-            // Controlli dilemmi
+            // Dilemma buttons
             document.querySelectorAll('.dilemma-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    document.querySelectorAll('.dilemma-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+                btn.addEventListener('click', () => {
                     loadDilemma(parseInt(btn.dataset.dilemma));
                 });
             });
             
-            // Slider parametri
-            document.getElementById('speedControl').addEventListener('input', (e) => {
-                timeSpeed = e.target.value / 100;
-                document.getElementById('speedValue').textContent = timeSpeed.toFixed(1) + 'x';
-                logFeedback(`Velocità sistema: ${timeSpeed.toFixed(1)}x`, 'info');
-            });
-            
-            document.getElementById('couplingControl').addEventListener('input', (e) => {
-                coupling = e.target.value / 100;
-                document.getElementById('couplingValue').textContent = coupling.toFixed(2);
-                logFeedback(`Accoppiamento (K): ${coupling.toFixed(2)}`, 'info');
-            });
-            
-            document.getElementById('noiseControl').addEventListener('input', (e) => {
-                noise = e.target.value / 100;
-                document.getElementById('noiseValue').textContent = noise.toFixed(2);
-                logFeedback(`Rumore (σ): ${noise.toFixed(2)}`, 'info');
-            });
-            
-            // Selezione nodi
-            canvas.addEventListener('click', (e) => {
-                const rect = canvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                selectNodeAt(x, y);
-            });
-            
-            // Inizializza velocità ridotta
-            document.getElementById('speedControl').value = 10; // 0.1x
-            document.getElementById('speedValue').textContent = '0.1x';
-        }
-        
-        function updateNodeControls() {
-            const container = document.getElementById('nodeControlsContainer');
-            container.innerHTML = '';
-            
-            nodes.forEach((node, index) => {
-                const row = document.createElement('div');
-                row.className = 'node-control-row';
-                row.innerHTML = `
-                    <div class="node-color" style="background: ${node.baseColor}"></div>
-                    <div class="node-name">${node.name}</div>
-                    <input type="range" class="node-slider" min="0" max="100" 
-                           value="${Math.round(node.baseWeight * 100)}"
-                           data-index="${index}">
-                `;
-                container.appendChild(row);
-            });
-            
-            // Aggiungi event listeners
-            document.querySelectorAll('.node-slider').forEach(slider => {
-                slider.addEventListener('input', (e) => {
-                    const index = parseInt(e.target.dataset.index);
-                    const newWeight = e.target.value / 100;
-                    nodes[index].baseWeight = newWeight;
-                    nodes[index].weight = newWeight;
-                    logFeedback(`Peso nodo ${nodes[index].name}: ${newWeight.toFixed(2)}`, 'info');
+            // Mode selector
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    mode = btn.textContent.toLowerCase().includes('scientific') ? 'scientific' : 'artistic';
                 });
             });
         }
         
-        function selectNodeAt(x, y) {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = Math.min(canvas.width, canvas.height) * 0.35;
+        function setupSliders() {
+            const sliders = [
+                { id: 'speedControl', fill: 'speedFill', thumb: 'speedThumb', value: 'speedValue', factor: 0.01 },
+                { id: 'couplingControl', fill: 'couplingFill', thumb: 'couplingThumb', value: 'couplingValue', factor: 0.01 },
+                { id: 'noiseControl', fill: 'noiseFill', thumb: 'noiseThumb', value: 'noiseValue', factor: 0.01 }
+            ];
+            
+            sliders.forEach(slider => {
+                const input = document.getElementById(slider.id);
+                const fill = document.getElementById(slider.fill);
+                const thumb = document.getElementById(slider.thumb);
+                const valueDisplay = document.getElementById(slider.value);
+                
+                function updateSlider() {
+                    const value = parseInt(input.value);
+                    const max = parseInt(input.max);
+                    const min = parseInt(input.min);
+                    const percentage = ((value - min) / (max - min)) * 100;
+                    
+                    fill.style.width = `${percentage}%`;
+                    thumb.style.left = `${percentage}%`;
+                    
+                    let displayValue;
+                    if (slider.id === 'speedControl') {
+                        displayValue = (value / 100).toFixed(1) + 'x';
+                        timeSpeed = value / 100;
+                    } else {
+                        displayValue = (value * slider.factor).toFixed(2);
+                        if (slider.id === 'couplingControl') coupling = value * slider.factor;
+                        if (slider.id === 'noiseControl') noise = value * slider.factor;
+                    }
+                    
+                    valueDisplay.textContent = displayValue;
+                    
+                    // Add feedback for significant changes
+                    if (Math.abs(value - input.previousValue || 0) > 10) {
+                        const paramName = slider.id.replace('Control', '').toLowerCase();
+                        addFeedback(`Parametro modificato: ${paramName}`, `Nuovo valore: ${displayValue}`, 'change');
+                    }
+                    
+                    input.previousValue = value;
+                }
+                
+                input.addEventListener('input', updateSlider);
+                updateSlider();
+                
+                // Add active state on interaction
+                input.addEventListener('mousedown', () => {
+                    thumb.classList.add('active');
+                });
+                
+                input.addEventListener('mouseup', () => {
+                    setTimeout(() => thumb.classList.remove('active'), 100);
+                });
+            });
+        }
+        
+        function createNodeControls() {
+            const container = document.getElementById('nodeControls');
+            container.innerHTML = '';
             
             nodes.forEach((node, i) => {
-                const pos = node.getPosition(radius, i, nodes.length);
-                const nodeX = centerX + pos.x;
-                const nodeY = centerY + pos.y;
-                const size = node.getSize();
-                
-                const dist = Math.sqrt((x - nodeX) ** 2 + (y - nodeY) ** 2);
-                if (dist < size) {
-                    selectedNode = node;
-                    updateSelectedNodeInfo();
-                    node.activateFeedback(1.5);
-                    logFeedback(`Selezionato: ${node.name}`, 'info');
-                }
+                const control = document.createElement('div');
+                control.className = 'param-control';
+                control.innerHTML = `
+                    <div class="param-header">
+                        <span class="param-label">${node.name}</span>
+                        <span class="param-value" id="nodeValue${i}">${node.weight.toFixed(2)}</span>
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-fill" id="nodeFill${i}"></div>
+                        <div class="slider-thumb" id="nodeThumb${i}"></div>
+                        <input type="range" class="node-slider" data-index="${i}" 
+                               min="0" max="100" value="${node.weight * 100}">
+                    </div>
+                `;
+                container.appendChild(control);
+            });
+            
+            // Add event listeners to node sliders
+            document.querySelectorAll('.node-slider').forEach(slider => {
+                slider.addEventListener('input', function() {
+                    const index = parseInt(this.dataset.index);
+                    const node = nodes[index];
+                    const newWeight = this.value / 100;
+                    
+                    if (Math.abs(newWeight - node.weight) > 0.01) {
+                        node.weight = newWeight;
+                        node.feedbackTimer = 3.0; // Longer feedback for direct manipulation
+                        
+                        // Update display
+                        document.getElementById(`nodeValue${index}`).textContent = newWeight.toFixed(2);
+                        document.getElementById(`nodeFill${index}`).style.width = `${this.value}%`;
+                        document.getElementById(`nodeThumb${index}`).style.left = `${this.value}%`;
+                        
+                        addFeedback(`Nodo modificato: ${node.name}`, 
+                                   `Nuovo peso: ${newWeight.toFixed(2)}`, 'change');
+                    }
+                });
             });
         }
         
-        function updateSelectedNodeInfo() {
-            if (!selectedNode) return;
+        // ============================================
+        // UPDATE SYSTEM
+        // ============================================
+        function updateSystem(dt) {
+            if (!systemRunning) return;
             
-            const info = document.getElementById('selectedNodeInfo');
-            info.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <strong style="color: ${selectedNode.baseColor}">${selectedNode.name}</strong>
-                    <span style="font-size: 0.7em; color: var(--accent-cyan);">ID: ${selectedNode.id.substr(0,6)}</span>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.75em;">
-                    <div>Peso: <span style="color: var(--accent-cyan);">${selectedNode.weight.toFixed(3)}</span></div>
-                    <div>Fase: <span style="color: var(--accent-cyan);">${selectedNode.phase.toFixed(2)}</span></div>
-                    <div>Valence: <span style="color: ${selectedNode.valence > 0 ? '#55efc4' : '#ff6b6b'}">${selectedNode.valence.toFixed(2)}</span></div>
-                    <div>Risonanza: <span style="color: var(--accent-cyan);">${selectedNode.resonance.toFixed(3)}</span></div>
-                </div>
-                <div style="margin-top: 8px; font-size: 0.7em; color: rgba(255,255,255,0.6);">
-                    Connessioni attive: ${selectedNode.connections.size}
-                </div>
-            `;
-        }
-        
-        // ============= UPDATE LOOP =============
-        function update(dt) {
-            if (!isRunning) return;
-            
-            const scaledDt = dt * timeSpeed;
-            const stimulus = 0.8;
-            
-            // Aggiorna tutti i nodi
-            nodes.forEach(node => {
-                node.update(scaledDt, stimulus, nodes, coupling, noise);
-            });
-            
-            // Aggiorna tempo
+            // Scale dt by timeSpeed
+            const scaledDt = dt * timeSpeed * 0.5;
             time += scaledDt;
-            document.getElementById('timeDisplay').textContent = time.toFixed(1);
-            document.getElementById('timelineProgress').style.width = Math.min((time % 60) / 60 * 100, 100) + '%';
             
-            // Aggiorna metriche
-            updateMetrics();
+            // Update all nodes
+            nodes.forEach(node => {
+                node.update(scaledDt, nodes, coupling, noise);
+            });
             
-            // Aggiorna info nodo selezionato
-            if (selectedNode) {
-                updateSelectedNodeInfo();
+            // Calculate resonances
+            calculateResonances();
+            
+            // Update UI
+            updateUI();
+            
+            // Add periodic feedback
+            if (time - lastUpdateTime > 3.0) {
+                addRandomFeedback();
+                lastUpdateTime = time;
             }
         }
         
-        function calculateGlobalPhi() {
+        function calculateResonances() {
+            let totalResonance = 0;
+            let connectionCount = 0;
+            
+            // Reset all resonance levels
+            nodes.forEach(node => node.resonanceLevel = 0);
+            
+            // Calculate pairwise resonances
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (!nodes[i].active || !nodes[j].active) continue;
+                    
+                    const resonance = nodes[i].calculateResonance(nodes[j]);
+                    totalResonance += resonance;
+                    connectionCount++;
+                    
+                    // Update individual resonance levels
+                    nodes[i].resonanceLevel = Math.max(nodes[i].resonanceLevel, resonance);
+                    nodes[j].resonanceLevel = Math.max(nodes[j].resonanceLevel, resonance);
+                }
+            }
+            
+            return connectionCount > 0 ? totalResonance / connectionCount : 0;
+        }
+        
+        function calculatePhi() {
             let sumReal = 0, sumImag = 0, sumWeights = 0;
             
             nodes.forEach(node => {
@@ -1084,51 +1125,9 @@
             return magnitude / sumWeights;
         }
         
-        function updateMetrics() {
-            const phi = calculateGlobalPhi();
-            document.getElementById('phiValue').textContent = phi.toFixed(3);
-            
-            // Calcola medie assi globali
-            let avgCoherence = 0, avgFairness = 0, avgPotential = 0;
-            let maxResonance = 0;
-            
-            nodes.forEach(n => {
-                avgCoherence += n.axes.coherence;
-                avgFairness += n.axes.fairness;
-                avgPotential += n.axes.potential;
-                maxResonance = Math.max(maxResonance, n.resonance);
-            });
-            
-            avgCoherence /= nodes.length;
-            avgFairness /= nodes.length;
-            avgPotential /= nodes.length;
-            
-            // Aggiorna display
-            document.getElementById('axisPhi').textContent = avgCoherence.toFixed(2);
-            document.getElementById('axisEthical').textContent = avgFairness.toFixed(2);
-            document.getElementById('axisEmergence').textContent = avgPotential.toFixed(2);
-            
-            document.getElementById('axisPhiBar').style.width = (avgCoherence * 100) + '%';
-            document.getElementById('axisEthicalBar').style.width = ((avgFairness + 1) * 50) + '%';
-            document.getElementById('axisEmergenceBar').style.width = (avgPotential * 100) + '%';
-            
-            // Altre metriche
-            const activeCount = nodes.filter(n => n.active).length;
-            document.getElementById('activeNodes').textContent = activeCount;
-            document.getElementById('connections').textContent = (activeCount * (activeCount - 1)) / 2;
-            document.getElementById('syncRate').textContent = phi.toFixed(2);
-            
-            const avgEnergy = nodes.reduce((sum, n) => sum + n.weight, 0) / nodes.length;
-            document.getElementById('avgEnergy').textContent = avgEnergy.toFixed(2);
-            document.getElementById('maxResonance').textContent = maxResonance.toFixed(3);
-            
-            // Feedback automatico per eventi significativi
-            if (phi > 0.8 && time > 5) {
-                logFeedback(`ALTA COERENZA GLOBALE: Φ = ${phi.toFixed(3)}`, 'resonance');
-            }
-        }
-        
-        // ============= RENDERING =============
+        // ============================================
+        // RENDERING
+        // ============================================
         function render() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
@@ -1138,92 +1137,115 @@
             
             if (mode === 'scientific') {
                 renderScientific(centerX, centerY, radius);
-            } else if (mode === 'artistic') {
-                renderArtistic(centerX, centerY, radius);
             } else {
-                renderMinimal(centerX, centerY, radius);
+                renderArtistic(centerX, centerY, radius);
             }
         }
         
         function renderScientific(cx, cy, r) {
-            const phi = calculateGlobalPhi();
+            const phi = calculatePhi();
             
-            // Campo Φ (solo se significativo)
+            // Background field based on phi
             if (phi > 0.3) {
-                const hue = phi * 120;
-                const pulseRadius = r * (0.2 + phi * 0.4);
+                const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.5);
+                gradient.addColorStop(0, `rgba(78, 205, 196, ${phi * 0.05})`);
+                gradient.addColorStop(1, 'rgba(78, 205, 196, 0)');
                 
-                for (let i = 3; i >= 0; i--) {
-                    const alpha = (0.15 - i * 0.03) * phi;
-                    const currentR = pulseRadius + i * 20;
-                    
-                    const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, currentR);
-                    gradient.addColorStop(0, `hsla(${hue}, 70%, 60%, ${alpha})`);
-                    gradient.addColorStop(1, `hsla(${hue}, 70%, 40%, 0)`);
-                    
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, currentR, 0, Math.PI * 2);
-                    ctx.fill();
-                }
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r * 1.5, 0, Math.PI * 2);
+                ctx.fill();
             }
             
-            // Posizioni nodi
-            const nodePositions = [];
-            nodes.forEach((node, i) => {
-                const pos = node.getPosition(r, i, nodes.length);
-                nodePositions.push({ 
-                    node, 
-                    x: cx + pos.x, 
-                    y: cy + pos.y,
-                    size: node.getSize()
-                });
+            // Calculate node positions
+            const nodePositions = nodes.map((node, i) => {
+                const angle = (i / nodes.length) * Math.PI * 2 - Math.PI / 2 + time * 0.05;
+                const distance = r * (0.7 + node.weight * 0.3);
+                return {
+                    node: node,
+                    x: cx + Math.cos(angle) * distance,
+                    y: cy + Math.sin(angle) * distance
+                };
             });
             
-            // Connessioni con spessore proporzionale
+            // Draw connections (axes) with dynamic length
             for (let i = 0; i < nodePositions.length; i++) {
                 for (let j = i + 1; j < nodePositions.length; j++) {
-                    const n1 = nodePositions[i];
-                    const n2 = nodePositions[j];
+                    const pos1 = nodePositions[i];
+                    const pos2 = nodePositions[j];
                     
-                    if (!n1.node.active || !n2.node.active) continue;
+                    if (!pos1.node.active || !pos2.node.active) continue;
                     
-                    const connection = n1.node.connections.get(n2.node.id);
-                    if (connection && connection.resonance > 0.2) {
-                        const intensity = connection.resonance;
-                        const opacity = intensity * 0.7 * Math.min(n1.node.weight, n2.node.weight);
+                    const resonance = pos1.node.calculateResonance(pos2.node);
+                    const connectionStrength = Math.max(0, resonance - 0.3);
+                    
+                    if (connectionStrength > 0) {
+                        // Dynamic axis length based on resonance
+                        const midX = (pos1.x + pos2.x) / 2;
+                        const midY = (pos1.y + pos2.y) / 2;
                         
-                        // Colore basato su tipo di connessione
-                        let color;
-                        if (connection.localAxes.alpha > 0.7) {
-                            color = `rgba(78, 205, 196, ${opacity})`; // Sincronizzazione
-                        } else if (Math.abs(connection.localAxes.beta) > 0.7) {
-                            color = `rgba(255, 107, 107, ${opacity})`; // Allineamento
-                        } else {
-                            color = `rgba(255, 255, 255, ${opacity * 0.5})`; // Base
-                        }
+                        // Calculate extension based on resonance
+                        const extension = connectionStrength * 40;
+                        const dx = pos2.x - pos1.x;
+                        const dy = pos2.y - pos1.y;
+                        const length = Math.sqrt(dx * dx + dy * dy);
+                        const unitX = dx / length;
+                        const unitY = dy / length;
                         
-                        ctx.strokeStyle = color;
-                        ctx.lineWidth = 1 + intensity * 4; // Spessore dinamico
+                        // Extended points
+                        const extX1 = pos1.x - unitX * extension;
+                        const extY1 = pos1.y - unitY * extension;
+                        const extX2 = pos2.x + unitX * extension;
+                        const extY2 = pos2.y + unitY * extension;
+                        
+                        // Draw axis with varying width
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 + connectionStrength * 0.3})`;
+                        ctx.lineWidth = 1 + connectionStrength * 4;
+                        ctx.lineCap = 'round';
+                        
                         ctx.beginPath();
-                        ctx.moveTo(n1.x, n1.y);
-                        ctx.lineTo(n2.x, n2.y);
+                        ctx.moveTo(extX1, extY1);
+                        ctx.lineTo(extX2, extY2);
                         ctx.stroke();
+                        
+                        // Add color if resonance is high
+                        if (resonance > 0.7) {
+                            ctx.strokeStyle = `rgba(78, 205, 196, ${0.3 + connectionStrength * 0.5})`;
+                            ctx.lineWidth = 1 + connectionStrength * 2;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(pos1.x, pos1.y);
+                            ctx.lineTo(pos2.x, pos2.y);
+                            ctx.stroke();
+                        }
                     }
                 }
             }
             
-            // Nodi
-            nodePositions.forEach(({ node, x, y, size }) => {
+            // Draw nodes
+            nodePositions.forEach(({ node, x, y }) => {
+                const size = node.getSize();
+                const glowSize = node.getGlowSize();
                 const color = node.getColor();
                 
-                // Glow per feedback
-                if (node.feedbackActive) {
-                    ctx.shadowBlur = 20;
-                    ctx.shadowColor = color;
+                // Glow effect
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = color;
+                
+                // Outer glow for high resonance
+                if (node.resonanceLevel > 0.7) {
+                    const glowAlpha = 0.1 + node.resonanceLevel * 0.2;
+                    const gradient = ctx.createRadialGradient(x, y, size, x, y, glowSize);
+                    gradient.addColorStop(0, `rgba(78, 205, 196, ${glowAlpha})`);
+                    gradient.addColorStop(1, `rgba(78, 205, 196, 0)`);
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+                    ctx.fill();
                 }
                 
-                // Nodo principale
+                // Node body
                 ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.arc(x, y, size, 0, Math.PI * 2);
@@ -1231,258 +1253,211 @@
                 
                 ctx.shadowBlur = 0;
                 
-                // Bordo selezionato
-                if (node === selectedNode) {
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 3;
-                    ctx.stroke();
-                }
+                // Node border
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.stroke();
                 
-                // Indicatore fase
-                const phaseLength = size + 8;
-                const phaseX = x + Math.cos(node.phase) * phaseLength;
-                const phaseY = y + Math.sin(node.phase) * phaseLength;
-                
-                ctx.strokeStyle = color.replace(/[\d.]+\)/, '0.5)');
+                // Phase indicator
+                const phaseX = x + Math.cos(node.phase) * (size + 5);
+                const phaseY = y + Math.sin(node.phase) * (size + 5);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.moveTo(x, y);
                 ctx.lineTo(phaseX, phaseY);
                 ctx.stroke();
                 
-                // Etichetta
-                ctx.fillStyle = `rgba(255, 255, 255, ${node.active ? 0.9 : 0.3})`;
-                ctx.font = `bold ${Math.max(10, size * 0.5)}px sans-serif`;
+                // Node label
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.font = 'bold 12px sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(node.name, x, y - size - 10);
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.name, x, y - size - 15);
                 
-                // Indicatore peso
-                ctx.font = '9px sans-serif';
+                // Weight indicator
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.font = '10px sans-serif';
                 ctx.fillText(node.weight.toFixed(2), x, y + size + 12);
             });
             
-            // Asse centrale Φ
-            ctx.strokeStyle = `rgba(78, 205, 196, ${phi * 0.5})`;
-            ctx.lineWidth = 2;
-            ctx.setLineDash([5, 3]);
+            // Center point
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
             ctx.beginPath();
-            ctx.arc(cx, cy, r * 0.9, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
+            ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+            ctx.fill();
         }
         
         function renderArtistic(cx, cy, r) {
-            // Punto centrale
+            // Similar but with artistic styling
+            renderScientific(cx, cy, r);
+            
+            // Add artistic elements
+            const pulse = Math.sin(time * 0.5) * 0.5 + 0.5;
+            
+            // Pulsing center
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 0.3);
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${0.3 + pulse * 0.2})`);
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            
+            ctx.fillStyle = gradient;
             ctx.beginPath();
-            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
-            ctx.fillStyle = '#FFFFFF';
+            ctx.arc(cx, cy, r * 0.3, 0, Math.PI * 2);
             ctx.fill();
-            
-            // 3 gruppi come croci pulsanti
-            const groups = [
-                nodes.slice(0, 2),
-                nodes.slice(2, 4),
-                nodes.slice(4, 6)
-            ];
-            
-            const grayShades = [
-                'rgba(255, 255, 255, 0.95)',
-                'rgba(200, 200, 200, 0.85)',
-                'rgba(150, 150, 150, 0.75)'
-            ];
-            
-            groups.forEach((group, i) => {
-                const baseAngle = time * 0.5 + (i * Math.PI * 2 / 3);
-                const shade = grayShades[i];
-                
-                const avgWeight = group.reduce((sum, n) => sum + n.weight, 0) / group.length;
-                const verticalLength = r * (0.3 + 0.7 * avgWeight);
-                
-                const vx = cx + Math.cos(baseAngle) * verticalLength;
-                const vy = cy + Math.sin(baseAngle) * verticalLength;
-                
-                // Stelo verticale
-                const gradient = ctx.createLinearGradient(cx, cy, vx, vy);
-                gradient.addColorStop(0, shade);
-                gradient.addColorStop(1, shade.replace(/[\d.]+\)/, '0.3)'));
-                
-                ctx.strokeStyle = gradient;
-                ctx.lineWidth = 3 + avgWeight * 6;
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.lineTo(vx, vy);
-                ctx.stroke();
-                
-                // Nodi pulsanti
-                group.forEach((node, j) => {
-                    const pulse = 8 + Math.sin(time * 3 + i + j) * 6 + node.weight * 10;
-                    const angle = baseAngle + (j - 0.5) * 0.7;
-                    const dist = verticalLength * 0.6;
-                    const nx = cx + Math.cos(angle) * dist;
-                    const ny = cy + Math.sin(angle) * dist;
-                    
-                    const nodeGradient = ctx.createRadialGradient(nx, ny, 0, nx, ny, pulse);
-                    nodeGradient.addColorStop(0, shade);
-                    nodeGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                    
-                    ctx.fillStyle = nodeGradient;
-                    ctx.beginPath();
-                    ctx.arc(nx, ny, pulse, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // Centro
-                    ctx.fillStyle = '#000000';
-                    ctx.beginPath();
-                    ctx.arc(nx, ny, pulse * 0.2, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-            });
         }
         
-        function renderMinimal(cx, cy, r) {
-            // Sfondo
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // ============================================
+        // UI UPDATES
+        // ============================================
+        function updateUI() {
+            const phi = calculatePhi();
+            const avgResonance = calculateResonances();
             
-            // Cerchio Φ
-            const phi = calculateGlobalPhi();
-            ctx.strokeStyle = `rgba(255, 255, 255, ${phi * 0.3})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI * 2);
-            ctx.stroke();
+            // Update phi display
+            document.getElementById('phiValue').textContent = phi.toFixed(3);
             
-            // Nodi minimali
+            // Update axes
+            document.getElementById('axisCoherence').textContent = phi.toFixed(2);
+            document.getElementById('axisCoherenceFill').style.width = `${phi * 100}%`;
+            
+            const ethicalAlignment = nodes.reduce((sum, n) => sum + n.valence, 0) / nodes.length;
+            document.getElementById('axisEthical').textContent = ethicalAlignment.toFixed(2);
+            document.getElementById('axisEthicalFill').style.width = `${(ethicalAlignment + 1) * 50}%`;
+            
+            const emergence = avgResonance;
+            document.getElementById('axisEmergence').textContent = emergence.toFixed(2);
+            document.getElementById('axisEmergenceFill').style.width = `${emergence * 100}%`;
+            
+            // Update metrics
+            const activeCount = nodes.filter(n => n.active).length;
+            document.getElementById('activeNodes').textContent = activeCount;
+            
+            const connectionCount = (activeCount * (activeCount - 1)) / 2;
+            document.getElementById('activeConnections').textContent = connectionCount;
+            
+            document.getElementById('syncRate').textContent = phi.toFixed(2);
+            
+            const avgEnergy = nodes.reduce((sum, n) => sum + n.weight, 0) / nodes.length;
+            document.getElementById('avgEnergy').textContent = avgEnergy.toFixed(2);
+            
+            // Update timeline
+            const progress = (time % 30) / 30 * 100;
+            document.getElementById('timelineProgress').style.width = `${progress}%`;
+            
+            // Update node controls
             nodes.forEach((node, i) => {
-                const pos = node.getPosition(r, i, nodes.length);
-                const x = cx + pos.x;
-                const y = cy + pos.y;
-                const size = 4 + node.weight * 8;
+                const valueEl = document.getElementById(`nodeValue${i}`);
+                const fillEl = document.getElementById(`nodeFill${i}`);
+                const thumbEl = document.getElementById(`nodeThumb${i}`);
+                const slider = document.querySelector(`.node-slider[data-index="${i}"]`);
                 
-                ctx.fillStyle = node.active ? 
-                    `rgba(255, 255, 255, ${0.2 + node.weight * 0.3})` : 
-                    'rgba(100, 100, 100, 0.1)';
-                
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Linea fase
-                if (node.active) {
-                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 + node.weight * 0.2})`;
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(x + Math.cos(node.phase) * (size + 4), 
-                               y + Math.sin(node.phase) * (size + 4));
-                    ctx.stroke();
+                if (valueEl) valueEl.textContent = node.weight.toFixed(2);
+                if (fillEl) fillEl.style.width = `${node.weight * 100}%`;
+                if (thumbEl) thumbEl.style.left = `${node.weight * 100}%`;
+                if (slider && !slider.matches(':focus')) {
+                    slider.value = node.weight * 100;
                 }
             });
         }
         
-        // ============= ANIMATION LOOP =============
+        // ============================================
+        // FEEDBACK SYSTEM
+        // ============================================
+        function addFeedback(title, text, type) {
+            const container = document.getElementById('feedbackContainer');
+            
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-item';
+            
+            const iconColor = type === 'resonance' ? 'var(--accent-primary)' :
+                            type === 'change' ? 'var(--accent-secondary)' : '#55efc4';
+            
+            feedback.innerHTML = `
+                <div class="feedback-header">
+                    <div class="feedback-icon ${type}"></div>
+                    <div class="feedback-title">${title}</div>
+                </div>
+                <div class="feedback-text">${text}</div>
+            `;
+            
+            container.appendChild(feedback);
+            feedbackMessages.push({ element: feedback, time: time });
+            
+            // Remove old messages
+            while (feedbackMessages.length > 5) {
+                const old = feedbackMessages.shift();
+                old.element.remove();
+            }
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.style.opacity = '0';
+                    feedback.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        if (feedback.parentNode) feedback.remove();
+                        feedbackMessages = feedbackMessages.filter(f => f.element !== feedback);
+                    }, 300);
+                }
+            }, 5000);
+        }
+        
+        function addRandomFeedback() {
+            const phi = calculatePhi();
+            const activeCount = nodes.filter(n => n.active).length;
+            
+            if (phi > 0.8 && Math.random() > 0.7) {
+                addFeedback('Alta Risonanza Φ', `Sincronizzazione: ${phi.toFixed(3)}`, 'resonance');
+            } else if (activeCount < nodes.length && Math.random() > 0.8) {
+                addFeedback('Nodo Disattivo', `${nodes.length - activeCount} nodi inattivi`, 'change');
+            }
+        }
+        
+        // ============================================
+        // SYSTEM CONTROLS
+        // ============================================
+        function toggleSystem() {
+            systemRunning = !systemRunning;
+            const btn = document.getElementById('toggleBtn');
+            btn.textContent = systemRunning ? '⏸ PAUSA' : '▶ AVVIA';
+            
+            addFeedback(systemRunning ? 'Sistema Avviato' : 'Sistema in Pausa', 
+                       systemRunning ? 'Dinamica attiva' : 'Dinamica sospesa', 'change');
+        }
+        
+        function resetSystem() {
+            loadDilemma(currentDilemma);
+            systemRunning = false;
+            document.getElementById('toggleBtn').textContent = '▶ AVVIA';
+            time = 0;
+            
+            addFeedback('Sistema Resettato', 'Tutti i parametri reimpostati', 'sync');
+        }
+        
+        function setMode(newMode) {
+            mode = newMode;
+            addFeedback(`Modalità ${newMode}`, 'Visualizzazione cambiata', 'change');
+        }
+        
+        // ============================================
+        // ANIMATION LOOP
+        // ============================================
         let lastTime = 0;
-        function animate(currentTime = 0) {
+        function animate(currentTime) {
             const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
             lastTime = currentTime;
             
-            update(dt);
+            updateSystem(dt);
             render();
             
             requestAnimationFrame(animate);
         }
         
-        // ============= ACTIONS =============
-        function toggleAnimation() {
-            isRunning = !isRunning;
-            const btn = document.querySelector('.action-btn');
-            btn.textContent = isRunning ? '⏸ PAUSA SISTEMA' : '▶ AVVIA SISTEMA';
-            logFeedback(isRunning ? 'Simulazione AVVIATA' : 'Simulazione in PAUSA', 
-                       isRunning ? 'success' : 'warning');
-        }
-        
-        function applyStimulus() {
-            nodes.forEach(node => {
-                if (node.active) {
-                    node.weight = Math.min(1, node.weight + 0.2);
-                    node.activateFeedback(1.0);
-                }
-            });
-            logFeedback('Stimolo applicato a tutti i nodi', 'success');
-        }
-        
-        function resetSystem() {
-            loadDilemma(currentDilemma);
-            isRunning = false;
-            document.querySelector('.action-btn').textContent = '▶ AVVIA SISTEMA';
-            logFeedback('Sistema resettato completamente', 'warning');
-        }
-        
-        function setMode(newMode) {
-            mode = newMode;
-            document.querySelectorAll('.mode-btn').forEach(btn => {
-                btn.classList.toggle('active', 
-                    btn.textContent.toLowerCase().includes(newMode));
-            });
-            logFeedback(`Modalità visualizzazione: ${newMode}`, 'info');
-        }
-        
-        // ============= FEEDBACK SYSTEM =============
-        function logFeedback(message, type = 'info') {
-            const output = document.getElementById('feedbackOutput');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `feedback-message ${type}`;
-            
-            const timestamp = new Date().toLocaleTimeString('it-IT', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            
-            messageDiv.innerHTML = `<strong>[${timestamp}]</strong> - ${message}`;
-            output.appendChild(messageDiv);
-            
-            if (autoScroll) {
-                output.scrollTop = output.scrollHeight;
-            }
-        }
-        
-        function clearFeedback() {
-            document.getElementById('feedbackOutput').innerHTML = '';
-            logFeedback('Feedback pulito', 'info');
-        }
-        
-        function toggleAutoScroll() {
-            autoScroll = !autoScroll;
-            const btn = document.querySelector('.feedback-btn:nth-child(2)');
-            btn.textContent = autoScroll ? 'Auto-scroll: ON' : 'Auto-scroll: OFF';
-            logFeedback(`Auto-scroll: ${autoScroll ? 'ATTIVO' : 'DISATTIVO'}`, 'info');
-        }
-        
-        function exportLog() {
-            const messages = document.querySelectorAll('.feedback-message');
-            let logText = "=== LOG SISTEMA Φ-RISONANZA ===\n";
-            logText += `Data: ${new Date().toLocaleString('it-IT')}\n`;
-            logText += "=================================\n\n";
-            
-            messages.forEach(msg => {
-                logText += msg.textContent + '\n';
-            });
-            
-            const blob = new Blob([logText], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `phi-risonanza-log-${Date.now()}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            logFeedback('Log esportato con successo', 'success');
-        }
-        
-        // ============= START =============
+        // ============================================
+        // START SYSTEM
+        // ============================================
         window.addEventListener('load', init);
     </script>
 </body>
